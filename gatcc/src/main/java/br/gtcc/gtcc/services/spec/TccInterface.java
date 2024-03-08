@@ -1,4 +1,4 @@
-package br.gtcc.gtcc.services;
+package br.gtcc.gtcc.services.spec;
 
 import java.util.List;
 

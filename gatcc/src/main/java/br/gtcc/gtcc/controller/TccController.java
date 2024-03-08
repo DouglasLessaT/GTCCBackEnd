@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.gtcc.gtcc.model.Tcc;
-import br.gtcc.gtcc.services.TccService;
+import br.gtcc.gtcc.services.impl.TccService;
 
 
 @RestController

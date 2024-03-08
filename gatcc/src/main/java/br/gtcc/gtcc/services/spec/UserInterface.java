@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
-package br.gtcc.gtcc.services;
+package br.gtcc.gtcc.services.spec;
 
 import br.gtcc.gtcc.model.Users;
 import java.util.List;

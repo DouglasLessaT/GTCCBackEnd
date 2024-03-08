@@ -5,7 +5,7 @@
 package br.gtcc.gtcc.controller;
 
 import br.gtcc.gtcc.model.Users;
-import br.gtcc.gtcc.services.UserServices;
+import br.gtcc.gtcc.services.impl.UserServices;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import br.gtcc.gtcc.services.UserInterface;
+import br.gtcc.gtcc.services.spec.UserInterface;
 
 /**
  *

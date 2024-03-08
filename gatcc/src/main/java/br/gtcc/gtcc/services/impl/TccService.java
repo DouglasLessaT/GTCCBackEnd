@@ -1,4 +1,4 @@
-package br.gtcc.gtcc.services;
+package br.gtcc.gtcc.services.impl;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.gtcc.gtcc.model.Tcc;
+import br.gtcc.gtcc.services.spec.TccInterface;
 
 @Service
 public class TccService implements TccInterface {

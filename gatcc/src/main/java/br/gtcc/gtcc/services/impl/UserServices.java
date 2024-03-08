@@ -2,9 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package br.gtcc.gtcc.services;
+package br.gtcc.gtcc.services.impl;
 
 import br.gtcc.gtcc.model.Users;
+import br.gtcc.gtcc.services.spec.UserInterface;
 import java.util.List;
 import org.dizitart.no2.collection.FindOptions;
 import org.dizitart.no2.common.SortOrder;
