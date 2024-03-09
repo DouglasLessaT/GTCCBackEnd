@@ -5,7 +5,8 @@
 package br.gtcc.gtcc.controller;
 
 import br.gtcc.gtcc.model.Users;
-import br.gtcc.gtcc.services.impl.UserServices;
+import br.gtcc.gtcc.services.impl.nitritedb.UserServices;
+import br.gtcc.gtcc.services.impl.nitritedb.UserServices;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;

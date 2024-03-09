@@ -1,4 +1,4 @@
-package br.gtcc.gtcc.services.impl;
+package br.gtcc.gtcc.services.impl.nitritedb;
 
 import java.util.List;
 

@@ -8,12 +8,14 @@ import br.gtcc.gtcc.model.ApresentationBanca;
 import br.gtcc.gtcc.model.Data;
 import br.gtcc.gtcc.model.Tcc;
 import br.gtcc.gtcc.model.Users;
+import br.gtcc.gtcc.services.impl.nitritedb.UserServices;
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.common.mapper.JacksonMapperModule;
 import org.dizitart.no2.mvstore.MVStoreModule;
 import org.dizitart.no2.repository.ObjectRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.annotation.Order;
 
 /**
@@ -31,7 +33,7 @@ public class DBConfig {
     // public void dataBaseH2(){
     // }
     
-    @Bean
+    @Bean("nitrite")
     public Nitrite dataBase(){
         MVStoreModule storeModule =MVStoreModule.withConfig()
                 .filePath("baseDados.db")
@@ -45,11 +47,18 @@ public class DBConfig {
         return db;
     }
     
-    @Bean 
+    
+    @Bean("repositorioUsers")
+    @DependsOn("nitrite")
     public ObjectRepository<Users> repositoryUsers() {
         
         return dataBase().getRepository(Users.class);
     
+    }
+    @Bean
+    @DependsOn("repositorioUsers")
+    public UserServices userService(){
+        return new UserServices();
     }
 
     @Bean 
