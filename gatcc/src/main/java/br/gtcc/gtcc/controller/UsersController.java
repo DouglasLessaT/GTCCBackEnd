@@ -4,7 +4,7 @@
  */
 package br.gtcc.gtcc.controller;
 
-import br.gtcc.gtcc.model.Users;
+import br.gtcc.gtcc.model.nitriteid.Users;
 import br.gtcc.gtcc.services.impl.nitritedb.UserServices;
 import br.gtcc.gtcc.services.impl.nitritedb.UserServices;
 
@@ -53,7 +53,7 @@ public class UsersController {
     
     }
     
-    @PutMapping("/update")
+    @PutMapping("/update/${id}")
     public Users updateUsers(@RequestParam(required = false) Users users){
         
         return service.updateUsers(users);
