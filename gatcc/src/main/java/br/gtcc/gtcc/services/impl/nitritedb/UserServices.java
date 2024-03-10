@@ -4,7 +4,7 @@
  */
 package br.gtcc.gtcc.services.impl.nitritedb;
 
-import br.gtcc.gtcc.model.Users;
+import br.gtcc.gtcc.model.nitriteid.Users;
 import br.gtcc.gtcc.services.spec.UserInterface;
 import java.util.List;
 import org.dizitart.no2.collection.FindOptions;

@@ -6,7 +6,7 @@ import org.dizitart.no2.repository.ObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.gtcc.gtcc.model.Tcc;
+import br.gtcc.gtcc.model.nitriteid.Tcc;
 import br.gtcc.gtcc.services.spec.TccInterface;
 
 @Service
