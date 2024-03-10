@@ -74,9 +74,19 @@ public class UsersController {
     }
     
     @PutMapping("/update/${id}")
-    public Users updateUsers(@RequestParam(required = false) Users users){
+    public ResponseEntity<Users> updateUsers(@RequestParam(required = false) Users users){
         
-        return service.updateUsers(users);
+        Users updatedUser =  service.updateUsers(users);
+ 
+        if (updatedUser != null) {
+        
+            return new ResponseEntity<>( updatedUser, HttpStatus.OK);
+        
+        } else {
+        
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        
+        } 
     
     }
     
