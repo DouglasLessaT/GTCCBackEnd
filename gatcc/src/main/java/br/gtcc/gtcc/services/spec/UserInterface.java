@@ -4,8 +4,9 @@
  */
 package br.gtcc.gtcc.services.spec;
 
-import br.gtcc.gtcc.model.Users;
 import java.util.List;
+
+import br.gtcc.gtcc.model.nitriteid.Users;
 
 
 
