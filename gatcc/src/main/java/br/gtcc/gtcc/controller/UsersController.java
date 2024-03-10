@@ -91,17 +91,29 @@ public class UsersController {
     }
     
     @GetMapping("/list")
-    public List<Users> getAllUsers(){
+    public ResponseEntity<List<Users>> getAllUsers(){
         
-        return service.getAllUsers();
+        List<Users> list = service.getAllUsers();
+        return new ResponseEntity<>( list , HttpStatus.OK);
     
     }
     
     @GetMapping("/get_user")
-    public Users getUser(@RequestParam(required = false) Users user){
+    public ResponseEntity<Users> getUser(@RequestParam(required = false) Users user){
         
-        return service.getUsers(user);
+        Users foundUsers = service.getUsers(user);
         
+        if (foundUsers != null) {
+        
+            return new ResponseEntity<>(foundUsers, HttpStatus.OK);
+        
+        } else {
+        
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        
+        }
+ 
+
     }
     
 }
