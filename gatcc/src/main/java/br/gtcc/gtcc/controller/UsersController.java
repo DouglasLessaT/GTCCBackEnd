@@ -9,6 +9,8 @@ import br.gtcc.gtcc.services.impl.nitritedb.UserServices;
 import br.gtcc.gtcc.services.impl.nitritedb.UserServices;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,11 +41,19 @@ public class UsersController {
     UserServices service;
     
     @PostMapping("/create")
-    public Users createUser(@RequestParam(required = false) Users users){
+    public ResponseEntity<Users> createUser(@RequestParam(required = false) Users users){
 
-        //return service.createUsers(users);
-        return usersInterface.createUsers(users);
-
+        Users updatedUsers = service.createUsers(users);
+        
+        if (updatedUsers != null) {
+        
+            return new ResponseEntity<>(updateUsers(users), HttpStatus.OK);
+        
+        } else {
+        
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        
+        }
     }
 
     @DeleteMapping("/delete")
