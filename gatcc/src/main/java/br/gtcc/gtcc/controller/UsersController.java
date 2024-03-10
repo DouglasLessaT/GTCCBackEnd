@@ -43,24 +43,34 @@ public class UsersController {
     @PostMapping("/create")
     public ResponseEntity<Users> createUser(@RequestParam(required = false) Users users){
 
-        Users updatedUsers = service.createUsers(users);
+        Users createdUsers = service.createUsers(users);
         
-        if (updatedUsers != null) {
+        if (createdUsers != null) {
         
-            return new ResponseEntity<>(updateUsers(users), HttpStatus.OK);
+            return new ResponseEntity<>(createdUsers, HttpStatus.OK);
         
         } else {
         
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         
-        }
+        } 
     }
 
     @DeleteMapping("/delete")
-    public Users deleteUsers(@RequestParam(required = false) Users users){
+    public ResponseEntity<Users> deleteUsers(@RequestParam(required = false) Users users){
        
-        return service.deleteUsers(users);
+        Users deletedUsers =  service.deleteUsers(users);
     
+        if (deletedUsers != null) {
+        
+            return new ResponseEntity<>(deletedUsers, HttpStatus.OK);
+        
+        } else {
+        
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        
+        } 
+
     }
     
     @PutMapping("/update/${id}")
