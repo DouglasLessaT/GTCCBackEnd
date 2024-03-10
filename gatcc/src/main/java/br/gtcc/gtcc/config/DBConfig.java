@@ -4,10 +4,10 @@
  */
 package br.gtcc.gtcc.config;
 
-import br.gtcc.gtcc.model.ApresentationBanca;
-import br.gtcc.gtcc.model.Data;
-import br.gtcc.gtcc.model.Tcc;
-import br.gtcc.gtcc.model.Users;
+import br.gtcc.gtcc.model.nitriteid.ApresentationBanca;
+import br.gtcc.gtcc.model.nitriteid.Data;
+import br.gtcc.gtcc.model.nitriteid.Tcc;
+import br.gtcc.gtcc.model.nitriteid.Users;
 import br.gtcc.gtcc.services.impl.nitritedb.UserServices;
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.common.mapper.JacksonMapperModule;
