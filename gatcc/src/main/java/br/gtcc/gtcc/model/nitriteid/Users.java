@@ -1,4 +1,4 @@
-package br.gtcc.gtcc.model;
+package br.gtcc.gtcc.model.nitriteid;
 
 import org.dizitart.no2.collection.NitriteId;
 import org.dizitart.no2.index.IndexType;
