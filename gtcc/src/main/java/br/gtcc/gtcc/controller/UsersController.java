@@ -6,7 +6,7 @@ package br.gtcc.gtcc.controller;
 
 import br.gtcc.gtcc.model.nitriteid.Users;
 import br.gtcc.gtcc.services.impl.nitritedb.UserServices;
-import br.gtcc.gtcc.services.impl.nitritedb.UserServices;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
