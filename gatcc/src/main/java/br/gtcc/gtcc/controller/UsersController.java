@@ -35,16 +35,19 @@ import br.gtcc.gtcc.services.spec.UserInterface;
 @RequestMapping("/v1/users")
 public class UsersController {
     
+    @Autowired
     public UserInterface usersInterface;
     
-    @Autowired
-    UserServices service;
+    // @Autowired
+    // UserServices service;
     
     @PostMapping("/create")
-    public ResponseEntity<Users> createUser(@RequestParam(required = false) Users users){
+    public ResponseEntity<Users> createUser(@RequestParam(required = true) Users users){
 
-        Users createdUsers = service.createUsers(users);
+        //Users createdUsers = service.createUsers(users);
         
+        Users createdUsers = usersInterface.createUsers(users);
+
         if (createdUsers != null) {
         
             return new ResponseEntity<>(createdUsers, HttpStatus.OK);
@@ -57,10 +60,12 @@ public class UsersController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Users> deleteUsers(@RequestParam(required = false) Users users){
+    public ResponseEntity<Users> deleteUsers(@RequestParam(required = true) Users users){
        
-        Users deletedUsers =  service.deleteUsers(users);
+        //Users deletedUsers =  service.deleteUsers(users);
     
+        Users deletedUsers =  usersInterface.deleteUsers(users);  
+
         if (deletedUsers != null) {
         
             return new ResponseEntity<>(deletedUsers, HttpStatus.OK);
@@ -74,10 +79,12 @@ public class UsersController {
     }
     
     @PutMapping("/update/${id}")
-    public ResponseEntity<Users> updateUsers(@RequestParam(required = false) Users users){
+    public ResponseEntity<Users> updateUsers(@RequestParam(required = true) Users users){
         
-        Users updatedUser =  service.updateUsers(users);
+        //Users updatedUser =  service.updateUsers(users);
  
+        Users updatedUser =  usersInterface.updateUsers(users);
+
         if (updatedUser != null) {
         
             return new ResponseEntity<>( updatedUser, HttpStatus.OK);
@@ -93,15 +100,18 @@ public class UsersController {
     @GetMapping("/list")
     public ResponseEntity<List<Users>> getAllUsers(){
         
-        List<Users> list = service.getAllUsers();
+        // List<Users> list = service.getAllUsers();
+        List<Users> list = usersInterface.getAllUsers();
         return new ResponseEntity<>( list , HttpStatus.OK);
     
     }
     
-    @GetMapping("/get_user")
+    @GetMapping("/get_user/{id}")
     public ResponseEntity<Users> getUser(@RequestParam(required = false) Users user){
         
-        Users foundUsers = service.getUsers(user);
+        //Users foundUsers = service.getUsers(user);
+
+        Users foundUsers = usersInterface.getUsers(user);
         
         if (foundUsers != null) {
         
