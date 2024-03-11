@@ -22,14 +22,19 @@ import br.gtcc.gtcc.services.impl.nitritedb.TccService;
 @RestController
 @RequestMapping("/v1/tccs")
 public class TccController {
- 
+  
  @Autowired
- private TccService tccService;
+ private TccInterface tccInterface; 
+
+//  @Autowired
+//  private TccService tccService;
  
     @PostMapping("/create")
     public ResponseEntity<Tcc> createTcc(@RequestBody Tcc tcc) {
-        Tcc createdTcc = tccService.createTcc(tcc);
-        if (createdTcc != null) {
+        
+        Tcc createdTcc = tccInterface.createTcc(tcc);
+        
+        if (createdTcc != null) { 
             return new ResponseEntity<>(createdTcc, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -39,7 +44,7 @@ public class TccController {
     @PutMapping("/update/{id}")
     public ResponseEntity<Tcc> updateTcc(@PathVariable("id") String id, @RequestBody Tcc tcc) {
         // Assume que o ID é passado como string, você pode alterar conforme necessário
-        Tcc updatedTcc = tccService.updateTCC(tcc);
+        Tcc updatedTcc = tccInterface.updateTCC(tcc);
         if (updatedTcc != null) {
             return new ResponseEntity<>(updatedTcc, HttpStatus.OK);
         } else {
@@ -51,7 +56,7 @@ public class TccController {
     public ResponseEntity<Void> deleteTcc(@PathVariable("id") String id) {
         // Assume que o ID é passado como string, você pode alterar conforme necessário
         Tcc tccToDelete = new Tcc(); // Você precisa criar um objeto Tcc com o ID fornecido
-        Tcc deletedTcc = tccService.deleteTCC(tccToDelete);
+        Tcc deletedTcc = tccInterface.deleteTCC(tccToDelete);
         if (deletedTcc != null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
@@ -61,15 +66,15 @@ public class TccController {
 
     @GetMapping("/list")
     public ResponseEntity<List<Tcc>> getAllTccs() {
-        List<Tcc> tccs = tccService.getAllTCC();
+        List<Tcc> tccs = tccInterface.getAllTCC();
         return new ResponseEntity<>(tccs, HttpStatus.OK);
     }
 
-    @GetMapping("/list/{id}")
+    @GetMapping("/get_tcc/{id}")
     public ResponseEntity<Tcc> getTccById(@PathVariable("id") String id) {
         // Assume que o ID é passado como string, você pode alterar conforme necessário
         Tcc tcc = new Tcc(); // Você precisa criar um objeto Tcc com o ID fornecido
-        Tcc foundTcc = tccService.getTCC(tcc);
+        Tcc foundTcc = tccInterface.getTCC(tcc);
         if (foundTcc != null) {
             return new ResponseEntity<>(foundTcc, HttpStatus.OK);
         } else {
