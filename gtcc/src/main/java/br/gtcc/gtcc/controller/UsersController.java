@@ -5,6 +5,12 @@
 package br.gtcc.gtcc.controller;
 
 import br.gtcc.gtcc.model.nitriteid.Users;
+<<<<<<< HEAD:gatcc/src/main/java/br/gtcc/gtcc/controller/UsersController.java
+=======
+import br.gtcc.gtcc.services.impl.nitritedb.UserServices;
+
+
+>>>>>>> fae80e71cee9d1fa56bf9246189281ec8276a267:gtcc/src/main/java/br/gtcc/gtcc/controller/UsersController.java
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
