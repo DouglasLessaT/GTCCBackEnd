@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.gtcc.gtcc.model.nitriteid.Tcc;
-import br.gtcc.gtcc.services.impl.nitritedb.TccService;
+import br.gtcc.gtcc.services.spec.TccInterface;
 
 @CrossOrigin
 @RestController
