@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@Node
+@Node("Users")
 public class Users {
 
     @Id 
