@@ -10,7 +10,7 @@ import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.data.neo4j.core.schema.Relationship.Direction;
 
-import br.gtcc.gtcc.model.nitriteid.UserType;
+import br.gtcc.gtcc.model.UserType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

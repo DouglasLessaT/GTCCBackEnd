@@ -7,6 +7,8 @@ import org.dizitart.no2.repository.annotations.Id;
 import org.dizitart.no2.repository.annotations.Index;
 import org.dizitart.no2.repository.annotations.Indices;
 
+import br.gtcc.gtcc.model.UserType;
+
 import java.util.List;
 // import br.gtcc.gtcc.model.UserType;
 import java.util.Date;
