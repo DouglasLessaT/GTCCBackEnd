@@ -11,22 +11,32 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.data.neo4j.core.schema.Relationship.Direction;
 
 import br.gtcc.gtcc.model.nitriteid.UserType;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
+@Data
+@NoArgsConstructor
 @Node
 public class Users {
 
- @Id @GeneratedValue private Long Id;
- @Property("tagline")
- private String name;
- @Property("tagline")
- private String email;
- @Relationship(type = "ACTED_IN", direction = Direction.INCOMING) 
- private List<UserType> userType;
- @Property("tagline") 
- private Date birthdate;
- @Property("tagline") 
- private int cellphone;
- 
- 
+    @Id 
+    @GeneratedValue 
+    private String Id;
+    
+    @Property("tagline")
+    private String name;
+    
+    @Property("tagline")
+    private String email;
+    
+    @Relationship(type = "ACTED_IN", direction = Direction.INCOMING) 
+    private List<UserType> userType;
+    
+    @Property("tagline") 
+    private Date birthdate;
+
+    @Property("tagline") 
+    private int cellphone;
+
 }
