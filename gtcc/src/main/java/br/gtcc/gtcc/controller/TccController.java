@@ -20,7 +20,7 @@ import br.gtcc.gtcc.services.spec.TccInterface;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/v1/tccs")
+@RequestMapping("coordenacao/tcc/v1")
 public class TccController {
   
  @Autowired
@@ -29,7 +29,7 @@ public class TccController {
 //  @Autowired
 //  private TccService tccService;
  
-    @PostMapping("/create")
+    @PostMapping("/tcc")
     public ResponseEntity<Tcc> createTcc(@RequestBody Tcc tcc) {
         
         Tcc createdTcc = tccInterface.createTcc(tcc);
@@ -41,7 +41,7 @@ public class TccController {
         }
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/tcc/{id}")
     public ResponseEntity<Tcc> updateTcc(@PathVariable("id") String id, @RequestBody Tcc tcc) {
         // Assume que o ID é passado como string, você pode alterar conforme necessário
         Tcc updatedTcc = tccInterface.updateTCC(tcc);
@@ -52,7 +52,7 @@ public class TccController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/tcc/{id}")
     public ResponseEntity<Void> deleteTcc(@PathVariable("id") String id) {
         // Assume que o ID é passado como string, você pode alterar conforme necessário
         Tcc tccToDelete = new Tcc(); // Você precisa criar um objeto Tcc com o ID fornecido
@@ -64,13 +64,13 @@ public class TccController {
         }
     }
 
-    @GetMapping("/list")
+    @GetMapping("/tccs")
     public ResponseEntity<List<Tcc>> getAllTccs() {
         List<Tcc> tccs = tccInterface.getAllTCC();
         return new ResponseEntity<>(tccs, HttpStatus.OK);
     }
 
-    @GetMapping("/get_tcc/{id}")
+    @GetMapping("/tcc/{id}")
     public ResponseEntity<Tcc> getTccById(@PathVariable("id") String id) {
         // Assume que o ID é passado como string, você pode alterar conforme necessário
         Tcc tcc = new Tcc(); // Você precisa criar um objeto Tcc com o ID fornecido
