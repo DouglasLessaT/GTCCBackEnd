@@ -6,37 +6,50 @@ import java.util.List;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.data.neo4j.core.schema.Relationship.Direction;
 
 import br.gtcc.gtcc.model.UserType;
+import io.micrometer.common.lang.NonNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-@Data
-@NoArgsConstructor
 @Node("Users")
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class Users {
 
-    @Id 
-    @GeneratedValue 
-    private String Id;
-    
-    @Property("tagline")
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @NonNull
     private String name;
-    
-    @Property("tagline")
+
+    @NonNull
     private String email;
-    
-    @Relationship(type = "ACTED_IN", direction = Direction.INCOMING) 
+
+    @Relationship(type = "HAS_USER_TYPE", direction = Direction.OUTGOING)
     private List<UserType> userType;
-    
-    @Property("tagline") 
+
+    @NonNull
     private Date birthdate;
 
-    @Property("tagline") 
+    @NonNull
     private int cellphone;
 
+    // Esta fução e para escrever o id- Atribuir. Ele cria uma nova entidade e
+    // define o campo de acordo, sem modificar a entidade original, tornando-a
+    // imutável.
+    // public Users withId(Long id) {
+    //     if (this.id.equals(id)) {
+    //         return this;
+    //     } else {
+    //         Users users = new Users(this.id, this.name, this.email, userType, birthdate, cellphone);
+    //         users.id = id;
+    //         return users;
+    //     }
+    // }
 }
