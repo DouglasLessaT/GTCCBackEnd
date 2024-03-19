@@ -32,7 +32,7 @@ import br.gtcc.gtcc.services.spec.UserInterface;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/v1/users")
+@RequestMapping("coordenacao/tcc/v1")
 public class UsersController {
     
     @Autowired
@@ -41,7 +41,7 @@ public class UsersController {
     // @Autowired
     // UserServices service;
     
-    @PostMapping("/create")
+    @PostMapping("/usuario")
     public ResponseEntity<Users> createUser(@RequestParam(required = true) Users users){
 
         //Users createdUsers = service.createUsers(users);
@@ -59,7 +59,7 @@ public class UsersController {
         } 
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/usuario/{id}")
     public ResponseEntity<Users> deleteUsers(@RequestParam(required = true) Users users){
        
         //Users deletedUsers =  service.deleteUsers(users);
@@ -78,7 +78,7 @@ public class UsersController {
 
     }
     
-    @PutMapping("/update/${id}")
+    @PutMapping("/usuario/{id}")
     public ResponseEntity<Users> updateUsers(@RequestParam(required = true) Users users){
         
         //Users updatedUser =  service.updateUsers(users);
@@ -97,7 +97,7 @@ public class UsersController {
     
     }
     
-    @GetMapping("/list")
+    @GetMapping("/usuarios")
     public ResponseEntity<List<Users>> getAllUsers(){
         
         // List<Users> list = service.getAllUsers();
@@ -106,7 +106,7 @@ public class UsersController {
     
     }
     
-    @GetMapping("/get_user/{id}")
+    @GetMapping("/usuario/{id}")
     public ResponseEntity<Users> getUser(@RequestParam(required = false) Users user){
         
         //Users foundUsers = service.getUsers(user);
