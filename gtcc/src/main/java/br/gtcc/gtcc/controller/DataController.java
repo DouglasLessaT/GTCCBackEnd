@@ -21,14 +21,14 @@ import br.gtcc.gtcc.services.spec.DataInterface;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/v1/data")
+@RequestMapping("coordenacao/tcc/v1")
 public class DataController {
     
     @Autowired
     private DataInterface interfaceData;
     
-     @PostMapping("/create")
-    public ResponseEntity<Data> createTcc(@RequestBody Data data) {
+     @PostMapping("/data")
+    public ResponseEntity<Data> createData(@RequestBody Data data) {
         
         Data createdData = interfaceData.createData(data);
         
@@ -39,8 +39,8 @@ public class DataController {
         }
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Data> updateTcc(@PathVariable("id") String id, @RequestBody Data data) {
+    @PutMapping("/data/{id}")
+    public ResponseEntity<Data> updateData(@PathVariable("id") String id, @RequestBody Data data) {
        
         Data updatedData = interfaceData.updateData(data);
        
@@ -55,8 +55,8 @@ public class DataController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteTcc(@PathVariable("id") String id, @RequestBody Data data ) {
+    @DeleteMapping("/data/{id}")
+    public ResponseEntity<Void> deleteData(@PathVariable("id") String id, @RequestBody Data data ) {
        
         Data DataToDelete = new Data();
        
@@ -73,7 +73,7 @@ public class DataController {
         }
     }
 
-    @GetMapping("/list")
+    @GetMapping("/data")
     public ResponseEntity<List<Data>> getAllDatas() {
         
         List<Data> datas = interfaceData.getAllData();
@@ -82,7 +82,7 @@ public class DataController {
     
     }
 
-    @GetMapping("/get_tcc/{id}")
+    @GetMapping("/data/{id}")
     public ResponseEntity<Data> getDataById(@PathVariable("id") String id, @RequestBody Data data ) {
     
         Data _data = new Data();
