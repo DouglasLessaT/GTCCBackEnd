@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 // import org.springframework.web.bind.annotation.GetMapping;
 // import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,6 +67,41 @@ public class ApresentaionBancaController {
         if (updatedApresentationBanca != null) {
         
             return new ResponseEntity<>( updatedApresentationBanca, HttpStatus.OK);
+        
+        } else {
+        
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        
+        } 
+    
+    }
+
+    @GetMapping("/apresentacao/{id}")
+    public ResponseEntity<ApresentationBanca> getApresentationBancaById(@RequestParam(required = true) ApresentationBanca apresentation){ 
+ 
+        ApresentationBanca getApresentationBanca =  interfaceBanca.getApresentationBanca(apresentation);
+
+        if (getApresentationBanca != null) {
+        
+            return new ResponseEntity<>( getApresentationBanca, HttpStatus.OK);
+        
+        } else {
+        
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        
+        } 
+    
+    }
+
+    
+    @GetMapping("/apresentacao/{id}")
+    public ResponseEntity<List<ApresentationBanca>> getAllApresentationBanca(){ 
+ 
+        List<ApresentationBanca> getApresentationBancaList =  interfaceBanca.getAllApresentationBanca();
+
+        if (getApresentationBancaList != null) {
+        
+            return new ResponseEntity<>( getApresentationBancaList, HttpStatus.OK);
         
         } else {
         
