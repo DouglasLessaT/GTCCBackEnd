@@ -16,6 +16,7 @@ import org.dizitart.no2.repository.ObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 /**
  *
  * @author mrbee
@@ -27,7 +28,7 @@ import org.springframework.stereotype.Service;
  * criar interface entre a service e controller
  */
 @Service
-public class UserServices implements UserInterface{
+public class UserServices implements UserInterface<Users, String>{
    
     @Autowired
     ObjectRepository<Users> repositoryUsers;
@@ -57,30 +58,22 @@ public class UserServices implements UserInterface{
     }
     
     @Override
-    public Users deleteUsers(Users users){
+    public Users deleteUsers(String id){
         
-        Users getU = this.getUsers(users);
+        Users getU = this.getUsers(id);
         
-        if( users != null ){
-            
-            if( users.getRegistration() != null ){
+        if( getU != null ){
             
                 if( getU != null ){
                 
-                    WriteResult result = repositoryUsers.remove(where("id").eq(users.getRegistration()));
-                    users = (Users) result;
+                    WriteResult result = repositoryUsers.remove(where("id").eq(id));
+                    getU = (Users) result;
             
                 } else {
 
                     return null;
 
-                }
-                
-            } else {
-                
-                return null;
-                
-            }            
+                }            
             
         } else {
             
@@ -88,12 +81,14 @@ public class UserServices implements UserInterface{
             
         }
         
-        return users;
+        return getU;
     }
     
     @Override
     public Users updateUsers(Users users){
-           Users getU = this.getUsers(users);
+        
+           String  id = users.getId();   
+           Users getU = this.getUsers(id);
         
         if( users != null ){
             
@@ -144,14 +139,12 @@ public class UserServices implements UserInterface{
     }
 
     @Override
-    public Users getUsers(Users users)  throws IllegalArgumentException{
+    public Users getUsers(String id)  throws IllegalArgumentException{
         
-        if( users != null ){
-            
-            if( users.getRegistration() != null ){
+        if( id != null ){
             
                 //Realiza  buscano banco de dados
-               Users user = repositoryUsers.find(FluentFilter.where("registration").eq(users.getRegistration())).firstOrNull();
+               Users user = repositoryUsers.find(FluentFilter.where("id").eq(id)).firstOrNull();
                
                if( user != null ){
                
@@ -164,12 +157,6 @@ public class UserServices implements UserInterface{
                
                }
                 
-            }else{
-                
-                //Execeção caso o usuário não tenha uma matricula
-                return null;
-                
-            }
             
         } else {
         
@@ -179,5 +166,4 @@ public class UserServices implements UserInterface{
         }
     
     }
-
 }
