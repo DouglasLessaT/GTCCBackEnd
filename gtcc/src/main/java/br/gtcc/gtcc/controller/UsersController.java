@@ -8,12 +8,15 @@ import br.gtcc.gtcc.model.nitriteid.Users;
 import br.gtcc.gtcc.controller.UsersController;
 
 import br.gtcc.gtcc.services.impl.nitritedb.UserServices;
+
+import org.dizitart.no2.collection.NitriteId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +38,7 @@ import br.gtcc.gtcc.services.spec.UserInterface;
 @RequestMapping("coordenacao/tcc/v1")
 public class UsersController {
     
+    @SuppressWarnings("rawtypes")
     @Autowired
     public UserInterface usersInterface;
     
@@ -60,11 +64,11 @@ public class UsersController {
     }
 
     @DeleteMapping("/usuario/{id}")
-    public ResponseEntity<Users> deleteUsers(@RequestParam(required = true) Users users){
+    public ResponseEntity<Users> deleteUsers(@PathVariable long id){
        
         //Users deletedUsers =  service.deleteUsers(users);
     
-        Users deletedUsers =  usersInterface.deleteUsers(users);  
+        Users deletedUsers =  usersInterface.deleteUsers(id);  
 
         if (deletedUsers != null) {
         
@@ -107,12 +111,13 @@ public class UsersController {
     }
     
     @GetMapping("/usuario/{id}")
-    public ResponseEntity<Users> getUser(@RequestParam(required = false) Users user){
+    public ResponseEntity<Users> getUser(@PathVariable Long id){
         
         //Users foundUsers = service.getUsers(user);
 
-        Users foundUsers = usersInterface.getUsers(user);
+        Users foundUsers = usersInterface.getUsers(id);
         
+
         if (foundUsers != null) {
         
             return new ResponseEntity<>(foundUsers, HttpStatus.OK);
