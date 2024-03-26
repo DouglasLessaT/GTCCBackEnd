@@ -5,14 +5,14 @@ import java.util.List;
 import br.gtcc.gtcc.model.nitriteid.Tcc;
 
 
-public interface TccInterface {
-    public Tcc createTcc(Tcc tcc);
+public interface TccInterface<T, E> {
+    public T createTcc(T tcc);
    
-   public Tcc updateTCC(Tcc tcc);
+   public T updateTCC(T tcc);
    
-   public Tcc deleteTCC(Tcc tcc);
+   public T deleteTCC(E tcc);
    
-   public List<Tcc> getAllTCC();
+   public List<T> getAllTCC();
    
-   public Tcc getTCC(Tcc tcc);
+   public T getTCC(E tcc);
 }
