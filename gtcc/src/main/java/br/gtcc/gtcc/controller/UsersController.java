@@ -50,7 +50,8 @@ public class UsersController {
 
         //Users createdUsers = service.createUsers(users);
         
-        Users createdUsers = usersInterface.createUsers(users);
+        @SuppressWarnings("unchecked")
+        Users createdUsers = (Users) usersInterface.createUsers(users);
 
         if (createdUsers != null) {
         
@@ -68,7 +69,8 @@ public class UsersController {
        
         //Users deletedUsers =  service.deleteUsers(users);
     
-        Users deletedUsers =  usersInterface.deleteUsers(id);  
+        @SuppressWarnings("unchecked")
+        Users deletedUsers =(Users)  usersInterface.deleteUsers(id);  
 
         if (deletedUsers != null) {
         
@@ -87,7 +89,8 @@ public class UsersController {
         
         //Users updatedUser =  service.updateUsers(users);
  
-        Users updatedUser =  usersInterface.updateUsers(users);
+        @SuppressWarnings("unchecked")
+        Users updatedUser = (Users)  usersInterface.updateUsers(users);
 
         if (updatedUser != null) {
         
@@ -115,7 +118,8 @@ public class UsersController {
         
         //Users foundUsers = service.getUsers(user);
 
-        Users foundUsers = usersInterface.getUsers(id);
+        @SuppressWarnings("unchecked")
+        Users foundUsers = (Users) usersInterface.getUsers(id);
         
 
         if (foundUsers != null) {
