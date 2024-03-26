@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import br.gtcc.gtcc.model.nitriteid.Users;
+import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.services.spec.UserInterface;
 
 @Service
-public class Userservices implements UserInterface {
+public class Userservices implements UserInterface<Users, Long> {
 
  @Override
  public Users createUsers(Users users) {
@@ -23,7 +23,7 @@ public class Userservices implements UserInterface {
  }
 
  @Override
- public Users deleteUsers(Users users) {
+ public Users deleteUsers(Long id) {
   // TODO Auto-generated method stub
   throw new UnsupportedOperationException("Unimplemented method 'deleteUsers'");
  }
@@ -35,7 +35,7 @@ public class Userservices implements UserInterface {
  }
 
  @Override
- public Users getUsers(Users users) {
+ public Users getUsers(Long id ) {
   // TODO Auto-generated method stub
   throw new UnsupportedOperationException("Unimplemented method 'getUsers'");
  }
