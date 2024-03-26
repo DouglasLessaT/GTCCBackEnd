@@ -57,6 +57,7 @@ public class UserServices implements UserInterface<Users, String>{
         return users;
     }
     
+    @SuppressWarnings("unused")
     @Override
     public Users deleteUsers(String id){
         
@@ -84,6 +85,7 @@ public class UserServices implements UserInterface<Users, String>{
         return getU;
     }
     
+    @SuppressWarnings("unused")
     @Override
     public Users updateUsers(Users users){
         
