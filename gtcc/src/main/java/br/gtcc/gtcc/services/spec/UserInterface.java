@@ -6,24 +6,20 @@ package br.gtcc.gtcc.services.spec;
 
 import java.util.List;
 
-import br.gtcc.gtcc.model.nitriteid.Users;
-
-
-
 /**
  *
  * @author privateclasswizard
  */
-public interface UserInterface {
+public interface UserInterface<T, E> {
     
-   public Users createUsers(Users users);
+   public T createUsers(T users);
    
-   public Users updateUsers(Users users);
+   public T updateUsers(T users);
    
-   public Users deleteUsers(Users users);
+   public T deleteUsers(E id);
    
-   public List<Users> getAllUsers();
+   public List<T> getAllUsers();
    
-   public Users getUsers(Users users);
+   public T getUsers(E id);
    
 }
