@@ -24,7 +24,7 @@ import java.util.Date;
 public class Users {
     
     @Id
-    NitriteId id ;
+    private NitriteId id ;
     private String name;                // Nome do usuário
     private String email;               // Email do usuário
     private String registration;        // Matricula do usuário
@@ -48,12 +48,12 @@ public class Users {
     
     }
 
-    public NitriteId getId() {
-        return id;
+    public String getId() {
+        return id.getIdValue();
     }
 
-    public void setId(NitriteId id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = NitriteId.createId(id);
     }
 
     public String getName() {
