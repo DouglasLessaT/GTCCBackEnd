@@ -51,11 +51,11 @@ public class Tcc {
 
     }
 
-    public NitriteId getId(){
-        return id;
+    public String getId(){
+        return id.getIdValue();
     }
-    public void setId(NitriteId id){
-        this.id = id;
+    public void setId( String id){
+        this.id = NitriteId.createId(id);
     }
     public NitriteId getIdAluno(){
         return idAluno;
