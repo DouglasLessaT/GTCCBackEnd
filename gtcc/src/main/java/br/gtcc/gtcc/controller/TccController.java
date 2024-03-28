@@ -23,12 +23,12 @@ import br.gtcc.gtcc.services.spec.TccInterface;
 @RequestMapping("coordenacao/tcc/v1")
 public class TccController {
   
- @SuppressWarnings("rawtypes")
-@Autowired
- private TccInterface tccInterface; 
+    @SuppressWarnings("rawtypes")
+    @Autowired
+    private TccInterface tccInterface; 
 
-//  @Autowired
-//  private TccService tccService;
+    //  @Autowired
+    //  private TccService tccService;
  
     @PostMapping("/tcc")
     public ResponseEntity<Tcc> createTcc(@RequestBody Tcc tcc) {
