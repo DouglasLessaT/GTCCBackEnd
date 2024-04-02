@@ -20,7 +20,7 @@ import lombok.Setter;
 public class Data {
 
  @Id@GeneratedValue
- private Long id;
+ private String id;
 
  @NonNull
  private LocalDateTime date;

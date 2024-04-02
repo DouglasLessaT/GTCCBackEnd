@@ -23,7 +23,7 @@ public class ApresentationBanca {
 
  @Id
  @GeneratedValue
- private Long id;
+ private String id;
  private String idTcc;
  @Relationship(type = "MEMBER_OF", direction = Direction.OUTGOING)
  private Member member1;

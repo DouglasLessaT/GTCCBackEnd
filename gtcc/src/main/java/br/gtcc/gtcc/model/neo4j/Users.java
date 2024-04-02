@@ -23,7 +23,7 @@ public class Users {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private String id;
 
     @NonNull
     private String name;
