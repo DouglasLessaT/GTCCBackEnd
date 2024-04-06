@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import br.gtcc.gtcc.services.spec.UserInterface;
+import java.util.Optional;
 
 /**
  *
@@ -46,14 +47,16 @@ public class UsersController {
     // UserServices service;
     
     @PostMapping("/usuario")
-    public ResponseEntity<Users> createUser(@RequestParam(required = true) Users users){
+    public ResponseEntity<Object> createUser(@RequestParam(required = true) Users users){
 
-        //Users createdUsers = service.createUsers(users);
-        
+        //Users createdUsers = service.createUsers(users);  
+//        @SuppressWarnings("unchecked")
+//        Users createdUsers = (Users) usersInterface.createUsers(users);
+    
         @SuppressWarnings("unchecked")
-        Users createdUsers = (Users) usersInterface.createUsers(users);
-
-        if (createdUsers != null) {
+        Optional<Users> createdUsers = (Optional<Users>) usersInterface.createUsers(users);
+            
+        if (createdUsers.isPresent()) {
         
             return new ResponseEntity<>(createdUsers, HttpStatus.OK);
         
@@ -65,14 +68,14 @@ public class UsersController {
     }
 
     @DeleteMapping("/usuario/{id}")
-    public ResponseEntity<Users> deleteUsers(@PathVariable long id){
+    public ResponseEntity<Object> deleteUsers(@PathVariable long id){
        
         //Users deletedUsers =  service.deleteUsers(users);
     
         @SuppressWarnings("unchecked")
-        Users deletedUsers =(Users)  usersInterface.deleteUsers(id);  
+        Optional<Users> deletedUsers = (Optional<Users>)  usersInterface.deleteUsers(id);  
 
-        if (deletedUsers != null) {
+        if (deletedUsers.isPresent()) {
         
             return new ResponseEntity<>(deletedUsers, HttpStatus.OK);
         
@@ -85,14 +88,14 @@ public class UsersController {
     }
     
     @PutMapping("/usuario/{id}")
-    public ResponseEntity<Users> updateUsers(@RequestParam(required = true) Users users){
+    public ResponseEntity<Object> updateUsers(@RequestParam(required = true) Users users){
         
         //Users updatedUser =  service.updateUsers(users);
  
         @SuppressWarnings("unchecked")
-        Users updatedUser = (Users)  usersInterface.updateUsers(users);
+        Optional<Users> updatedUser = (Optional<Users>)  usersInterface.updateUsers(users);
 
-        if (updatedUser != null) {
+        if (updatedUser.isPresent()) {
         
             return new ResponseEntity<>( updatedUser, HttpStatus.OK);
         
@@ -105,24 +108,33 @@ public class UsersController {
     }
     
     @GetMapping("/usuarios")
-    public ResponseEntity<List<Users>> getAllUsers(){
+    public ResponseEntity<Object> getAllUsers(){
         
         // List<Users> list = service.getAllUsers();
-        List<Users> list = usersInterface.getAllUsers();
-        return new ResponseEntity<>( list , HttpStatus.OK);
+       List<Optional<Users>> list = (List<Optional<Users>>) usersInterface.getAllUsers();
+       
+       if(list.isEmpty() != true){
     
+            return new ResponseEntity<>( list , HttpStatus.OK);
+           
+       }else {
+       
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+           
+       }
+       
     }
     
     @GetMapping("/usuario/{id}")
-    public ResponseEntity<Users> getUser(@PathVariable Long id){
+    public ResponseEntity<Object> getUser(@PathVariable Long id){
         
         //Users foundUsers = service.getUsers(user);
 
         @SuppressWarnings("unchecked")
-        Users foundUsers = (Users) usersInterface.getUsers(id);
+        Optional<Users> foundUsers = (Optional<Users>) usersInterface.getUsers(id);
         
 
-        if (foundUsers != null) {
+        if (foundUsers.isPresent()) {
         
             return new ResponseEntity<>(foundUsers, HttpStatus.OK);
         
