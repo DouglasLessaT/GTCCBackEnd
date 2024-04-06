@@ -8,7 +8,7 @@ import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.services.spec.UserInterface;
 
 @Service
-public class Userservices implements UserInterface<Users, Long> {
+public class Userservices implements UserInterface<Users, String> {
 
  @Override
  public Users createUsers(Users users) {
@@ -23,7 +23,7 @@ public class Userservices implements UserInterface<Users, Long> {
  }
 
  @Override
- public Users deleteUsers(Long id) {
+ public Users deleteUsers(String id) {
   // TODO Auto-generated method stub
   throw new UnsupportedOperationException("Unimplemented method 'deleteUsers'");
  }
@@ -35,7 +35,7 @@ public class Userservices implements UserInterface<Users, Long> {
  }
 
  @Override
- public Users getUsers(Long id ) {
+ public Users getUsers(String id ) {
   // TODO Auto-generated method stub
   throw new UnsupportedOperationException("Unimplemented method 'getUsers'");
  }
