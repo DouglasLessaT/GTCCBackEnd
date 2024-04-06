@@ -5,16 +5,16 @@ import java.util.List;
 
 import br.gtcc.gtcc.model.nitriteid.Data; 
 
-public interface DataInterface {
+public interface DataInterface<T, E> {
 
-   public  Data createData(Data data);
+   public  T   createData(T data);
    
-   public  Data updateData(Data Data);
+   public  T   updateData(T Data);
    
-   public  Data deleteData(Data Data);
+   public  T   deleteData(E data);
    
-   public List<Data> getAllData();
+   public  T getData(E data);
    
-   public  Data getData(Data Data);
+   public List<T> getAllData();
     
 }
