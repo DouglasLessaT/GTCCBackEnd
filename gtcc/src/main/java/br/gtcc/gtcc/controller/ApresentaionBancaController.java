@@ -33,7 +33,7 @@ public class ApresentaionBancaController {
  @PostMapping("/apresentacao")
    public ResponseEntity<ApresentationBanca> createApresentantion(@RequestBody ApresentationBanca apresentation) {
        
-        ApresentationBanca  createdApresentationBanca  = interfaceBanca.createApresentationBanca(apresentation);
+        ApresentationBanca  createdApresentationBanca  = (ApresentationBanca) interfaceBanca.createApresentationBanca(apresentation);
        
        if (  createdApresentationBanca  != null) { 
            return new ResponseEntity<>(  createdApresentationBanca , HttpStatus.CREATED);
@@ -45,7 +45,7 @@ public class ApresentaionBancaController {
    @DeleteMapping("/apresentacao/{id}")
     public ResponseEntity<ApresentationBanca> deleteApresentationBanca(@RequestParam(required = true) ApresentationBanca apresentation){
     
-        ApresentationBanca deletedApresentationBanca =  interfaceBanca.deleteApresentationBanca(apresentation);  
+        ApresentationBanca deletedApresentationBanca = (ApresentationBanca) interfaceBanca.deleteApresentationBanca(apresentation);  
 
         if (deletedApresentationBanca != null) {
         
@@ -62,7 +62,7 @@ public class ApresentaionBancaController {
     @PutMapping("/apresentacao/{id}")
     public ResponseEntity<ApresentationBanca> updateApresentationBanca(@RequestParam(required = true) ApresentationBanca apresentation){ 
  
-        ApresentationBanca updatedApresentationBanca =  interfaceBanca.updateApresentationBanca(apresentation);
+        ApresentationBanca updatedApresentationBanca =  (ApresentationBanca) interfaceBanca.updateApresentationBanca(apresentation);
 
         if (updatedApresentationBanca != null) {
         
@@ -79,7 +79,7 @@ public class ApresentaionBancaController {
     @GetMapping("/apresentacao/{id}")
     public ResponseEntity<ApresentationBanca> getApresentationBancaById(@RequestParam(required = true) ApresentationBanca apresentation){ 
  
-        ApresentationBanca getApresentationBanca =  interfaceBanca.getApresentationBanca(apresentation);
+        ApresentationBanca getApresentationBanca =  (ApresentationBanca) interfaceBanca.getApresentationBanca(apresentation);
 
         if (getApresentationBanca != null) {
         
