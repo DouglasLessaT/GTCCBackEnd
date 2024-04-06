@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.gtcc.gtcc.model.nitriteid.Data;
-import br.gtcc.gtcc.model.nitriteid.Tcc;
+import br.gtcc.gtcc.model.neo4j.Data;
+import br.gtcc.gtcc.model.neo4j.Tcc;
 import br.gtcc.gtcc.services.spec.DataInterface;
 
 @CrossOrigin
@@ -30,7 +30,7 @@ public class DataController {
      @PostMapping("/data")
     public ResponseEntity<Data> createData(@RequestBody Data data) {
         
-        Data createdData = interfaceData.createData(data);
+        Data createdData = (Data) interfaceData.createData(data);
         
         if (createdData != null) { 
             return new ResponseEntity<>(createdData, HttpStatus.CREATED);
@@ -42,7 +42,7 @@ public class DataController {
     @PutMapping("/data/{id}")
     public ResponseEntity<Data> updateData(@PathVariable("id") String id, @RequestBody Data data) {
        
-        Data updatedData = interfaceData.updateData(data);
+        Data updatedData = (Data) interfaceData.updateData(data);
        
         if (updatedData != null) {
        
@@ -60,7 +60,7 @@ public class DataController {
        
         Data DataToDelete = new Data();
        
-        Data deletedData = interfaceData.deleteData(DataToDelete);
+        Data deletedData = (Data) interfaceData.deleteData(DataToDelete);
        
         if (deletedData != null) {
        
@@ -87,7 +87,7 @@ public class DataController {
     
         Data _data = new Data();
         
-        Data foundData = interfaceData.getData(_data);
+        Data foundData = (Data) interfaceData.getData(_data);
         
         if (foundData != null) {
         
