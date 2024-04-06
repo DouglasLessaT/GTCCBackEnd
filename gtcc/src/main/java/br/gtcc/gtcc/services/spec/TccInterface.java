@@ -2,8 +2,6 @@ package br.gtcc.gtcc.services.spec;
 
 import java.util.List;
 
-import br.gtcc.gtcc.model.nitriteid.Tcc;
-
 
 public interface TccInterface<T, E> {
     public T createTcc(T tcc);
