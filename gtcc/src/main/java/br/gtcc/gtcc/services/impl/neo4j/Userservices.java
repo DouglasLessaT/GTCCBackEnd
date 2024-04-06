@@ -8,7 +8,7 @@ import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.services.spec.UserInterface;
 
 @Service
-public class Userservices implements UserInterface<Users, String> {
+public class UserServices implements UserInterface<Users, String> {
 
  @Override
  public Users createUsers(Users users) {
