@@ -2,20 +2,17 @@ package br.gtcc.gtcc.services.spec;
 
 import java.util.List;
 
-import br.gtcc.gtcc.model.nitriteid.ApresentationBanca;
-
-
-public interface ApresentationBancaInterface {
+public interface ApresentationBancaInterface<T , E > {
  
     
-   public  ApresentationBanca createApresentationBanca (ApresentationBanca apresentationBanca);
+   public  T createApresentationBanca ( T apresentationBanca);
    
-   public  ApresentationBanca updateApresentationBanca ( ApresentationBanca apresentationBanca);
+   public  T updateApresentationBanca ( T apresentationBanca);
    
-   public  ApresentationBanca deleteApresentationBanca ( ApresentationBanca apresentationBanca);
+   public  T deleteApresentationBanca ( E apresentationBanca);
    
-   public List< ApresentationBanca> getAllApresentationBanca ();
+   public  T getApresentationBanca ( E apresentationBanca);
    
-   public  ApresentationBanca getApresentationBanca ( ApresentationBanca apresentationBanca);
+   public List< T > getAllApresentationBanca ();
 
 }
