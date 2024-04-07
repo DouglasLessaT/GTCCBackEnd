@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.gtcc.gtcc.model.neo4j.Data;
 import br.gtcc.gtcc.model.neo4j.Tcc;
 import br.gtcc.gtcc.services.spec.DataInterface;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -28,23 +29,27 @@ public class DataController {
     private DataInterface interfaceData;
     
      @PostMapping("/data")
-    public ResponseEntity<Data> createData(@RequestBody Data data) {
+    public ResponseEntity<Object> createData(@RequestBody Data data) {
         
-        Data createdData = (Data) interfaceData.createData(data);
+        Optional<Data> createdData = (Optional<Data>) interfaceData.createData(data);
         
-        if (createdData != null) { 
+        if (createdData.isPresent()) {
+            
             return new ResponseEntity<>(createdData, HttpStatus.CREATED);
+        
         } else {
+        
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        
         }
     }
 
     @PutMapping("/data/{id}")
-    public ResponseEntity<Data> updateData(@PathVariable("id") String id, @RequestBody Data data) {
+    public ResponseEntity<Object> updateData(@PathVariable("id") String id, @RequestBody Data data) {
        
-        Data updatedData = (Data) interfaceData.updateData(data);
+        Optional<Data> updatedData = (Optional<Data>) interfaceData.updateData(data);
        
-        if (updatedData != null) {
+        if (updatedData.isPresent()) {
        
             return new ResponseEntity<>(updatedData, HttpStatus.OK);
        
@@ -56,13 +61,13 @@ public class DataController {
     }
 
     @DeleteMapping("/data/{id}")
-    public ResponseEntity<Void> deleteData(@PathVariable("id") String id, @RequestBody Data data ) {
+    public ResponseEntity<Object> deleteData(@PathVariable("id") String id, @RequestBody Data data ) {
        
         Data DataToDelete = new Data();
        
-        Data deletedData = (Data) interfaceData.deleteData(DataToDelete);
+        Optional<Data> deletedData = (Optional<Data>) interfaceData.deleteData(DataToDelete);
        
-        if (deletedData != null) {
+        if (deletedData.isPresent()) {
        
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
        
@@ -74,22 +79,30 @@ public class DataController {
     }
 
     @GetMapping("/data")
-    public ResponseEntity<List<Data>> getAllDatas() {
+    public ResponseEntity<Object> getAllDatas() {
         
-        List<Data> datas = interfaceData.getAllData();
+        List<Optional<Data>> datas = (List<Optional<Data>>) interfaceData.getAllData();
         
-        return new ResponseEntity<>(datas, HttpStatus.OK);
-    
+        if(datas.isEmpty() != true){
+
+            return new ResponseEntity<>(datas, HttpStatus.OK);
+            
+        }else{
+
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            
+        }
+            
     }
 
     @GetMapping("/data/{id}")
-    public ResponseEntity<Data> getDataById(@PathVariable("id") String id, @RequestBody Data data ) {
+    public ResponseEntity<Object> getDataById(@PathVariable("id") String id, @RequestBody Data data ) {
     
         Data _data = new Data();
         
-        Data foundData = (Data) interfaceData.getData(_data);
+        Optional<Data> foundData = (Optional<Data>) interfaceData.getData(_data);
         
-        if (foundData != null) {
+        if (foundData.isPresent()) {
         
             return new ResponseEntity<>(foundData, HttpStatus.OK);
         
