@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.gtcc.gtcc.model.nitriteid.Tcc;
 import br.gtcc.gtcc.services.spec.TccInterface;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -31,12 +32,12 @@ public class TccController {
     //  private TccService tccService;
  
     @PostMapping("/tcc")
-    public ResponseEntity<Tcc> createTcc(@RequestBody Tcc tcc) {
+    public ResponseEntity<Object> createTcc(@RequestBody Tcc tcc) {
         
         @SuppressWarnings("unchecked")
-        Tcc createdTcc = (Tcc) tccInterface.createTcc(tcc);
+        Optional<Tcc> createdTcc = (Optional<Tcc>) tccInterface.createTcc(tcc);
         
-        if (createdTcc != null) { 
+        if (createdTcc.isPresent()) { 
       
             return new ResponseEntity<>(createdTcc, HttpStatus.CREATED);
       
@@ -48,12 +49,12 @@ public class TccController {
     }
 
     @PutMapping("/tcc/{id}")
-    public ResponseEntity<Tcc> updateTcc(@PathVariable("id") String id, @RequestBody Tcc tcc) {
+    public ResponseEntity<Object> updateTcc(@PathVariable("id") String id, @RequestBody Tcc tcc) {
         // Assume que o ID é passado como string, você pode alterar conforme necessário
         @SuppressWarnings("unchecked")
-        Tcc updatedTcc = (Tcc) tccInterface.updateTCC(tcc);
+        Optional<Tcc> updatedTcc = (Optional<Tcc>) tccInterface.updateTCC(tcc);
       
-        if (updatedTcc != null) {
+        if (updatedTcc.isPresent()) {
       
             return new ResponseEntity<>(updatedTcc, HttpStatus.OK);
       
@@ -65,13 +66,13 @@ public class TccController {
     }
 
     @DeleteMapping("/tcc/{id}")
-    public ResponseEntity<Void> deleteTcc(@PathVariable("id") String id) {
+    public ResponseEntity<Object> deleteTcc(@PathVariable("id") String id) {
         // Assume que o ID é passado como string, você pode alterar conforme necessário
         Tcc tccToDelete = new Tcc(); // Você precisa criar um objeto Tcc com o ID fornecido
         @SuppressWarnings("unchecked")
-        Tcc deletedTcc = (Tcc) tccInterface.deleteTCC(tccToDelete);
+        Optional<Tcc> deletedTcc = (Optional<Tcc>) tccInterface.deleteTCC(tccToDelete);
     
-        if (deletedTcc != null) {
+        if (deletedTcc.isPresent()) {
     
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     
@@ -83,22 +84,31 @@ public class TccController {
     }
 
     @GetMapping("/tccs")
-    public ResponseEntity<List<Tcc>> getAllTccs() {
+    public ResponseEntity<Object> getAllTccs() {
     
         @SuppressWarnings("unchecked")
-        List<Tcc> tccs = tccInterface.getAllTCC();
+        List<Optional<Tcc>> tccs = (List<Optional<Tcc>>) tccInterface.getAllTCC();
     
-        return new ResponseEntity<>(tccs, HttpStatus.OK);
+        if(tccs.isEmpty() != true){
+      
+            return new ResponseEntity<>(tccs, HttpStatus.OK);
+            
+        }else{
+        
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            
+        }
+      
     }
 
     @GetMapping("/tcc/{id}")
-    public ResponseEntity<Tcc> getTccById(@PathVariable("id") String id) {
+    public ResponseEntity<Object> getTccById(@PathVariable("id") String id) {
         // Assume que o ID é passado como string, você pode alterar conforme necessário
         Tcc tcc = new Tcc(); // Você precisa criar um objeto Tcc com o ID fornecido
         @SuppressWarnings("unchecked")
-        Tcc foundTcc = (Tcc) tccInterface.getTCC(tcc);
+        Optional<Tcc> foundTcc = (Optional<Tcc>) tccInterface.getTCC(tcc);
 
-        if (foundTcc != null) {
+        if (foundTcc.isPresent()) {
         
             return new ResponseEntity<>(foundTcc, HttpStatus.OK);
         
