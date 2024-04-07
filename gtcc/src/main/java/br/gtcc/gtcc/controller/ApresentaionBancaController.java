@@ -20,6 +20,7 @@ import br.gtcc.gtcc.services.spec.ApresentationBancaInterface;
 
 
 import java.util.List;// pode usar para apresentaçao
+import java.util.Optional;
 
 
 @CrossOrigin
@@ -31,23 +32,27 @@ public class ApresentaionBancaController {
     private  ApresentationBancaInterface interfaceBanca;
 
  @PostMapping("/apresentacao")
-   public ResponseEntity<ApresentationBanca> createApresentantion(@RequestBody ApresentationBanca apresentation) {
+   public ResponseEntity<Object> createApresentantion(@RequestBody ApresentationBanca apresentation) {
        
-        ApresentationBanca  createdApresentationBanca  = (ApresentationBanca) interfaceBanca.createApresentationBanca(apresentation);
+        Optional<ApresentationBanca>  createdApresentationBanca  = (Optional<ApresentationBanca>) interfaceBanca.createApresentationBanca(apresentation);
        
-       if (  createdApresentationBanca  != null) { 
+       if (  createdApresentationBanca.isPresent()) { 
+           
            return new ResponseEntity<>(  createdApresentationBanca , HttpStatus.CREATED);
+       
        } else {
+       
            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+       
        }
    }
 
    @DeleteMapping("/apresentacao/{id}")
-    public ResponseEntity<ApresentationBanca> deleteApresentationBanca(@RequestParam(required = true) ApresentationBanca apresentation){
+    public ResponseEntity<Object> deleteApresentationBanca(@RequestParam(required = true) ApresentationBanca apresentation){
     
-        ApresentationBanca deletedApresentationBanca = (ApresentationBanca) interfaceBanca.deleteApresentationBanca(apresentation);  
+        Optional<ApresentationBanca> deletedApresentationBanca = (Optional<ApresentationBanca>) interfaceBanca.deleteApresentationBanca(apresentation);  
 
-        if (deletedApresentationBanca != null) {
+        if (deletedApresentationBanca.isPresent()) {
         
             return new ResponseEntity<>(deletedApresentationBanca, HttpStatus.OK);
         
@@ -60,11 +65,11 @@ public class ApresentaionBancaController {
     }
 
     @PutMapping("/apresentacao/{id}")
-    public ResponseEntity<ApresentationBanca> updateApresentationBanca(@RequestParam(required = true) ApresentationBanca apresentation){ 
+    public ResponseEntity<Object> updateApresentationBanca(@RequestParam(required = true) ApresentationBanca apresentation){ 
  
-        ApresentationBanca updatedApresentationBanca =  (ApresentationBanca) interfaceBanca.updateApresentationBanca(apresentation);
+       Optional<ApresentationBanca> updatedApresentationBanca =  (Optional<ApresentationBanca>) interfaceBanca.updateApresentationBanca(apresentation);
 
-        if (updatedApresentationBanca != null) {
+        if (updatedApresentationBanca.isPresent()) {
         
             return new ResponseEntity<>( updatedApresentationBanca, HttpStatus.OK);
         
@@ -77,11 +82,11 @@ public class ApresentaionBancaController {
     }
 
     @GetMapping("/apresentacao/{id}")
-    public ResponseEntity<ApresentationBanca> getApresentationBancaById(@RequestParam(required = true) ApresentationBanca apresentation){ 
+    public ResponseEntity<Object> getApresentationBancaById(@RequestParam(required = true) ApresentationBanca apresentation){ 
  
-        ApresentationBanca getApresentationBanca =  (ApresentationBanca) interfaceBanca.getApresentationBanca(apresentation);
+        Optional<ApresentationBanca> getApresentationBanca =  (Optional<ApresentationBanca>) interfaceBanca.getApresentationBanca(apresentation);
 
-        if (getApresentationBanca != null) {
+        if (getApresentationBanca.isPresent()) {
         
             return new ResponseEntity<>( getApresentationBanca, HttpStatus.OK);
         
@@ -95,11 +100,11 @@ public class ApresentaionBancaController {
 
     
     @GetMapping("/apresentacao/{id}")
-    public ResponseEntity<List<ApresentationBanca>> getAllApresentationBanca(){ 
+    public ResponseEntity<Object> getAllApresentationBanca(){ 
  
-        List<ApresentationBanca> getApresentationBancaList =  interfaceBanca.getAllApresentationBanca();
+        List<Optional<ApresentationBanca>> getApresentationBancaList = (List<Optional<ApresentationBanca>>) interfaceBanca.getAllApresentationBanca();
 
-        if (getApresentationBancaList != null) {
+        if (getApresentationBancaList.isEmpty()) {
         
             return new ResponseEntity<>( getApresentationBancaList, HttpStatus.OK);
         
