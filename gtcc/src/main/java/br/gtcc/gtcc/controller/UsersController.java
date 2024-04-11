@@ -4,12 +4,9 @@
  */
 package br.gtcc.gtcc.controller;
 
-import br.gtcc.gtcc.model.nitriteid.Users;
+import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.controller.UsersController;
 
-import br.gtcc.gtcc.services.impl.nitritedb.UserServices;
-
-import org.dizitart.no2.collection.NitriteId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
