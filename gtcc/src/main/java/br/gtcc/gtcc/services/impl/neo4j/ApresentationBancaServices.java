@@ -6,8 +6,9 @@ import br.gtcc.gtcc.model.neo4j.repository.ApresentationBancaRepository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-
+@Service
 public class ApresentationBancaServices implements ApresentationBancaInterface<ApresentationBanca, String>{
 
     @Autowired

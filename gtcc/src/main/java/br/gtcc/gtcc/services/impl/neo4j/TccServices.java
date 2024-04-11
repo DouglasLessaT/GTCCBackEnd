@@ -7,7 +7,9 @@ import br.gtcc.gtcc.model.neo4j.repository.TccRepository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TccServices implements TccInterface<Tcc, String>{
 
     @Autowired
