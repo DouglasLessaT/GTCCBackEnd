@@ -45,6 +45,6 @@ public class DBConfig {
         return org.neo4j.cypherdsl.core.renderer.Configuration
         .newConfig()
         .withDialect(Dialect.NEO4J_5).build();
-     }
+    }
 
 }
