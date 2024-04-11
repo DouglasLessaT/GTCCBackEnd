@@ -5,8 +5,13 @@ import br.gtcc.gtcc.model.neo4j.ApresentationBanca;
 import br.gtcc.gtcc.model.neo4j.repository.ApresentationBancaRepository;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 public class ApresentationBancaServices implements ApresentationBancaInterface<ApresentationBanca, String>{
+
+    @Autowired
+    public ApresentationBancaRepository repository;
 
     @Override
     public ApresentationBanca createApresentationBanca(ApresentationBanca apresentationBanca) {
