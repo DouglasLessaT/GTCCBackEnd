@@ -6,9 +6,14 @@ import org.springframework.stereotype.Service;
 
 import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.services.spec.UserInterface;
+import org.springframework.beans.factory.annotation.Autowired;
+import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
 
 @Service
 public class UserServices implements UserInterface<Users, String> {
+
+ @Autowired
+ public UsersRepository repository;
 
  @Override
  public Users createUsers(Users users) {
