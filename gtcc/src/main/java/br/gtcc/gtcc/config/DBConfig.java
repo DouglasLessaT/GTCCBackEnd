@@ -4,17 +4,6 @@
  */
 package br.gtcc.gtcc.config;
 
-import br.gtcc.gtcc.model.nitriteid.ApresentationBanca;
-import br.gtcc.gtcc.model.nitriteid.Data;
-import br.gtcc.gtcc.model.nitriteid.Tcc;
-import br.gtcc.gtcc.model.nitriteid.Users;
-import br.gtcc.gtcc.services.impl.nitritedb.UserServices;
-
-import org.dizitart.no2.Nitrite;
-import org.dizitart.no2.common.mapper.JacksonMapperModule;
-import org.dizitart.no2.mvstore.MVStoreModule;
-import org.dizitart.no2.repository.ObjectRepository;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
