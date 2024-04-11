@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.gtcc.gtcc.model.nitriteid.ApresentationBanca;
+import br.gtcc.gtcc.model.neo4j.ApresentationBanca;
 import br.gtcc.gtcc.services.spec.ApresentationBancaInterface;
 
 
