@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.gtcc.gtcc.model.neo4j.Data;
-import br.gtcc.gtcc.model.neo4j.Tcc;
 import br.gtcc.gtcc.services.spec.DataInterface;
 import java.util.Optional;
 
