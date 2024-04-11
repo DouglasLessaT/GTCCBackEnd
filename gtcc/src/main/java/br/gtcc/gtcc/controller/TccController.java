@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.gtcc.gtcc.model.nitriteid.Tcc;
+import br.gtcc.gtcc.model.neo4j.Tcc;
 import br.gtcc.gtcc.services.spec.TccInterface;
 import java.util.Optional;
 
