@@ -6,10 +6,12 @@ import br.gtcc.gtcc.model.neo4j.repository.DataRepository;
 
 import java.util.List;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class DataServices implements DataInterface<Data, String>{
 
+   @Autowired
+   public DataRepository repository;
    
    @Override
    public  Data   createData(Data data){
