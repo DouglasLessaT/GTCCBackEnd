@@ -39,10 +39,6 @@ import org.neo4j.cypherdsl.core.renderer.Dialect;
 @EnableReactiveNeo4jRepositories
 public class DBConfig {
     
-    // @Bean
-    // public void dataBaseH2(){
-    // }
-    
     //neo4j DB
     @Bean("neo4j")
     org.neo4j.cypherdsl.core.renderer.Configuration cypherDslConfiguration() {
@@ -51,55 +47,4 @@ public class DBConfig {
         .withDialect(Dialect.NEO4J_5).build();
      }
 
-     //nitrite
-    @Bean("nitrite")
-    public Nitrite dataBase(){
-        MVStoreModule storeModule =MVStoreModule.withConfig()
-                .filePath("baseDados.db")
-                .build();
-      
-        Nitrite db = Nitrite.builder()
-                .loadModule(storeModule)
-                .loadModule(new JacksonMapperModule())
-                .openOrCreate("roo", "gtcc");
-                
-        return db;
-    }
-    
-    
-    @Bean("repositorioUsers")
-    @DependsOn("nitrite")
-    public ObjectRepository<Users> repositoryUsers() {
-        
-        return dataBase().getRepository(Users.class);
-    
-    }
-
-    @Bean
-    @DependsOn("repositorioUsers")
-    public UserServices userService(){
-        return new UserServices();
-    }
-
-    @Bean 
-    public ObjectRepository<Tcc> repositoryTCC() {
-        
-        return dataBase().getRepository(Tcc.class);
-    
-    }
-    
-    @Bean 
-    public ObjectRepository<Data> repositoryData() {
-        
-        return dataBase().getRepository(Data.class);
-    
-    }
-    
-    @Bean 
-    public ObjectRepository<ApresentationBanca> repositoryApresentation() {
-        
-        return dataBase().getRepository(ApresentationBanca.class);
-    
-    }
-  
 }
