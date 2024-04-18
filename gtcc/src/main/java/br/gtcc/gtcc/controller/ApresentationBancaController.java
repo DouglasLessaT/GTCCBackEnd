@@ -99,7 +99,7 @@ public class ApresentationBancaController {
     }
 
     
-    @GetMapping("/apresentacao/{id}")
+    @GetMapping("/apresentacoes")
     public ResponseEntity<Object> getAllApresentationBanca(){ 
  
         List<Optional<ApresentationBanca>> getApresentationBancaList = (List<Optional<ApresentationBanca>>) interfaceBanca.getAllApresentationBanca();
