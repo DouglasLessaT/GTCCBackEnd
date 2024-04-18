@@ -24,7 +24,7 @@ public class DocConfig {
     @Bean
     public OpenAPI customOpenAPI(){
         return new OpenAPI().info(new Info()
-                .title("API em NoSQL Nitrite GTCC")
+                .title("API em NoSQL Neo4j GTCC")
                 .version("0.0.1")
                 .contact(new Contact().email("vix.bay.group@gmail.com")
                 .name("Arthur, Alessandro Santos, Hugo Alves, Douglas Lessa, Pedro Pompermayer, Samuel Paviotti"))
