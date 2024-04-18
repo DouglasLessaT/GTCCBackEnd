@@ -5,7 +5,6 @@
 package br.gtcc.gtcc.controller;
 
 import br.gtcc.gtcc.model.neo4j.Users;
-import br.gtcc.gtcc.controller.UsersController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
