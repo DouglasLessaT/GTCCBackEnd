@@ -26,9 +26,9 @@ public class ApresentationBanca {
  private String id;
  private String idTcc;
  @Relationship(type = "MEMBER_OF", direction = Direction.OUTGOING)
- private Member member1;
+ private Users member1;
  @Relationship(type = "MEMBER_OF", direction = Direction.OUTGOING)
- private Member member2;
+ private Users member2;
  @Relationship(type = "ON_DATE", direction = Direction.OUTGOING)
- private Date date;
+ private Data date;
 }
