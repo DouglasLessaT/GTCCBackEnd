@@ -34,3 +34,6 @@ build/
 
 ### Banco de Dados ###
 *.db
+
+## Zip files ##
+gtcc.zip
