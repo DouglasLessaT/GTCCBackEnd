@@ -19,7 +19,8 @@ import lombok.Setter;
 @Getter
 public class Data {
 
- @Id@GeneratedValue
+ @Id
+ @GeneratedValue
  private String id;
 
  @NonNull
