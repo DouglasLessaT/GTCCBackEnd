@@ -19,3 +19,9 @@ Adicionado arquivos das services e repositorys
 Services: Implementei as interfaces para alocar a lógica de negócio e adicionei os Generics dentro das interfaces restantes 
 Controllers: Adicionei os a classe Optional dentro do Contorller Users para tratar melhor o que o banco nos retorna. Não apliquei ainda para as controllers restantes.    
 Consertei alugns conlitos restantes dentro do código, envolvendo o tipo de parametro dentro dos métodos das clases nas services, interfaces e controllers
+
+# Resolvendo conflitos e executando o projeto -> 18/04/2024
+Executei o porjeto e obtive erro, resolvi todas as dependencias com o comando mvn clean install -U, e removi o relacionamento que existe na classe users, 
+mudei de lugar as configurações do banco para a classe main do projeto, e modifiqui o POM.XML adicei as versões das dependencias, e alterei a rota ApresentantionControllers o metodo 
+getAllApresentantionsBancas tinha uma rota mapeada que ja existia, então alterei. 
+E removi libs restantes do nitriteDB que causavam problemas no projeto.
