@@ -5,16 +5,12 @@
 package br.gtcc.gtcc.model.neo4j;
 
 import java.time.LocalDateTime;
-import org.dizitart.no2.collection.NitriteId;
-import org.dizitart.no2.index.IndexType;
-import org.dizitart.no2.repository.annotations.Entity;
-import org.dizitart.no2.repository.annotations.Id;
-import org.dizitart.no2.repository.annotations.Index;
-import org.dizitart.no2.repository.annotations.Indices;
 import org.springframework.data.neo4j.core.schema.Node;
 import lombok.NonNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.Id;
 
 /**
  *
@@ -29,6 +25,7 @@ import lombok.NoArgsConstructor;
  public class Tcc {
     
     @Id
+    @GeneratedValue
     private String Id;                               // Id do Tcc
    
     @NonNull
