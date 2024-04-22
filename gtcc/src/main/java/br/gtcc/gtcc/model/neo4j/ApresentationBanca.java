@@ -1,8 +1,5 @@
 package br.gtcc.gtcc.model.neo4j;
 
-import java.lang.reflect.Member;
-import java.util.Date;
-
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -34,5 +31,5 @@ public class ApresentationBanca {
  private Users member2;
  
  @Relationship(type = "ON_DATE", direction = Direction.OUTGOING)        // Relacionamento com a data em que a apresentação esta sendo marcada 
- private Data date;
+ private br.gtcc.gtcc.model.neo4j.Data date;
 }
