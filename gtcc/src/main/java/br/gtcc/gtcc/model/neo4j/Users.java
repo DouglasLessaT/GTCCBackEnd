@@ -18,28 +18,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Node
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 public class Users {
 
     @Id
     @GeneratedValue
-    private String id;
+    private String id;                                  // id elementId do neo4j
 
     @NonNull
-    private String name;
+    private String name;                                // nome do usuário
 
     @NonNull
-    private String email;
+    private String email;                               // email do usuário    
 
     //@Relationship(type = "HAS_USER_TYPE", direction = Direction.OUTGOING)
-    private Set<UserType> userType = new HashSet<>();
+    @NonNull
+    private Set<UserType> userType = new HashSet<>();  // Tipo de usuário 
 
     @NonNull
-    private Date birthdate;
+    private Date birthdate;                            // Data de aniversário
 
     @NonNull
-    private int cellphone;
+    private String cellphone;                          // Telefone do usuário 
 
 }

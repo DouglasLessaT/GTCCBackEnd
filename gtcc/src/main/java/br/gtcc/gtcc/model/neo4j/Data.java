@@ -8,22 +8,19 @@ import org.springframework.data.neo4j.core.schema.Node;
 
 import io.micrometer.common.lang.NonNull;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Node
+@lombok.Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
-@Getter
 public class Data {
 
  @Id
  @GeneratedValue
- private String id;
+ private String id;                 //elementId  de la clase en Neo4J para a data da apresentação
 
  @NonNull
- private LocalDateTime date;
+ private LocalDateTime date;        // Propriedade date que  guarda a data e hora em que foi armazenado o apresentação
 
 }

@@ -7,6 +7,7 @@ package br.gtcc.gtcc.model.neo4j;
 import java.time.LocalDateTime;
 import org.springframework.data.neo4j.core.schema.Node;
 import lombok.NonNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
@@ -19,9 +20,11 @@ import org.springframework.data.neo4j.core.schema.Id;
  * Entidade que representa o TCC e a Banca 
  * Essa esntidade tem relação com a entidae usuário por meio de Id's
  */
-@Data
-@NoArgsConstructor
-@Node("TCC")
+
+ @Node
+ @Data
+ @NoArgsConstructor
+ @AllArgsConstructor
  public class Tcc {
     
     @Id
