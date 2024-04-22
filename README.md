@@ -24,4 +24,7 @@ Consertei alugns conlitos restantes dentro do código, envolvendo o tipo de para
 Executei o porjeto e obtive erro, resolvi todas as dependencias com o comando mvn clean install -U, e removi o relacionamento que existe na classe users, 
 mudei de lugar as configurações do banco para a classe main do projeto, e modifiqui o POM.XML adicei as versões das dependencias, e alterei a rota ApresentantionControllers o metodo 
 getAllApresentantionsBancas tinha uma rota mapeada que ja existia, então alterei. 
-E removi libs restantes do nitriteDB que causavam problemas no projeto.
+E removi libs restantes do nitriteDB que causavam problemas no projeto.]
+
+# Removendo a Dependencias Spring Data Rest
+Comentando a dependencia do POM.xml.
