@@ -9,6 +9,5 @@ import java.util.Optional;
 
 
 public interface DataRepository extends Neo4jRepository<Data, String> {
- Data findByName(String name);
  Optional<Data> findById(String id);
 }
