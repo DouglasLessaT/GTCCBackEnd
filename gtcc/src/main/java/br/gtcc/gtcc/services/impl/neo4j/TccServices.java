@@ -22,8 +22,8 @@ public class TccServices implements TccInterface<Tcc, String> {
     private Tcc getById(String id) {
         return tccRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Moradia não encontrada para o ID fornecido: " + id));
-}
 
+    @Override
     public Tcc createTcc(Tcc tcc) {
         if (tcc != null && tcc.getId() == null) {
             return tccRepository.save(tcc);
@@ -32,10 +32,11 @@ public class TccServices implements TccInterface<Tcc, String> {
         }
     }
 
+    @Override
     public Tcc deleteTCC(String id) {
         Tcc delTcc = this.getById(id);
         if (delTcc != null) {
-           tccRepository.delete(delTcc);
+            tccRepository.delete(delTcc);
         } else {
             throw new IllegalArgumentException("O Tcc fornecido é inválido ou já possui um ID.");
         }
@@ -44,8 +45,7 @@ public class TccServices implements TccInterface<Tcc, String> {
 
     @Override
     public List<Tcc> getAllTCC() {
-        // TODO Auto-generated method stub
-        return null;
+        return tccRepository.findAll();
     }
 
     @Override
@@ -59,5 +59,4 @@ public class TccServices implements TccInterface<Tcc, String> {
         // TODO Auto-generated method stub
         return null;
     }
-
 }
