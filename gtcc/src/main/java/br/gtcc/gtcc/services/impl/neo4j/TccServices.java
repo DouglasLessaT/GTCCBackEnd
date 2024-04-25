@@ -10,20 +10,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TccServices implements TccInterface<Tcc, String>{
+public class TccServices implements TccInterface<Tcc, String> {
 
     @Autowired
-    public TccRepository repository;
+    public final TccRepository tccRepository;
 
-    @Override
-    public Tcc createTcc(Tcc tcc) {
-        // TODO Auto-generated method stub
-        return null;
+    public TccServices(TccRepository tccRepository) {
+        this.tccRepository = tccRepository;
     }
 
-    @Override
-    public Tcc deleteTCC(String id) { 
-        // TODO Auto-generated method stub
+    private Tcc getById(String id) {
+        return tccRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("Moradia não encontrada para o ID fornecido: " + id));
+}
+
+    public Tcc createTcc(Tcc tcc) {
+        if (tcc != null && tcc.getId() == null) {
+            return tccRepository.save(tcc);
+        } else {
+            throw new IllegalArgumentException("O Tcc fornecido é inválido ou já possui um ID.");
+        }
+    }
+
+    public Tcc deleteTCC(String id) {
+        Tcc delTcc = this.getById(id);
+        if (delTcc != null) {
+           tccRepository.delete(delTcc);
+        } else {
+            throw new IllegalArgumentException("O Tcc fornecido é inválido ou já possui um ID.");
+        }
         return null;
     }
 
@@ -45,5 +60,4 @@ public class TccServices implements TccInterface<Tcc, String>{
         return null;
     }
 
-    
 }
