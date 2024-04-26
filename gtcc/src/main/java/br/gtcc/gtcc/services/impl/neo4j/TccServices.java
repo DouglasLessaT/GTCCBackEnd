@@ -21,8 +21,9 @@ public class TccServices implements TccInterface<Tcc, String> {
 
     private Tcc getById(String id) {
         return tccRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Moradia não encontrada para o ID fornecido: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Moradia não encontrada para o ID fornecido: " + id));
     }
+
     @Override
     public Tcc createTcc(Tcc tcc) {
         if (tcc != null && tcc.getId() == null) {
@@ -50,13 +51,26 @@ public class TccServices implements TccInterface<Tcc, String> {
 
     @Override
     public Tcc getTCC(String nameString) {
-        
-        return null;
+        return tccRepository.findByName(nameString);
     }
 
     @Override
     public Tcc updateTCC(Tcc tcc) {
-        // TODO Auto-generated method stub
-        return null;
+        if (tcc != null && tcc.getId() != null) {
+            Tcc existingTcc = getById(tcc.getId());
+            if (existingTcc != null) {
+                existingTcc.setTitle(tcc.getTitle());
+                existingTcc.setTheme(tcc.getTheme());
+                existingTcc.setCurse(tcc.getCurse());
+                existingTcc.setDateOfApresentation(tcc.getDateOfApresentation());
+                // Aqui você pode adicionar mais campos a serem atualizados, se necessário
+                
+                return tccRepository.save(existingTcc);
+            } else {
+                throw new IllegalArgumentException("Tcc não encontrado para o ID fornecido: " + tcc.getId());
+            }
+        } else {
+            throw new IllegalArgumentException("O Tcc fornecido é inválido ou não possui um ID.");
+        }
     }
 }
