@@ -3,11 +3,13 @@ package br.gtcc.gtcc.services.impl.neo4j;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.services.spec.UserInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
+
 
 @Service
 public class UserServices implements UserInterface<Users, String> {
@@ -88,8 +90,14 @@ public class UserServices implements UserInterface<Users, String> {
 
  @Override
  public Users getUsers(String id ) {
-  // TODO Auto-generated method stub
-  throw new UnsupportedOperationException("Unimplemented method 'getUsers'");
+  
+    if(id != " " || id != null){
+
+       return repository.existsById(id)==true? repository.findById(id).get() : null;
+    }
+
+    return null;
+    
  }
  
 }
