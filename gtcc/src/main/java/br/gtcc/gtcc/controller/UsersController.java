@@ -78,20 +78,18 @@ public class UsersController {
     }
     
     @PutMapping("/usuario/{id}")
-    public ResponseEntity<Object> updateUsers(@RequestParam(required = true) Users users){
+    public ResponseEntity<Object> updateUsers(@RequestBody(required = true) Users users, @PathVariable("id") String id){
         
-        //Users updatedUser =  service.updateUsers(users);
- 
         @SuppressWarnings("unchecked")
-        Optional<Users> updatedUser = (Optional<Users>)  usersInterface.updateUsers(users);
+        Optional<Users> updatedUser = Optional.ofNullable((Users)  usersInterface.updateUsers(users , id));
 
         if (updatedUser.isPresent()) {
         
-            return new ResponseEntity<>( updatedUser, HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.OK).body("Usuario alterado com sucesso");
         
         } else {
         
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado");
         
         } 
     
