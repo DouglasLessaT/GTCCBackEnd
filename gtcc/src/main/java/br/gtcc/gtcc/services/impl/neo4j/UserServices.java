@@ -17,8 +17,18 @@ public class UserServices implements UserInterface<Users, String> {
 
  @Override
  public Users createUsers(Users users) {
-  // TODO Auto-generated method stub
-  throw new UnsupportedOperationException("Unimplemented method 'createUsers'");
+    
+    if(users.getId() == null || users.getId() == "" || users.getId() == " "){
+        
+        return  this.repository.save(users);
+    
+    }
+    if( this.repository.existsById(users.getId()) != true){
+
+        return this.repository.save(users);
+
+    }
+    return  null;
  }
 
  @Override
