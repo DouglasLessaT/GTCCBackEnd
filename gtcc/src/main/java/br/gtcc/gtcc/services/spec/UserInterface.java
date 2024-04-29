@@ -14,7 +14,7 @@ public interface UserInterface<T, E> {
     
    public T createUsers(T users);
    
-   public T updateUsers(T users);
+   public T updateUsers(T users, E id);
    
    public T deleteUsers(E id);
    
