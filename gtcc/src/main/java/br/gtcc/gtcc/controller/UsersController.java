@@ -44,15 +44,15 @@ public class UsersController {
     public ResponseEntity<Object> createUser(@RequestBody(required = true) Users users){
 
         @SuppressWarnings("unchecked")
-        Optional<Users> createdUsers = (Optional<Users>) usersInterface.createUsers(users);
-            
+        Optional<Users> createdUsers = Optional.ofNullable((Users) usersInterface.createUsers(users));
+        
         if (createdUsers.isPresent()) {
         
-            return new ResponseEntity<>(createdUsers, HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Usuário criado com sucesso");
         
         } else {
         
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado"); 
         
         } 
     }
