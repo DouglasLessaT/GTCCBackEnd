@@ -114,21 +114,19 @@ public class UsersController {
     }
     
     @GetMapping("/usuario/{id}")
-    public ResponseEntity<Object> getUser(@PathVariable Long id){
+    public ResponseEntity<Object> getUser(@PathVariable String id){
         
-        //Users foundUsers = service.getUsers(user);
-
         @SuppressWarnings("unchecked")
-        Optional<Users> foundUsers = (Optional<Users>) usersInterface.getUsers(id);
+        Optional<Users> foundUsers = Optional.ofNullable( (Users) usersInterface.getUsers(id));
         
 
         if (foundUsers.isPresent()) {
         
-            return new ResponseEntity<>(foundUsers, HttpStatus.OK);
+            return new ResponseEntity<>(foundUsers, HttpStatus.FOUND);
         
         } else {
         
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
         
         }
  
