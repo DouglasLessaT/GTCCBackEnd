@@ -35,7 +35,7 @@ public class TccController {
     public ResponseEntity<Object> createTcc(@RequestBody Tcc tcc) {
         
         @SuppressWarnings("unchecked")
-        Optional<Tcc> createdTcc = (Optional<Tcc>) tccInterface.createTcc(tcc);
+        Optional<Tcc> createdTcc = Optional.ofNullable((Tcc) tccInterface.createTcc(tcc));
         
         if (createdTcc.isPresent()) { 
       
@@ -103,10 +103,10 @@ public class TccController {
 
     @GetMapping("/tcc/{id}")
     public ResponseEntity<Object> getTccById(@PathVariable("id") String id) {
-        // Assume que o ID é passado como string, você pode alterar conforme necessário
-        Tcc tcc = new Tcc(); // Você precisa criar um objeto Tcc com o ID fornecido
+
         @SuppressWarnings("unchecked")
-        Optional<Tcc> foundTcc = (Optional<Tcc>) tccInterface.getTCC(tcc);
+
+        Optional<Tcc> foundTcc = Optional.ofNullable( (Tcc) tccInterface.getTCC(id) ) ;
 
         if (foundTcc.isPresent()) {
         
