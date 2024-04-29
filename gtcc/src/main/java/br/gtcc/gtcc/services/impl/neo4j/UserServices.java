@@ -57,8 +57,20 @@ public class UserServices implements UserInterface<Users, String> {
 
  @Override
  public Users deleteUsers(String id) {
-  // TODO Auto-generated method stub
-  throw new UnsupportedOperationException("Unimplemented method 'deleteUsers'");
+
+    if(id != "" || id != null || id != " ") {
+
+        Users u = this.getUsers(id);
+        if( u != null ){
+
+            this.repository.deleteById(id);
+            return u; 
+
+        }
+    }
+
+    return null;
+
  }
 
  @Override
