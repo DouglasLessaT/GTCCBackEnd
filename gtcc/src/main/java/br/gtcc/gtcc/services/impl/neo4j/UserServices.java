@@ -17,8 +17,7 @@ public class UserServices implements UserInterface<Users, String> {
 
  @Override
  public Users createUsers(Users users) {
-  // TODO Auto-generated method stub
-  throw new UnsupportedOperationException("Unimplemented method 'createUsers'");
+  return repository.save(users);
  }
 
  @Override
@@ -35,14 +34,12 @@ public class UserServices implements UserInterface<Users, String> {
 
  @Override
  public List<Users> getAllUsers() {
-  // TODO Auto-generated method stub
-  throw new UnsupportedOperationException("Unimplemented method 'getAllUsers'");
+  return repository.findAll();
  }
 
  @Override
  public Users getUsers(String id ) {
-  // TODO Auto-generated method stub
-  throw new UnsupportedOperationException("Unimplemented method 'getUsers'");
+  return repository.findById(id).get();
  }
  
 }

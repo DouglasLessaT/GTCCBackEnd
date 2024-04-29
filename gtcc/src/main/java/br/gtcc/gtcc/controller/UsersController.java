@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,16 +44,15 @@ public class UsersController {
     // UserServices service;
     
     @PostMapping("/usuario")
-    public ResponseEntity<Object> createUser(@RequestParam(required = true) Users users){
+    public ResponseEntity<Object> createUser(@RequestBody(required = true) Users users){
 
         //Users createdUsers = service.createUsers(users);  
 //        @SuppressWarnings("unchecked")
 //        Users createdUsers = (Users) usersInterface.createUsers(users);
     
-        @SuppressWarnings("unchecked")
-        Optional<Users> createdUsers = (Optional<Users>) usersInterface.createUsers(users);
+        Users createdUsers = (Users) usersInterface.createUsers(users);
             
-        if (createdUsers.isPresent()) {
+        if (createdUsers != null) {
         
             return new ResponseEntity<>(createdUsers, HttpStatus.OK);
         
