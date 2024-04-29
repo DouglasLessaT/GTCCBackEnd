@@ -63,15 +63,15 @@ public class UsersController {
         //Users deletedUsers =  service.deleteUsers(users);
     
         @SuppressWarnings("unchecked")
-        Optional<Users> deletedUsers = (Optional<Users>)  usersInterface.deleteUsers(id);  
+        Optional<Users> deletedUsers = Optional.ofNullable((Users) usersInterface.deleteUsers(id));  
 
         if (deletedUsers.isPresent()) {
-        
-            return new ResponseEntity<>(deletedUsers, HttpStatus.OK);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("Usuário deletado com sucesso");
         
         } else {
         
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuáio não encontrado");
         
         } 
 
