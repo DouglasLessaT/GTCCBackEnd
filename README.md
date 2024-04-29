@@ -28,3 +28,6 @@ E removi libs restantes do nitriteDB que causavam problemas no projeto.]
 
 # Removendo a Dependencias Spring Data Rest
 Comentando a dependencia do POM.xml.
+
+# Criando minha versão e aplicando boas práticas 
+Refatorei a classe TccServices e implementando a classe UsersServices e adicionando tratamento de erros dentro da controller de usuário
