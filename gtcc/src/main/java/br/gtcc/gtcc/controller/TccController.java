@@ -1,6 +1,7 @@
 package br.gtcc.gtcc.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,105 +18,83 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.gtcc.gtcc.model.neo4j.Tcc;
 import br.gtcc.gtcc.services.spec.TccInterface;
-import java.util.Optional;
 
 @CrossOrigin
 @RestController
 @RequestMapping("coordenacao/tcc/v1")
 public class TccController {
-  
-    @SuppressWarnings("rawtypes")
-    @Autowired
-    private TccInterface tccInterface; 
 
-    //  @Autowired
-    //  private TccService tccService;
- 
+    @Autowired
+    private TccInterface<Tcc, String> tccInterface;
+
     @PostMapping("/tcc")
     public ResponseEntity<Object> createTcc(@RequestBody Tcc tcc) {
-        
-        @SuppressWarnings("unchecked")
-        Optional<Tcc> createdTcc = (Optional<Tcc>) tccInterface.createTcc(tcc);
-        
-        if (createdTcc.isPresent()) { 
-      
-            return new ResponseEntity<>(createdTcc, HttpStatus.CREATED);
-      
-        } else {
-      
+        try {
+            Tcc createdTcc = tccInterface.createTcc(tcc);
+            if (createdTcc != null) {
+                return new ResponseEntity<>(createdTcc, HttpStatus.CREATED);
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-      
         }
     }
 
     @PutMapping("/tcc/{id}")
     public ResponseEntity<Object> updateTcc(@PathVariable("id") String id, @RequestBody Tcc tcc) {
-        // Assume que o ID é passado como string, você pode alterar conforme necessário
-        @SuppressWarnings("unchecked")
-        Optional<Tcc> updatedTcc = (Optional<Tcc>) tccInterface.updateTCC(tcc);
-      
-        if (updatedTcc.isPresent()) {
-      
-            return new ResponseEntity<>(updatedTcc, HttpStatus.OK);
-      
-        } else {
-      
+        try {
+            tcc.setId(id); // Define o ID do TCC com base no caminho da URL
+            Tcc updatedTcc = tccInterface.updateTCC(tcc);
+            if (updatedTcc != null) {
+                return new ResponseEntity<>(updatedTcc, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-      
         }
     }
 
     @DeleteMapping("/tcc/{id}")
     public ResponseEntity<Object> deleteTcc(@PathVariable("id") String id) {
-        // Assume que o ID é passado como string, você pode alterar conforme necessário
-        Tcc tccToDelete = new Tcc(); // Você precisa criar um objeto Tcc com o ID fornecido
-        @SuppressWarnings("unchecked")
-        Optional<Tcc> deletedTcc = (Optional<Tcc>) tccInterface.deleteTCC(tccToDelete);
-    
-        if (deletedTcc.isPresent()) {
-    
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    
-        } else {
-    
+        try {
+            Tcc deletedTcc = tccInterface.deleteTCC(id);
+            if (deletedTcc != null) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    
         }
     }
 
     @GetMapping("/tccs")
     public ResponseEntity<Object> getAllTccs() {
-    
-        @SuppressWarnings("unchecked")
-        List<Optional<Tcc>> tccs = (List<Optional<Tcc>>) tccInterface.getAllTCC();
-    
-        if(tccs.isEmpty() != true){
-      
-            return new ResponseEntity<>(tccs, HttpStatus.OK);
-            
-        }else{
-        
+        try {
+            List<Tcc> tccs = tccInterface.getAllTCC();
+            if (!tccs.isEmpty()) {
+                return new ResponseEntity<>(tccs, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            
         }
-      
     }
 
     @GetMapping("/tcc/{id}")
     public ResponseEntity<Object> getTccById(@PathVariable("id") String id) {
-        // Assume que o ID é passado como string, você pode alterar conforme necessário
-        Tcc tcc = new Tcc(); // Você precisa criar um objeto Tcc com o ID fornecido
-        @SuppressWarnings("unchecked")
-        Optional<Tcc> foundTcc = (Optional<Tcc>) tccInterface.getTCC(tcc);
-
-        if (foundTcc.isPresent()) {
-        
-            return new ResponseEntity<>(foundTcc, HttpStatus.OK);
-        
-        } else {
-        
+        try {
+            Tcc tcc = tccInterface.getTCC(id);
+            if (tcc != null) {
+                return new ResponseEntity<>(tcc, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        
         }
     }
 }

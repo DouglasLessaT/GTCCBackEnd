@@ -50,8 +50,8 @@ public class TccServices implements TccInterface<Tcc, String> {
     }
 
     @Override
-    public Tcc getTCC(String nameString) {
-        return tccRepository.findByName(nameString);
+    public Tcc getTCC(String title) {
+        return tccRepository.findByTitle(title);
     }
 
     @Override
