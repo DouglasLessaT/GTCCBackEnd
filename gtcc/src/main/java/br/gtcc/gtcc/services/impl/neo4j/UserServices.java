@@ -32,10 +32,28 @@ public class UserServices implements UserInterface<Users, String> {
  }
 
  @Override
- public Users updateUsers(Users users) {
-  // TODO Auto-generated method stub
-  throw new UnsupportedOperationException("Unimplemented method 'updateUsers'");
- }
+ public Users updateUsers(Users users , String id) {
+    
+    if(id != null || id != "" || id != " "){
+       
+        Users u = this.getUsers(id);
+       
+        if(u != null){
+
+            u.setName(users.getName());
+            u.setEmail(users.getEmail());
+            u.setBirthdate(users.getBirthdate());
+            u.setCellphone(users.getCellphone());
+            u.setUserType(users.getUserType());
+
+            return this.repository.save(u);
+
+        }
+    }
+
+    return null;
+ 
+}
 
  @Override
  public Users deleteUsers(String id) {
