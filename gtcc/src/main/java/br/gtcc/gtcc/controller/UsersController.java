@@ -21,13 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import br.gtcc.gtcc.services.spec.UserInterface;
+
 import java.util.Optional;
 
 /**
  *
  * @author mrbee
  * 
- * Controller da esntidade Users, criação de rotas  
+ * Controller da entidade Users, criação de rotas  
  */
 
 @CrossOrigin
@@ -38,17 +39,10 @@ public class UsersController {
     @SuppressWarnings("rawtypes")
     @Autowired
     public UserInterface usersInterface;
-    
-    // @Autowired
-    // UserServices service;
-    
+        
     @PostMapping("/usuario")
-    public ResponseEntity<Object> createUser(@RequestParam(required = true) Users users){
+    public ResponseEntity<Object> createUser(@RequestBody(required = true) Users users){
 
-        //Users createdUsers = service.createUsers(users);  
-//        @SuppressWarnings("unchecked")
-//        Users createdUsers = (Users) usersInterface.createUsers(users);
-    
         @SuppressWarnings("unchecked")
         Optional<Users> createdUsers = (Optional<Users>) usersInterface.createUsers(users);
             
