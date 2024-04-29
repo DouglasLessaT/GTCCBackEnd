@@ -75,8 +75,15 @@ public class UserServices implements UserInterface<Users, String> {
 
  @Override
  public List<Users> getAllUsers() {
-  // TODO Auto-generated method stub
-  throw new UnsupportedOperationException("Unimplemented method 'getAllUsers'");
+
+    if(this.repository.count() > 0){
+
+        return this.repository.findAll();
+    
+    }
+    
+    return null;
+
  }
 
  @Override
