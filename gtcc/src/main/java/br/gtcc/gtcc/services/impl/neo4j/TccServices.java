@@ -47,10 +47,17 @@ public class TccServices implements TccInterface<Tcc, String> {
                 tcc.setAluno(aluno);
                 tcc.setOrientador(orientador);
                 
-                if(orientador.getUserType().equals("COORDENADOR") || orientador.getUserType().equals("PROFESSOR")){}
-                orientador.getTccsGerenciados().add(tcc);
-                usersRepository.save(orientador);
+                if(orientador.getUserType().equals("COORDENADOR") || orientador.getUserType().equals("PROFESSOR")){
+    
+                    orientador.getTccsGerenciados().add(tcc);
+                    usersRepository.save(orientador);
 
+                }else {
+
+                    return null;
+
+                }
+                
                 return tccRepository.save(tcc);
 
             }
