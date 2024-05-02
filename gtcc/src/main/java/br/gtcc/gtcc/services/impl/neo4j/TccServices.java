@@ -34,6 +34,27 @@ public class TccServices implements TccInterface<Tcc, String> {
     }
 
     @Override
+    public Tcc updateTCC(Tcc tcc) {
+        if (tcc != null && tcc.getId() != null) {
+
+            Tcc existingTcc = getTCC(tcc.getId());
+            
+            if (existingTcc != null) {
+                existingTcc.setTitle(tcc.getTitle());
+                existingTcc.setTheme(tcc.getTheme());
+                existingTcc.setCurse(tcc.getCurse());
+                existingTcc.setDateOfApresentation(tcc.getDateOfApresentation());
+                
+                return tccRepository.save(existingTcc);
+            } else {
+                throw new IllegalArgumentException("Tcc não encontrado para o ID fornecido: " + tcc.getId());
+            }
+        } else {
+            throw new IllegalArgumentException("O Tcc fornecido é inválido ou não possui um ID.");
+        }
+    }
+
+    @Override
     public Tcc deleteTCC(String id) {
         Tcc delTcc = this.getTCC(id);
         if (delTcc != null) {
@@ -53,28 +74,10 @@ public class TccServices implements TccInterface<Tcc, String> {
     public Tcc getTCC(String id) {
         if(id != null || id != " "){
 
-            return tccRepository.findById(id).get();
+            return this.tccRepository.existsById(id)==true? tccRepository.findById(id).get() : null;
         }
         return null;
     }
 
-    @Override
-    public Tcc updateTCC(Tcc tcc) {
-        if (tcc != null && tcc.getId() != null) {
-            Tcc existingTcc = getTCC(tcc.getId());
-            if (existingTcc != null) {
-                existingTcc.setTitle(tcc.getTitle());
-                existingTcc.setTheme(tcc.getTheme());
-                existingTcc.setCurse(tcc.getCurse());
-                existingTcc.setDateOfApresentation(tcc.getDateOfApresentation());
-                // Aqui você pode adicionar mais campos a serem atualizados, se necessário
-                
-                return tccRepository.save(existingTcc);
-            } else {
-                throw new IllegalArgumentException("Tcc não encontrado para o ID fornecido: " + tcc.getId());
-            }
-        } else {
-            throw new IllegalArgumentException("O Tcc fornecido é inválido ou não possui um ID.");
-        }
-    }
+    
 }
