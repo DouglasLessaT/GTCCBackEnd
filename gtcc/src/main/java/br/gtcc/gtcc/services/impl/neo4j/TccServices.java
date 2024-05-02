@@ -9,12 +9,22 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.gtcc.gtcc.model.neo4j.Tcc;
+import br.gtcc.gtcc.model.neo4j.Users;
+import br.gtcc.gtcc.model.neo4j.repository.TccRepository;
+import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
+import br.gtcc.gtcc.services.spec.TccInterface;
+
 @Service
 public class TccServices implements TccInterface<Tcc, String> {
 
     @Autowired
     public TccRepository tccRepository;
 
+    @Autowired
+    public UsersRepository usersRepository;
+
+    @SuppressWarnings("unlikely-arg-type")
     @Override
     public Tcc createTcc(Tcc tcc) {
         if (tcc != null && tcc.getId() == null) {
