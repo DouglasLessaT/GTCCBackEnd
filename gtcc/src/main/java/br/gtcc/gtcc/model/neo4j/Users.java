@@ -9,7 +9,7 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.data.neo4j.core.schema.Relationship.Direction;
-//import br.gtcc.gtcc.model.UserType;
+
 import io.micrometer.common.lang.NonNull;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,7 +33,6 @@ public class Users {
     @NonNull
     private String email;                               // email do usuário    
 
-    //@Relationship(type = "HAS_USER_TYPE", direction = Direction.OUTGOING)
     @NonNull
     private Set<UserType> userType = new HashSet<>();  // Tipo de usuário 
 
@@ -42,5 +41,7 @@ public class Users {
 
     @NonNull
     private String cellphone;                          // Telefone do usuário 
+
+    private Set<Tcc> tccsGerenciados = new HashSet<>();
 
 }
