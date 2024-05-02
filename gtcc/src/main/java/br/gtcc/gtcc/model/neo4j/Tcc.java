@@ -6,6 +6,10 @@ package br.gtcc.gtcc.model.neo4j;
 
 import java.time.LocalDateTime;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.NonNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,7 +50,17 @@ import org.springframework.data.neo4j.core.schema.Id;
     @NonNull
     private String curse;                       // String que representa curso do tcc
    
-    @NonNull
+    @JsonIgnore
     private LocalDateTime dateOfApresentation;  // Date que representa a data de apresentação do tcc
     
+    @JsonIgnore
+    @NonNull
+    @Relationship(type = "REALIZA", direction = Relationship.Direction.INCOMING)
+    private Users aluno;
+    
+    @JsonIgnore
+    @NonNull
+    @Relationship(type = "ORIENTA", direction = Relationship.Direction.INCOMING)
+    private Users orientador;
+
 }
