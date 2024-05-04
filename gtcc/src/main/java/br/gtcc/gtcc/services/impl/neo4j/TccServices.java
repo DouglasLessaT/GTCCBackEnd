@@ -21,7 +21,7 @@ public class TccServices implements TccInterface<Tcc, String> {
 
     private Tcc getById(String id) {
         return tccRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Moradia não encontrada para o ID fornecido: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("TCC não encontrada para o ID fornecido: " + id));
     }
 
     @Override
@@ -59,6 +59,7 @@ public class TccServices implements TccInterface<Tcc, String> {
         if (tcc != null && tcc.getId() != null) {
             Tcc existingTcc = getById(tcc.getId());
             if (existingTcc != null) {
+                existingTcc.setIdAluno(tcc.getIdAluno());
                 existingTcc.setTitle(tcc.getTitle());
                 existingTcc.setTheme(tcc.getTheme());
                 existingTcc.setCurse(tcc.getCurse());
