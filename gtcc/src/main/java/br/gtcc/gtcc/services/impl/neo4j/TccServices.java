@@ -80,23 +80,77 @@ public class TccServices implements TccInterface<Tcc, String> {
     }
 
     @Override
-    public Tcc updateTCC(Tcc tcc) {
-        if (tcc != null && tcc.getId() != null) {
+    public Tcc updateTCC(Tcc tcc, String id) {
 
-            Tcc existingTcc = getTCC(tcc.getId());
+        if (tcc != null && id != null) {
+
+            Tcc existingTcc = getTCC(id);
             
             if (existingTcc != null) {
+
                 existingTcc.setTitle(tcc.getTitle());
                 existingTcc.setTheme(tcc.getTheme());
                 existingTcc.setCurse(tcc.getCurse());
                 existingTcc.setDateOfApresentation(tcc.getDateOfApresentation());
+
+                if(tcc.getAluno() != null && tcc.getOrientador() != null){
+
+                    if(tcc.getIdAluno() != null && tcc.getIdOrientador() != null){
+
+                        Users orientador = this.usersRepository.findById(tcc.getIdOrientador()).get();
+                        Users aluno = this.usersRepository.findById(tcc.getIdAluno()).get();
+
+                        if( orientador != null && aluno != null){
+
+                            EnumSet<UserType> userTypeCoordenador = EnumSet.of(UserType.COORDENADOR);
+                            EnumSet<UserType> userTypeProfessor = EnumSet.of(UserType.PROFESSOR);
+                            
+                            boolean isCoordenador = orientador.getUserType().equals(userTypeCoordenador);
+                            boolean isProfessor = orientador.getUserType().equals(userTypeProfessor);
+            
+                            if(isCoordenador == true || isProfessor == true){
+
+                                orientador.getTccsGerenciados().add(existingTcc);
+                                aluno.getTccsGerenciados().add(existingTcc);
+                                existingTcc.setIdOrientador(tcc.getIdOrientador());
+                                existingTcc.setIdAluno(tcc.getIdAluno());
+                                existingTcc.setAluno(tcc.getAluno());
+                                existingTcc.setOrientador(tcc.getOrientador());
+
+                                this.usersRepository.save(orientador);
+                                this.usersRepository.save(aluno);
+
+                            } else {
+
+                                return null;
+                            
+                            }
+
+                        } else {
+                            
+                            return null;
+                       
+                        }
+
+                    } else {
+
+                        return null;
+
+                    }
+                    
+                }
                 
                 return tccRepository.save(existingTcc);
+
             } else {
-                throw new IllegalArgumentException("Tcc não encontrado para o ID fornecido: " + tcc.getId());
+                //throw new IllegalArgumentException("Tcc não encontrado para o ID fornecido: " + tcc.getId());
+                return null;
+            
             }
         } else {
-            throw new IllegalArgumentException("O Tcc fornecido é inválido ou não possui um ID.");
+            //throw new IllegalArgumentException("O Tcc fornecido é inválido ou não possui um ID.");
+            return null;
+
         }
     }
 

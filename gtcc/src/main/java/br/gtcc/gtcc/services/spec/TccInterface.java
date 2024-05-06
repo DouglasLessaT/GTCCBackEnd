@@ -6,7 +6,7 @@ import java.util.List;
 public interface TccInterface<T, E> {
     public T createTcc(T tcc);
    
-   public T updateTCC(T tcc);
+   public T updateTCC(T tcc , E id);
    
    public T deleteTCC(E tcc);
    

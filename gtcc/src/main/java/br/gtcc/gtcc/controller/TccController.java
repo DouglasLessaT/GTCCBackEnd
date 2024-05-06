@@ -47,17 +47,17 @@ public class TccController {
 
     @PutMapping("/tcc/{id}")
     public ResponseEntity<Object> updateTcc(@PathVariable("id") String id, @RequestBody Tcc tcc) {
-        // Assume que o ID é passado como string, você pode alterar conforme necessário
+        
         @SuppressWarnings("unchecked")
-        Optional<Tcc> updatedTcc = (Optional<Tcc>) tccInterface.updateTCC(tcc);
+        Optional<Tcc> updatedTcc = Optional.ofNullable((Tcc) tccInterface.updateTCC(tcc, id));
       
         if (updatedTcc.isPresent()) {
       
-            return new ResponseEntity<>(updatedTcc, HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Tcc alterado com sucesso");
       
         } else {
       
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tcc não encontrado");
       
         }
     }
