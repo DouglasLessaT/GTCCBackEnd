@@ -5,6 +5,9 @@
 package br.gtcc.gtcc.services.spec;
 
 import java.util.List;
+import java.util.Optional;
+
+import br.gtcc.gtcc.model.neo4j.Users;
 
 /**
  *
