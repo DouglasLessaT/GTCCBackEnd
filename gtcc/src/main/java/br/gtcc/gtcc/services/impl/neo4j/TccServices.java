@@ -154,16 +154,23 @@ public class TccServices implements TccInterface<Tcc, String> {
         }
     }
 
+    @SuppressWarnings("unused")
     @Override
     public Tcc deleteTCC(String id) {
         
         if( id != " " || id != null || id != "")  {
 
             Tcc delTcc = this.getTCC(id);
-            if (delTcc != null) {
-                tccRepository.delete(delTcc);
+            if (delTcc != null) {    
+
+                this.tccRepository.deleteById(id);
+                return delTcc;
+
             } else {
-                throw new IllegalArgumentException("O Tcc fornecido é inválido ou já possui um ID.");
+                
+                //throw new IllegalArgumentException("O Tcc fornecido é inválido ou não existe.");
+                return null;
+            
             }
         }
         

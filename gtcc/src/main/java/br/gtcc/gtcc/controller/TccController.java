@@ -64,18 +64,17 @@ public class TccController {
 
     @DeleteMapping("/tcc/{id}")
     public ResponseEntity<Object> deleteTcc(@PathVariable("id") String id) {
-        // Assume que o ID é passado como string, você pode alterar conforme necessário
-        Tcc tccToDelete = new Tcc(); // Você precisa criar um objeto Tcc com o ID fornecido
+        
         @SuppressWarnings("unchecked")
-        Optional<Tcc> deletedTcc = (Optional<Tcc>) tccInterface.deleteTCC(tccToDelete);
+        Optional<Tcc> deletedTcc = Optional.ofNullable((Tcc) tccInterface.deleteTCC(id));
     
         if (deletedTcc.isPresent()) {
     
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Tcc deletado com sucesso");
     
         } else {
     
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tcc não encontrado");
     
         }
     }
