@@ -1,10 +1,12 @@
 package br.gtcc.gtcc.services.impl.neo4j;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.gtcc.gtcc.model.UserType;
 import br.gtcc.gtcc.model.neo4j.Tcc;
 import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.model.neo4j.repository.TccRepository;
@@ -24,42 +26,54 @@ public class TccServices implements TccInterface<Tcc, String> {
     @Override
     public Tcc createTcc(Tcc tcc) {
        
-        System.out.println( "\n Tcc na service I " + tcc.toString());
-
         String idAluno = tcc.getIdAluno();
 
         String idOrientador = tcc.getIdOrientador();
 
         if((idAluno != " " || idAluno != null) && (idOrientador != " " || idOrientador != null) ){
-
             
             Boolean existsAluno = this.usersRepository.existsById(idAluno);
             Boolean existsOrientador = this.usersRepository.existsById(idOrientador); 
-            
 
             if ((tcc.getId() != null || tcc.getId() != " ") && (existsAluno == true && existsOrientador == true)) {
-                
-                System.out.println( "\nTcc na service III" + tcc.toString());
                 
                 Users aluno = this.usersRepository.findById(idAluno).get();
                 Users orientador = this.usersRepository.findById(idOrientador).get();
 
                 tcc.setAluno(aluno);
                 tcc.setOrientador(orientador);
+
+                EnumSet<UserType> userTypeCoordenador = EnumSet.of(UserType.COORDENADOR);
+                EnumSet<UserType> userTypeProfessor = EnumSet.of(UserType.PROFESSOR);
                 
-                if(orientador.getUserType().equals("COORDENADOR") || orientador.getUserType().equals("PROFESSOR")){}
-                orientador.getTccsGerenciados().add(tcc);
-                usersRepository.save(orientador);
+                boolean isCoordenador = orientador.getUserType().equals(userTypeCoordenador);
+                boolean isProfessor = orientador.getUserType().equals(userTypeProfessor);
+                
+                if(isCoordenador == true || isProfessor == true){
+                    
+                    if((aluno.getTccsGerenciados().size() == 0)){
 
+                        orientador.getTccsGerenciados().add(tcc);  
+                        aluno.getTccsGerenciados().add(tcc);
+
+                        this.usersRepository.save(orientador);
+                        this.usersRepository.save(aluno);
+                    
+                    }else{
+
+                        return null;
+                    
+                    }
+
+                } else {
+                
+                    return null;
+                }
+                
                 return tccRepository.save(tcc);
 
             }
 
-            if( (this.tccRepository.existsById(tcc.getId())) && (existsAluno == true && existsOrientador == true)){
-            
-                System.out.println( "\n Tcc na service IV" + tcc.toString());
-                return tccRepository.save(tcc);
-            }
         }
  
         return null;

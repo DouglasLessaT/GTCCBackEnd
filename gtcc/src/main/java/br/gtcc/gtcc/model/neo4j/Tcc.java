@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package br.gtcc.gtcc.model.neo4j;
 
 import java.time.LocalDateTime;
@@ -31,31 +27,32 @@ import org.springframework.data.neo4j.core.schema.Id;
  @AllArgsConstructor
  public class Tcc {
     
+    @JsonIgnore
     @Id
     @GeneratedValue
-    private String Id;                               // Id do Tcc
+    private String Id;                               
    
     @NonNull
-    private String idAluno;                          // Id do aluno  que relacionado a este tcc 
+    private String idAluno;                          
+    
+    @NonNull
+    private String idOrientador;                     
+
+    @NonNull
+    private String title;                       
    
     @NonNull
-    private String idOrientador;                     // Id do professor orientador deste tcc 
-   
+    private String theme;                          
+
     @NonNull
-    private String title;                       // String que representa o titulo do tcc
-   
-    @NonNull
-    private String theme;                       // String que representa o tema do tcc
-   
-    @NonNull
-    private String curse;                       // String que representa curso do tcc
-   
+    private String curse;                        
+
     @JsonIgnore
-    private LocalDateTime dateOfApresentation;  // Date que representa a data de apresentação do tcc
+    private LocalDateTime dateOfApresentation;  
     
     @JsonIgnore
     @NonNull
-    @Relationship(type = "REALIZA", direction = Relationship.Direction.INCOMING)
+    @Relationship(type = "REALIZA", direction = Relationship.Direction.INCOMING)  
     private Users aluno;
     
     @JsonIgnore

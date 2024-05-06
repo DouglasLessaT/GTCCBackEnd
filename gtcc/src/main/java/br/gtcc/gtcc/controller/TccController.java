@@ -27,9 +27,6 @@ public class TccController {
     @SuppressWarnings("rawtypes")
     @Autowired
     private TccInterface tccInterface; 
-
-    //  @Autowired
-    //  private TccService tccService;
  
     @PostMapping("/tcc")
     public ResponseEntity<Object> createTcc(@RequestBody Tcc tcc) {
@@ -39,7 +36,7 @@ public class TccController {
         
         if (createdTcc.isPresent()) { 
       
-            return new ResponseEntity<>(createdTcc, HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Tcc criado com sucesso");
       
         } else {
       
