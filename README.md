@@ -11,3 +11,6 @@ falata os outros métodos de busca delete e update de um tcc.
 
 # ALTERAÇÕES FEITAS 05/05/2024
 Finalizado a criação de tcc com as regras de negocio, e inicializado a alteração para update de tcc sem ter terminado ainda
+
+# ALTERAÇÕES FEITAS 19/05/2024
+Finalizando o CRUD de criação da Entidade Data
