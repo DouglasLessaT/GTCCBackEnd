@@ -4,10 +4,10 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 
 import br.gtcc.gtcc.model.neo4j.Data;
 
-import java.util.List;
-import java.util.Optional;
-
+import java.time.LocalDateTime;
 
 public interface DataRepository extends Neo4jRepository<Data, String> {
- Optional<Data> findById(String id);
+
+    Data findByDate(LocalDateTime date);
+    
 }

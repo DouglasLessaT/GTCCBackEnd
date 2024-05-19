@@ -22,7 +22,6 @@ public class TccServices implements TccInterface<Tcc, String> {
     @Autowired
     public UsersRepository usersRepository;
 
-    @SuppressWarnings("unlikely-arg-type")
     @Override
     public Tcc createTcc(Tcc tcc) {
        
@@ -143,12 +142,12 @@ public class TccServices implements TccInterface<Tcc, String> {
                 return tccRepository.save(existingTcc);
 
             } else {
-                //throw new IllegalArgumentException("Tcc não encontrado para o ID fornecido: " + tcc.getId());
+
                 return null;
             
             }
         } else {
-            //throw new IllegalArgumentException("O Tcc fornecido é inválido ou não possui um ID.");
+
             return null;
 
         }
@@ -168,7 +167,6 @@ public class TccServices implements TccInterface<Tcc, String> {
 
             } else {
                 
-                //throw new IllegalArgumentException("O Tcc fornecido é inválido ou não existe.");
                 return null;
             
             }

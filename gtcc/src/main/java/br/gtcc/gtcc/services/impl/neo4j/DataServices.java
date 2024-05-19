@@ -17,28 +17,102 @@ public class DataServices implements DataInterface<Data, String>{
    
    @Override
    public  Data   createData(Data data){
+       
+       if(data.getDate() != null){
+        
+        Data dataRepo = repository.findByDate(data.getDate());
+        Boolean existsData = dataRepo==null? false : true ;
+        
+        if( existsData == false){
+
+            return this.repository.save(data);
+
+        }else{
+
+            return null;
+
+        }
+
+       }
+       
+       return null;
+   
+   }
+   
+   @Override
+   public  Data   updateData(String id ,Data data){
+
+        if(id != null && data != null){
+
+            Data dataRepo = this.getData(id);
+
+            if( dataRepo != null){
+
+                dataRepo.setListApresentacoes(data.getListApresentacoes());
+                dataRepo.setDate(data.getDate());                
+                return this.repository.save(dataRepo);
+
+            } else {
+
+                return null;
+            
+            }
+
+        }
+
        return null;
    }
    
    @Override
-   public  Data   updateData(Data Data){
-       return null;
-   }
+   public  Data   deleteData(String id){
+
+        if(id != null){
+
+            Data dataRepo = this.repository.existsById(id)==true? repository.findById(id).get() : null;
+
+            if(dataRepo != null){
+
+                this.repository.deleteById(id);
+                return dataRepo;
+
+            }
+
+            return null;
+
+        }
+
+        return null;
+
+    }
    
-   @Override
-   public  Data   deleteData(String data){
-       return null;
-   }
-   
-   @Override
-   public  Data   getData(String data){
-       return null;
-   }
+   @SuppressWarnings("unused")
+    @Override
+    public  Data   getData(String id){
+
+        if(id != null || id != " "){
+
+            return this.repository.existsById(id)==true? repository.findById(id).get() : null;
+
+        }
+
+        return null;
+
+    }
    
    @Override
    public List< Data > getAllData(){
-       return null;
-   }
+  
+    Long listData = this.repository.count();
+    
+    if(listData > 0){
+
+        return this.repository.findAll();
+
+    }
+
+    return null;
+   
+  }
 
     
 }
