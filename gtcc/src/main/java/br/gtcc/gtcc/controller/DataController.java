@@ -24,21 +24,23 @@ import java.util.Optional;
 @RequestMapping("coordenacao/tcc/v1")
 public class DataController {
     
+    @SuppressWarnings("rawtypes")
     @Autowired
     private DataInterface interfaceData;
     
      @PostMapping("/data")
     public ResponseEntity<Object> createData(@RequestBody Data data) {
         
-        Optional<Data> createdData = (Optional<Data>) interfaceData.createData(data);
+        @SuppressWarnings("unchecked")
+        Optional<Data> createdData = Optional.ofNullable((Data) interfaceData.createData(data));
         
         if (createdData.isPresent()) {
             
-            return new ResponseEntity<>(createdData, HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Data criada com sucesso");
         
         } else {
         
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao criar Data");
         
         }
     }
@@ -46,38 +48,39 @@ public class DataController {
     @PutMapping("/data/{id}")
     public ResponseEntity<Object> updateData(@PathVariable("id") String id, @RequestBody Data data) {
        
-        Optional<Data> updatedData = (Optional<Data>) interfaceData.updateData(data);
+        @SuppressWarnings("unchecked")
+        Optional<Data> updatedData = Optional.ofNullable((Data) interfaceData.updateData(id ,data));
        
         if (updatedData.isPresent()) {
        
-            return new ResponseEntity<>(updatedData, HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.OK).body("Data atualizada com sucesso");
        
         } else {
        
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro ao atualizar Data");
        
         }
     }
 
+    @SuppressWarnings("unchecked")
     @DeleteMapping("/data/{id}")
-    public ResponseEntity<Object> deleteData(@PathVariable("id") String id, @RequestBody Data data ) {
+    public ResponseEntity<Object> deleteData(@PathVariable("id") String id ) {
        
-        Data DataToDelete = new Data();
-       
-        Optional<Data> deletedData = (Optional<Data>) interfaceData.deleteData(DataToDelete);
-       
+        Optional<Data> deletedData = Optional.ofNullable((Data) interfaceData.deleteData(id));
+        
         if (deletedData.isPresent()) {
        
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.status(HttpStatus.OK).body("Data deletada com sucesso");
        
         } else {
        
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro ao deletar Data");
        
         }
     }
 
-    @GetMapping("/data")
+    @SuppressWarnings("unchecked")
+    @GetMapping("/datas")
     public ResponseEntity<Object> getAllDatas() {
         
         List<Optional<Data>> datas = (List<Optional<Data>>) interfaceData.getAllData();
@@ -88,18 +91,17 @@ public class DataController {
             
         }else{
 
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sem datas cadatradas");
             
         }
             
     }
 
+    @SuppressWarnings("unchecked")
     @GetMapping("/data/{id}")
-    public ResponseEntity<Object> getDataById(@PathVariable("id") String id, @RequestBody Data data ) {
+    public ResponseEntity<Object> getDataById(@PathVariable("id") String id) {
     
-        Data _data = new Data();
-        
-        Optional<Data> foundData = (Optional<Data>) interfaceData.getData(_data);
+        Optional<Data> foundData = Optional.ofNullable((Data) interfaceData.getData(id));
         
         if (foundData.isPresent()) {
         
@@ -107,8 +109,8 @@ public class DataController {
         
         } else {
         
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Data não encontrada");
+            
         }
     }
 }
