@@ -1,6 +1,8 @@
 package br.gtcc.gtcc.model.neo4j;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
@@ -18,9 +20,11 @@ public class Data {
 
  @Id
  @GeneratedValue
- private String id;                 //elementId  de la clase en Neo4J para a data da apresentação
+ private String id;                 
 
  @NonNull
- private LocalDateTime date;        // Propriedade date que  guarda a data e hora em que foi armazenado o apresentação
+ private LocalDateTime date;        
+   
+ private Set<ApresentationBanca> listApresentacoes = new HashSet<>();
 
 }
