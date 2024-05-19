@@ -6,11 +6,11 @@ public interface DataInterface<T, E> {
 
    public  T   createData(T data);
    
-   public  T   updateData(T Data);
+   public  T   updateData( E id ,T Data);
    
-   public  T   deleteData(E data);
+   public  T   deleteData(E id);
    
-   public  T getData(E data);
+   public  T getData(E id);
    
    public List<T> getAllData();
     
