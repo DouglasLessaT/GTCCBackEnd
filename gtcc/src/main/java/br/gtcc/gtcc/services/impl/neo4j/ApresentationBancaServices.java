@@ -16,27 +16,40 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
 
     @Override
     public ApresentationBanca createApresentationBanca(ApresentationBanca apresentationBanca) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        //Verificar se a apresentação é nula caso sim retornan  -> 1
+        //Verificar se a apresentação existe caso sim retornar null -> 2
+        //Verificar se o id do tcc é válido e existe no banco, caso não retorna null -> 3
+        //Verificar se a data mencionanda existe -> 4
+        //Verificar se o menbro um e dois ja existe. -> 5
+        //Verificar se os menbros 1 e 2 já estão alocados na data entregue pelo cliente, caso não esteja continuar fluxo ->6
+        //Caso estejam alocados verificar se a hora entregue já esta alocada para os dois menbros -> 7
+        //Verificar se existe conflito de horário na apresentação presente, se ja existe um apresentação alocada no mesmo horário ->8
+
+        return null;
     }
 
     @Override
-    public ApresentationBanca updateApresentationBanca(ApresentationBanca apresentationBanca) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public ApresentationBanca updateApresentationBanca(String id,ApresentationBanca apresentationBanca) {
+       
+        return null;
     }
 
     @Override
     public ApresentationBanca deleteApresentationBanca(String apresentationBanca) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       
+        return null;
     }
 
     @Override
     public ApresentationBanca getApresentationBanca(String apresentationBanca) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       
+        return null;
     }
 
     @Override
     public List<ApresentationBanca> getAllApresentationBanca() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       
+        return null;
     }
  
 }

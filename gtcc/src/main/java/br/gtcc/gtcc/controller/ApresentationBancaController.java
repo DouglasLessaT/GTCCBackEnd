@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 // import org.springframework.web.bind.annotation.GetMapping;
-// import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,7 +34,7 @@ public class ApresentationBancaController {
  @PostMapping("/apresentacao")
    public ResponseEntity<Object> createApresentantion(@RequestBody ApresentationBanca apresentation) {
        
-        Optional<ApresentationBanca>  createdApresentationBanca  = (Optional<ApresentationBanca>) interfaceBanca.createApresentationBanca(apresentation);
+        Optional<ApresentationBanca>  createdApresentationBanca  = Optional.ofNullable((ApresentationBanca)interfaceBanca.createApresentationBanca(apresentation));
        
        if (  createdApresentationBanca.isPresent()) { 
            
@@ -48,9 +48,9 @@ public class ApresentationBancaController {
    }
 
    @DeleteMapping("/apresentacao/{id}")
-    public ResponseEntity<Object> deleteApresentationBanca(@RequestParam(required = true) ApresentationBanca apresentation){
+    public ResponseEntity<Object> deleteApresentationBanca(@PathVariable("id") String id){
     
-        Optional<ApresentationBanca> deletedApresentationBanca = (Optional<ApresentationBanca>) interfaceBanca.deleteApresentationBanca(apresentation);  
+        Optional<ApresentationBanca> deletedApresentationBanca = Optional.ofNullable((ApresentationBanca)interfaceBanca.deleteApresentationBanca(id));  
 
         if (deletedApresentationBanca.isPresent()) {
         
@@ -65,9 +65,9 @@ public class ApresentationBancaController {
     }
 
     @PutMapping("/apresentacao/{id}")
-    public ResponseEntity<Object> updateApresentationBanca(@RequestParam(required = true) ApresentationBanca apresentation){ 
+    public ResponseEntity<Object> updateApresentationBanca(@PathVariable("id") String id ,@RequestBody(required = true) ApresentationBanca apresentation){ 
  
-       Optional<ApresentationBanca> updatedApresentationBanca =  (Optional<ApresentationBanca>) interfaceBanca.updateApresentationBanca(apresentation);
+       Optional<ApresentationBanca> updatedApresentationBanca =  Optional.ofNullable((ApresentationBanca)interfaceBanca.updateApresentationBanca(id,apresentation));
 
         if (updatedApresentationBanca.isPresent()) {
         
@@ -82,9 +82,9 @@ public class ApresentationBancaController {
     }
 
     @GetMapping("/apresentacao/{id}")
-    public ResponseEntity<Object> getApresentationBancaById(@RequestParam(required = true) ApresentationBanca apresentation){ 
+    public ResponseEntity<Object> getApresentationBancaById(@PathVariable("id") String id ){ 
  
-        Optional<ApresentationBanca> getApresentationBanca =  (Optional<ApresentationBanca>) interfaceBanca.getApresentationBanca(apresentation);
+        Optional<ApresentationBanca> getApresentationBanca =  Optional.ofNullable((ApresentationBanca) interfaceBanca.getApresentationBanca(id));
 
         if (getApresentationBanca.isPresent()) {
         
