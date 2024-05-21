@@ -1,0 +1,14 @@
+{
+ "configurations": [
+  {
+   "type": "java",
+   "name": "Spring Boot-GtccApplication<gtcc>",
+   "request": "launch",
+   "cwd": "${workspaceFolder}",
+   "mainClass": "br.gtcc.gtcc.GtccApplication",
+   "projectName": "gtcc",
+   "args": "",
+   "envFile": "${workspaceFolder}/.env"
+  }
+ ]
+}

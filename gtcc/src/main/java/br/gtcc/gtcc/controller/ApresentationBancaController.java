@@ -84,6 +84,7 @@ public class ApresentationBancaController {
     @GetMapping("/apresentacao/{id}")
     public ResponseEntity<Object> getApresentationBancaById(@PathVariable("id") String id ){ 
  
+        @SuppressWarnings("unchecked")
         Optional<ApresentationBanca> getApresentationBanca =  Optional.ofNullable((ApresentationBanca) interfaceBanca.getApresentationBanca(id));
 
         if (getApresentationBanca.isPresent()) {
@@ -102,9 +103,9 @@ public class ApresentationBancaController {
     @GetMapping("/apresentacoes")
     public ResponseEntity<Object> getAllApresentationBanca(){ 
  
-        List<Optional<ApresentationBanca>> getApresentationBancaList = (List<Optional<ApresentationBanca>>) interfaceBanca.getAllApresentationBanca();
-
-        if (getApresentationBancaList.isEmpty()) {
+        Optional<List<ApresentationBanca>> getApresentationBancaList = Optional.ofNullable((List<ApresentationBanca>) interfaceBanca.getAllApresentationBanca());
+        
+        if (getApresentationBancaList.isPresent()) {
         
             return new ResponseEntity<>( getApresentationBancaList, HttpStatus.OK);
         

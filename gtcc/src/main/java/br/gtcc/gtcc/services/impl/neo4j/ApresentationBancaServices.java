@@ -15,8 +15,25 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
     public ApresentationBancaRepository repository;
 
     @Override
-    public ApresentationBanca createApresentationBanca(ApresentationBanca apresentationBanca) {
-        //Verificar se a apresentação é nula caso sim retornan  -> 1
+    public ApresentationBanca createApresentationBanca(ApresentationBanca aB) {
+        //Verificar se a apresentação é nula caso sim retornar null  -> 1
+        
+        if(aB != null ){
+            if(aB.getId() != null){
+
+                ApresentationBanca apreentacao = this.getApresentationBanca(aB.getId());
+                 
+                if(apreentacao != null){
+
+                } else {
+
+                    return null;
+                
+                }
+
+            }
+
+        }
         //Verificar se a apresentação existe caso sim retornar null -> 2
         //Verificar se o id do tcc é válido e existe no banco, caso não retorna null -> 3
         //Verificar se a data mencionanda existe -> 4
@@ -35,21 +52,53 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
     }
 
     @Override
-    public ApresentationBanca deleteApresentationBanca(String apresentationBanca) {
+    public ApresentationBanca deleteApresentationBanca(String id) {
        
+        if(id != null){
+
+            ApresentationBanca apresentationBancaRepo = this.repository.existsById(id)==true? repository.findById(id).get() : null;
+
+            if(apresentationBancaRepo != null){
+
+                this.repository.deleteById(id);
+                return apresentationBancaRepo;
+
+            }
+
+            return null;
+
+        }
+
         return null;
+
     }
 
     @Override
-    public ApresentationBanca getApresentationBanca(String apresentationBanca) {
-       
+    public ApresentationBanca getApresentationBanca(String id) {
+
+        if(id != null || id != " "){
+
+            return this.repository.existsById(id)==true? repository.findById(id).get() : null;
+
+        }
+
         return null;
+
     }
 
     @Override
     public List<ApresentationBanca> getAllApresentationBanca() {
        
+        Long listApresentacoes = this.repository.count();
+
+        if(listApresentacoes > 0){
+
+            return this.repository.findAll();
+
+        }
+
         return null;
+   
     }
  
 }
