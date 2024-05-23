@@ -80,28 +80,10 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                                             
                                             if(ab.getMember1().equals(menberI)){
                                                 
-                                                if(ab.getDate().getHours() == aB.getDate().getHours()){
-
-                                                    isLockedMenberI = true;
-
-                                                } else {
-
-                                                    isLockedMenberI = false;
-
-                                                }
+                                                
                                                 count++;
 
                                             } else if(ab.getMember2().equals(menberII)){
-                                                
-                                                if(ab.getDate().getHours() == aB.getDate().getHours()){
-
-                                                    isLockedMenberII = true;
-
-                                                } else {
-
-                                                    isLockedMenberII = false;
-
-                                                }
 
                                                 count++;
                                             

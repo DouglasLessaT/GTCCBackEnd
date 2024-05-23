@@ -1,7 +1,8 @@
 package br.gtcc.gtcc.model.neo4j;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.LocalTime;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,8 +28,14 @@ public class Data {
  private LocalDateTime date;        
 
  @NonNull
- private Date hours;
-   
+ private LocalTime horasComeco;
+
+ @NonNull
+ private LocalTime horasFim;
+
+ @NonNull
+ private Boolean isLock = false;
+ 
  private Set<ApresentationBanca> listApresentacoes = new HashSet<>();
 
 }
