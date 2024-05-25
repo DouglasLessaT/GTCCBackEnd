@@ -72,24 +72,11 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                                         Users menberI = this.usersRepository.findById(aB.getMember1().getId()).get();
                                         Users menberII = this.usersRepository.findById(aB.getMember2().getId()).get();
                                         Data data = this.dataRepository.findById(aB.getDate().getId()).get();
-                                        List<ApresentationBanca> listApresentacoes = new ArrayList<>(data.getListApresentacoes());
+                                        ApresentationBanca apresentacaoData = data.getApresentacao();
                                         int count = 0; Boolean isLockedMenberI = false; Boolean isLockedMenberII = false; 
 
                                         //Caso estejam alocados verificar se a hora entregue já esta alocada para os dois menbros -> 7
-                                        for(ApresentationBanca ab : listApresentacoes){
-                                            
-                                            if(ab.getMember1().equals(menberI)){
-                                                
-                                                
-                                                count++;
-
-                                            } else if(ab.getMember2().equals(menberII)){
-
-                                                count++;
-                                            
-                                            } 
-
-                                        }
+                                        
 
                                    
 

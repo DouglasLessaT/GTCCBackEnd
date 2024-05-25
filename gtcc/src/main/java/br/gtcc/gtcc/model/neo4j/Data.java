@@ -3,9 +3,6 @@ package br.gtcc.gtcc.model.neo4j;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -36,6 +33,6 @@ public class Data {
  @NonNull
  private Boolean isLock = false;
  
- private Set<ApresentationBanca> listApresentacoes = new HashSet<>();
+ private ApresentationBanca apresentacao;
 
 }

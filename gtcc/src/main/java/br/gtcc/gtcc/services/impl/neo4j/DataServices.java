@@ -48,7 +48,7 @@ public class DataServices implements DataInterface<Data, String>{
 
             if( dataRepo != null){
 
-                dataRepo.setListApresentacoes(data.getListApresentacoes());
+                dataRepo.setApresentacao(data.getApresentacao());
                 dataRepo.setDate(data.getDate());                
                 return this.repository.save(dataRepo);
 
