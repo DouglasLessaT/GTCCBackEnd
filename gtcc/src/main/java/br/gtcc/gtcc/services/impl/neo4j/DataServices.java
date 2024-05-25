@@ -1,6 +1,7 @@
 package br.gtcc.gtcc.services.impl.neo4j;
 
 import br.gtcc.gtcc.services.spec.DataInterface;
+
 import br.gtcc.gtcc.model.neo4j.Data;
 import br.gtcc.gtcc.model.neo4j.repository.DataRepository;
 
@@ -19,19 +20,20 @@ public class DataServices implements DataInterface<Data, String>{
    public  Data   createData(Data data){
        
        if(data.getDate() != null){
-        
-        Data dataRepo = repository.findByDate(data.getDate());
-        Boolean existsData = dataRepo==null? false : true ;
-        
-        if( existsData == false){
+    
+        Integer dia = data.getDate().getDayOfMonth();
+        Integer mes = data.getDate().getMonthValue();
+        Integer ano = data.getDate().getYear();
+       
+        Boolean exists = repository.countByDayMonthYear(dia, mes, ano) > 0;
 
-            return this.repository.save(data);
-
-        }else{
+        if (exists) {
 
             return null;
-
+        
         }
+       
+        return this.repository.save(data);
 
        }
        
@@ -49,7 +51,10 @@ public class DataServices implements DataInterface<Data, String>{
             if( dataRepo != null){
 
                 dataRepo.setApresentacao(data.getApresentacao());
-                dataRepo.setDate(data.getDate());                
+                dataRepo.setDate(data.getDate());     
+                dataRepo.setHorasComeco(data.getHorasComeco());
+                dataRepo.setHorasFim(data.getHorasFim());    
+                dataRepo.setIsLock(data.getIsLock());       
                 return this.repository.save(dataRepo);
 
             } else {

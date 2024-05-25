@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import br.gtcc.gtcc.services.spec.UserInterface;
+import br.gtcc.gtcc.util.Console;
 
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ import java.util.Optional;
  * Controller da entidade Users, criação de rotas  
  */
 
-@CrossOrigin
+@CrossOrigin("*")
 @RestController
 @RequestMapping("coordenacao/tcc/v1")
 public class UsersController {
@@ -59,8 +60,6 @@ public class UsersController {
 
     @DeleteMapping("/usuario/{id}")
     public ResponseEntity<Object> deleteUsers(@PathVariable long id){
-       
-        //Users deletedUsers =  service.deleteUsers(users);
     
         @SuppressWarnings("unchecked")
         Optional<Users> deletedUsers = Optional.ofNullable((Users) usersInterface.deleteUsers(id));  
