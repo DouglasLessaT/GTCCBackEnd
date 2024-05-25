@@ -50,51 +50,45 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
 
                         Boolean existsTcc  = this.tccRepository.existsById(aB.getIdTcc());
                         
-                        if(existsTcc == true && aB.getDate().getId() != null){
+                        Data dataApresentacao = this.dataRepository.findById(aB.getIdData()).orElse(null);
+
+                        if(existsTcc == true && dataApresentacao.getDate() != null){
                             
                             //Verificar se a data mencionanda existe -> 4
-                            Boolean existsData = this.dataRepository.existsById(aB.getDate().getId());
-                            
-                            if(existsData == true){
-                                                        
-                                if(aB.getMember1().getId() != null && aB.getMember1() != null ){
+    
+                                                                        
+                            if(aB.getMember1().getId() != null && aB.getMember1() != null ){
 
-                                    //Verificar se os membros um e dois ja existem. -> 5
-                                    Boolean existsMenberI = this.usersRepository.existsById(aB.getMember1().getId());
-                                    Boolean existsMenberII  = this.usersRepository.existsById(aB.getMember1().getId());;
-                                    if(existsMenberI == true && existsMenberII == true){
+                                //Verificar se os membros um e dois ja existem. -> 5
+                                Boolean existsMenberI = this.usersRepository.existsById(aB.getMember1().getId());
+                                Boolean existsMenberII  = this.usersRepository.existsById(aB.getMember1().getId());;
+                                if(existsMenberI == true && existsMenberII == true){
 
-                                        //Verificar se os menbros 1 e 2 já estão alocados na data entregue pelo cliente(FRONT-END), caso não esteja continuar fluxo ->6
-                                        //Buscar a data 
-                                        //Obter o array de apresentações dentro da data
-                                        //Busca os dois menbros I e II
-                                        //Busca se dentro de cada apresentaçção existe os menbros 1 e 2 
-                                        Users menberI = this.usersRepository.findById(aB.getMember1().getId()).get();
-                                        Users menberII = this.usersRepository.findById(aB.getMember2().getId()).get();
-                                        Data data = this.dataRepository.findById(aB.getDate().getId()).get();
-                                        ApresentationBanca apresentacaoData = data.getApresentacao();
-                                        int count = 0; Boolean isLockedMenberI = false; Boolean isLockedMenberII = false; 
+                                    //Verificar se os menbros 1 e 2 já estão alocados na data entregue pelo cliente(FRONT-END), caso não esteja continuar fluxo ->6
+                                    //Buscar a data 
+                                    //Obter o array de apresentações dentro da data
+                                    //Busca os dois menbros I e II
+                                    //Busca se dentro de cada apresentaçção existe os menbros 1 e 2 
+                                    Users menberI = this.usersRepository.findById(aB.getMember1().getId()).get();
+                                    Users menberII = this.usersRepository.findById(aB.getMember2().getId()).get();
+                                    
+                                    ApresentationBanca apresentacaoData = dataApresentacao.getApresentacao();
+                                    int count = 0; Boolean isLockedMenberI = false; Boolean isLockedMenberII = false; 
 
-                                        //Caso estejam alocados verificar se a hora entregue já esta alocada para os dois menbros -> 7
-                                        
+                                    //Caso estejam alocados verificar se a hora entregue já esta alocada para os dois menbros -> 7
+                                    
 
-                                   
+                                
 
 
-                                    }else {
-
-                                        return null;
-
-                                    }
-
-
-                                }else{
+                                }else {
 
                                     return null;
 
                                 }
 
-                            } else {
+
+                            }else{
 
                                 return null;
 

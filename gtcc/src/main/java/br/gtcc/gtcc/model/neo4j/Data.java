@@ -6,6 +6,8 @@ import java.time.LocalTime;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.core.schema.Relationship.Direction;
 
 import io.micrometer.common.lang.NonNull;
 import lombok.AllArgsConstructor;
@@ -32,7 +34,8 @@ public class Data {
 
  @NonNull
  private Boolean isLock = false;
- 
+
+ @Relationship(type = "ON_DATE", direction = Direction.INCOMING)  
  private ApresentationBanca apresentacao;
 
 }

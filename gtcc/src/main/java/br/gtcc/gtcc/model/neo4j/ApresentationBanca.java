@@ -19,17 +19,17 @@ public class ApresentationBanca {
 
  @Id
  @GeneratedValue
- private String id;                                                     // elementid da Apresentação e formação da Banca                                 
+ private String id;                                                                                   
  
  @NonNull
- private String idTcc;                                                  // elementId  do TCC na Apresentação da banca
+ private String idTcc;                                                  
  
- @Relationship(type = "MEMBER_OF", direction = Direction.OUTGOING)      //Relacionamento entre o menbro 1 e a apresentação
+ @Relationship(type = "MEMBER_OF", direction = Direction.OUTGOING)     
  private Users member1;
  
- @Relationship(type = "MEMBER_OF", direction = Direction.OUTGOING)      // Relacionamento da apresentação com o menbro 2
+ @Relationship(type = "MEMBER_OF", direction = Direction.OUTGOING)      
  private Users member2;
- 
- @Relationship(type = "ON_DATE", direction = Direction.OUTGOING)        // Relacionamento com a data em que a apresentação esta sendo marcada 
- private br.gtcc.gtcc.model.neo4j.Data date;
+        
+ @NonNull
+ private String idData;
 }
