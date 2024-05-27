@@ -5,6 +5,7 @@ import br.gtcc.gtcc.services.spec.DataInterface;
 import br.gtcc.gtcc.model.neo4j.Data;
 import br.gtcc.gtcc.model.neo4j.repository.DataRepository;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,10 @@ public class DataServices implements DataInterface<Data, String>{
         Integer dia = data.getDate().getDayOfMonth();
         Integer mes = data.getDate().getMonthValue();
         Integer ano = data.getDate().getYear();
-       
-        Boolean exists = repository.countByDayMonthYear(dia, mes, ano) > 0;
+        LocalTime horasComeco = data.getHorasComeco();
+        LocalTime horasFim = data.getHorasFim();
+        
+        Boolean exists = repository.countByDayMonthYearAndHours(dia, mes, ano ,horasComeco ,horasFim ) > 0;
 
         if (exists) {
 
