@@ -27,7 +27,6 @@ import org.springframework.data.neo4j.core.schema.Id;
  @AllArgsConstructor
  public class Tcc {
     
-    @JsonIgnore
     @Id
     @GeneratedValue
     private String Id;                               
