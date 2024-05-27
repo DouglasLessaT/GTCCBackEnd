@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.gtcc.gtcc.model.neo4j.ApresentationBanca;
 import br.gtcc.gtcc.services.spec.ApresentationBancaInterface;
-
+import br.gtcc.gtcc.util.Console;
 
 import java.util.List;// pode usar para apresentaçao
 import java.util.Optional;
@@ -28,21 +28,25 @@ import java.util.Optional;
 @RequestMapping("coordenacao/tcc/v1")
 public class ApresentationBancaController {
     
- @Autowired
+ @SuppressWarnings("rawtypes")
+@Autowired
  private  ApresentationBancaInterface interfaceBanca;
 
  @PostMapping("/apresentacao")
    public ResponseEntity<Object> createApresentantion(@RequestBody ApresentationBanca apresentation) {
        
-        Optional<ApresentationBanca>  createdApresentationBanca  = Optional.ofNullable((ApresentationBanca)interfaceBanca.createApresentationBanca(apresentation));
-       
+       @SuppressWarnings("unchecked")
+       Optional<ApresentationBanca>  createdApresentationBanca  = Optional.ofNullable((ApresentationBanca)interfaceBanca.createApresentationBanca(apresentation));
+      
+       Console.log("Depois do Optional "+createdApresentationBanca);
+      
        if (  createdApresentationBanca.isPresent()) { 
            
-           return new ResponseEntity<>(  createdApresentationBanca , HttpStatus.CREATED);
+           return ResponseEntity.status(HttpStatus.CREATED).body("Apresentação marcada com sucesso");
        
        } else {
        
-           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Apresentação não marcada");
        
        }
    }

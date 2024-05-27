@@ -1,20 +1,21 @@
 package br.gtcc.gtcc.services.impl.neo4j;
 
-import br.gtcc.gtcc.services.spec.ApresentationBancaInterface;
-import br.gtcc.gtcc.model.neo4j.ApresentationBanca;
-import br.gtcc.gtcc.model.neo4j.Data;
-import br.gtcc.gtcc.model.neo4j.Tcc;
-import br.gtcc.gtcc.model.neo4j.Users;
-import br.gtcc.gtcc.model.neo4j.repository.ApresentationBancaRepository;
-import br.gtcc.gtcc.model.neo4j.repository.DataRepository;
-import br.gtcc.gtcc.model.neo4j.repository.TccRepository;
-import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
-
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import br.gtcc.gtcc.model.neo4j.ApresentationBanca;
+import br.gtcc.gtcc.model.neo4j.Data;
+import br.gtcc.gtcc.model.neo4j.Tcc;
+import br.gtcc.gtcc.model.neo4j.repository.ApresentationBancaRepository;
+import br.gtcc.gtcc.model.neo4j.repository.DataRepository;
+import br.gtcc.gtcc.model.neo4j.repository.TccRepository;
+import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
+import br.gtcc.gtcc.services.spec.ApresentationBancaInterface;
+import br.gtcc.gtcc.util.Console;
 
 @Service
 public class ApresentationBancaServices implements ApresentationBancaInterface<ApresentationBanca, String>{
@@ -34,89 +35,122 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
 
     @Override
     public ApresentationBanca createApresentationBanca(ApresentationBanca aB) {
-        //Verificar se a apresentação é nula caso sim retornar null  -> 1
         
-        if(aB != null ){
+        //Verificar se a apresentação é nula caso sim retornar null  -> 1 
+        Boolean isNull = aB == null;
+        if( isNull == false ){
 
-            if(aB.getId() != null){
+            if(aB.getId() == null){
+                //Verificar se o id do tcc é válido e existe no banco, caso não retorna null -> 3
+                if(aB.getIdTcc() != null ){
 
-                //Verificar se a apresentação existe caso sim retornar null -> 2
-                ApresentationBanca apresentacao = this.getApresentationBanca(aB.getId());
+                    Boolean existsTcc  = this.tccRepository.existsById(aB.getIdTcc());
+                    //Verificar se a data mencionanda existe -> 4
+
+                    Data dataApresentacao = this.dataRepository.findById(aB.getIdData()).orElse(null);
+                    ApresentationBanca apresentacaoInData = dataApresentacao.getApresentacao();
                  
-                if(apresentacao != null){
-                    
-                    //Verificar se o id do tcc é válido e existe no banco, caso não retorna null -> 3
-                    if(aB.getIdTcc() != null ){
-
-                        Boolean existsTcc  = this.tccRepository.existsById(aB.getIdTcc());
+                    if(existsTcc == true && dataApresentacao.getDate() != null){
                         
-                        Data dataApresentacao = this.dataRepository.findById(aB.getIdData()).orElse(null);
+                        if(aB.getMember1() != null && aB.getMember1() != null ){
 
-                        if(existsTcc == true && dataApresentacao.getDate() != null){
-                            
-                            //Verificar se a data mencionanda existe -> 4
-    
-                                                                        
-                            if(aB.getMember1().getId() != null && aB.getMember1() != null ){
+                            //Verificar se os membros um e dois ja existem. -> 5
+                            Boolean existsMenberI = this.usersRepository.existsById(aB.getMember1().getId());
+                            Boolean existsMenberII  = this.usersRepository.existsById(aB.getMember1().getId());
 
-                                //Verificar se os membros um e dois ja existem. -> 5
-                                Boolean existsMenberI = this.usersRepository.existsById(aB.getMember1().getId());
-                                Boolean existsMenberII  = this.usersRepository.existsById(aB.getMember1().getId());;
-                                if(existsMenberI == true && existsMenberII == true){
+                            if(existsMenberI == true && existsMenberII == true){
 
-                                    //Verificar se os menbros 1 e 2 já estão alocados na data entregue pelo cliente(FRONT-END), caso não esteja continuar fluxo ->6
-                                    //Buscar a data 
-                                    //Obter o array de apresentações dentro da data
-                                    //Busca os dois menbros I e II
-                                    //Busca se dentro de cada apresentaçção existe os menbros 1 e 2 
-                                    Users menberI = this.usersRepository.findById(aB.getMember1().getId()).get();
-                                    Users menberII = this.usersRepository.findById(aB.getMember2().getId()).get();
-                                    
-                                    ApresentationBanca apresentacaoData = dataApresentacao.getApresentacao();
-                                    int count = 0; Boolean isLockedMenberI = false; Boolean isLockedMenberII = false; 
-
-                                    //Caso estejam alocados verificar se a hora entregue já esta alocada para os dois menbros -> 7
-                                    
-
+                                String memberI = aB.getMember1().getId();
+                                String memberII = aB.getMember2().getId();
+                                LocalDateTime date = dataApresentacao.getDate();
+                                LocalTime horasComeco = dataApresentacao.getHorasComeco();
+                                LocalTime horasFim = dataApresentacao.getHorasFim();
                                 
+                                //Verificar se os menbros 1 e 2 já estão alocados na data entregue pelo cliente(FRONT-END), caso não esteja continuar fluxo ->6
+                                //Caso estejam alocados verificar se a hora entregue já esta alocada para os dois menbros -> 7
+                                Boolean isLockedMemberOneAndMemberTwo = repository.countByMembersDateAndTime(memberI, memberII, date, horasComeco, horasFim) > 0;
+                                Console.log("Error: " + repository.countByMembersDateAndTime(memberI, memberII, date, horasComeco, horasFim) );
+                                if (!isLockedMemberOneAndMemberTwo) {
 
+                                    //Verificar se existe conflito de horário na apresentação presente, se ja existe um apresentação alocada no mesmo horário ->8   
+                                    Boolean isLock = dataApresentacao.getIsLock();
+                                    Tcc tcc = this.tccRepository.findById(aB.getIdTcc()).get();
+                                    
+                                    if(isLock == false && apresentacaoInData == null ){
 
-                                }else {
+                                        Console.log("Teste salvando entidade " + aB.toString());
+                                        dataApresentacao.setApresentacao(aB);
+                                        dataApresentacao.setIsLock(true);
+                                        
+                                        dataRepository.save(dataApresentacao);
+                                        
+                                        aB.setTcc(tcc);
+                                        return repository.save(aB);
+    
+                                    }else {
+
+                                        return null;
+
+                                    }
+                                
+                                } else {
 
                                     return null;
-
+                                
                                 }
+                                
+                            
+                            }else {
+
+                               return null;
+
+                            }
 
 
-                            }else{
+                        }else{
+                            // Salvar a apresentação caso o tcc não tenha menbros 
+                            Boolean isLock = dataApresentacao.getIsLock();
+                            Tcc tcc = this.tccRepository.findById(aB.getIdTcc()).get();
+                            
+                            if(isLock == false && apresentacaoInData == null ){
+
+                                Console.log("Teste salvando entidade Sem menbros" + aB.toString());
+                                dataApresentacao.setApresentacao(aB);
+                                dataApresentacao.setIsLock(true);
+                                
+                                dataRepository.save(dataApresentacao);
+                                
+                                aB.setTcc(tcc);
+                                return repository.save(aB);
+
+                            }else {
 
                                 return null;
 
                             }
 
-                        }else{
-
-                            return null;
-
                         }
 
-                    } else {
-                        
+                    }else{
+
                         return null;
 
                     }
 
                 } else {
-
+                    
                     return null;
-                
+
                 }
 
+            
+            } else {
+
+                return null;
+           
             }
 
         }
-      
-        //Verificar se existe conflito de horário na apresentação presente, se ja existe um apresentação alocada no mesmo horário ->8
 
         return null;
     }

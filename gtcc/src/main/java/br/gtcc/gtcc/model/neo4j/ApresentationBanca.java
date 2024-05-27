@@ -6,6 +6,8 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.data.neo4j.core.schema.Relationship.Direction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,14 +24,20 @@ public class ApresentationBanca {
  private String id;                                                                                   
  
  @NonNull
- private String idTcc;                                                  
+ private String idTcc;         
  
- @Relationship(type = "MEMBER_OF", direction = Direction.OUTGOING)     
- private Users member1;
- 
- @Relationship(type = "MEMBER_OF", direction = Direction.OUTGOING)      
- private Users member2;
-        
  @NonNull
  private String idData;
+ 
+ @JsonIgnore
+ @NonNull
+ @Relationship(type = "TCC_APRESENTA_EM", direction = Direction.INCOMING)     
+ private Tcc tcc;
+ 
+ @Relationship(type = "MEMBER_ONE_OF", direction = Direction.OUTGOING)     
+ private Users member1;
+ 
+ @Relationship(type = "MEMBER_TWO_OF", direction = Direction.OUTGOING)      
+ private Users member2;
+
 }
