@@ -37,5 +37,13 @@ public interface ApresentationBancaRepository extends Neo4jRepository<Apresentat
            "RETURN count(DISTINCT ap)")
     Integer countConflictingApresentationsByData(String date, String horasComeco, String horasFim, String member1, String member2);
 
+//     @Query("MATCH (ap:ApresentationBanca)-[rel:MEMBER_ONE_OF|MEMBER_TWO_OF]->(user:Users), (ap)-[:ON_DATE]->(agenda:Agenda) 
+//     WHERE user.id IN ["4:f50458d9-721d-4153-a562-bbaa6e6cc75b:9", "4:f50458d9-721d-4153-a562-bbaa6e6cc75b:2"] 
+//     AND agenda.date = datetime("2024-05-25T14:15:15.825000000") 
+//     AND agenda.horasComeco = time("10:30:00") 
+//     AND agenda.horasFim = time("11:00:00") 
+//     RETURN ap
+//     ")
+
 
 }

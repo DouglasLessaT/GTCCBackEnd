@@ -1,6 +1,7 @@
 package br.gtcc.gtcc.services.impl.neo4j;
 
 import br.gtcc.gtcc.services.spec.AgendaInterface;
+import br.gtcc.gtcc.util.Console;
 import br.gtcc.gtcc.model.neo4j.Agenda;
 
 import br.gtcc.gtcc.model.neo4j.repository.AgendaRepository;
@@ -28,14 +29,13 @@ public class AgendaServices implements AgendaInterface<Agenda, String>{
         LocalTime horasComeco = data.getHorasComeco();
         LocalTime horasFim = data.getHorasFim();
         
-        Boolean exists = repository.countByDayMonthYearAndHours(dia, mes, ano ,horasComeco ,horasFim ) > 0;
+        Boolean exists = repository.countByDateAndHours( data.getDate() ,horasComeco ,horasFim ) > 0;
 
         if (exists) {
 
             return null;
         
         }
-       
         return this.repository.save(data);
 
        }
@@ -109,10 +109,10 @@ public class AgendaServices implements AgendaInterface<Agenda, String>{
    
    @Override
    public List<  Agenda  > getAllAgenda(){
-  
-    Long listData = this.repository.count();
     
-    if(listData > 0){
+    Long countAgendas = this.repository.count();
+    
+    if(countAgendas > 0){
 
         return this.repository.findAll();
 

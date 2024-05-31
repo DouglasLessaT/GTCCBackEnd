@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.gtcc.gtcc.model.neo4j.Agenda;
 import br.gtcc.gtcc.services.spec.AgendaInterface;
+import br.gtcc.gtcc.util.Console;
+
 import java.util.Optional;
 
 @CrossOrigin
@@ -81,10 +83,12 @@ public class AgendaController {
 
     @SuppressWarnings("unchecked")
     @GetMapping("/agendas")
-    public ResponseEntity<Object> getAllDatas() {
+    public ResponseEntity<Object> getAllAgendas() {
         
+        Console.log("TEstre controller");
         List<Optional<Agenda>> agendas = (List<Optional<Agenda>>) interfaceAgenda.getAllAgenda();
         
+        Console.log("TEstre controller II ");
         if(agendas.isEmpty() != true){
 
             return new ResponseEntity<>(agendas, HttpStatus.OK);

@@ -9,12 +9,15 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.data.neo4j.core.schema.Relationship.Direction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.micrometer.common.lang.NonNull;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Node
-@lombok.Data
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Agenda {
