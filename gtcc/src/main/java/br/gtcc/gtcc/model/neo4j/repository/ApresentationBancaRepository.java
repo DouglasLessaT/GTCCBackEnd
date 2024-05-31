@@ -29,11 +29,11 @@ public interface ApresentationBancaRepository extends Neo4jRepository<Apresentat
     Integer countConflictingApresentations(String date, String horasComeco, String horasFim, String member1Id, String member2Id);
 
     @Query("MATCH (ap:ApresentationBanca)-[:MEMBER_ONE_OF|:MEMBER_TWO_OF]->(user:Users), " +
-           "(ap)-[:ON_DATE]->(data:Data) " +
+           "(ap)-[:ON_DATE]->(agenda:Agenda) " +
            "WHERE (user.id = $member1 OR user.id = $member2) " +
-           "AND data.date = $date " +
-           "AND data.horasComeco = $horasComeco " +
-           "AND data.horasFim = $horasFim " +
+           "AND agenda.date = $date " +
+           "AND agenda.horasComeco = $horasComeco " +
+           "AND agenda.horasFim = $horasFim " +
            "RETURN count(DISTINCT ap)")
     Integer countConflictingApresentationsByData(String date, String horasComeco, String horasFim, String member1, String member2);
 

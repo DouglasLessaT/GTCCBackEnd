@@ -15,24 +15,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.gtcc.gtcc.model.neo4j.Data;
-import br.gtcc.gtcc.services.spec.DataInterface;
+import br.gtcc.gtcc.model.neo4j.Agenda;
+import br.gtcc.gtcc.services.spec.AgendaInterface;
 import java.util.Optional;
 
 @CrossOrigin
 @RestController
 @RequestMapping("coordenacao/tcc/v1")
-public class DataController {
+public class AgendaController {
     
     @SuppressWarnings("rawtypes")
     @Autowired
-    private DataInterface interfaceData;
+    private AgendaInterface interfaceAgenda;
     
-     @PostMapping("/data")
-    public ResponseEntity<Object> createData(@RequestBody Data data) {
+     @PostMapping("/agenda")
+    public ResponseEntity<Object> createAgenda(@RequestBody Agenda agenda) {
         
         @SuppressWarnings("unchecked")
-        Optional<Data> createdData = Optional.ofNullable((Data) interfaceData.createData(data));
+        Optional<Agenda> createdData = Optional.ofNullable((Agenda) interfaceAgenda.createAgenda(agenda));
         
         if (createdData.isPresent()) {
             
@@ -45,13 +45,13 @@ public class DataController {
         }
     }
 
-    @PutMapping("/data/{id}")
-    public ResponseEntity<Object> updateData(@PathVariable("id") String id, @RequestBody Data data) {
+    @PutMapping("/agenda/{id}")
+    public ResponseEntity<Object> updateAgenda(@PathVariable("id") String id, @RequestBody Agenda agenda) {
        
         @SuppressWarnings("unchecked")
-        Optional<Data> updatedData = Optional.ofNullable((Data) interfaceData.updateData(id ,data));
+        Optional<Agenda> updatedAgenda = Optional.ofNullable((Agenda) interfaceAgenda.updateAgenda(id ,agenda));
        
-        if (updatedData.isPresent()) {
+        if (updatedAgenda.isPresent()) {
        
             return ResponseEntity.status(HttpStatus.OK).body("Data atualizada com sucesso");
        
@@ -63,12 +63,12 @@ public class DataController {
     }
 
     @SuppressWarnings("unchecked")
-    @DeleteMapping("/data/{id}")
-    public ResponseEntity<Object> deleteData(@PathVariable("id") String id ) {
+    @DeleteMapping("/agenda/{id}")
+    public ResponseEntity<Object> deleteAgenda(@PathVariable("id") String id ) {
        
-        Optional<Data> deletedData = Optional.ofNullable((Data) interfaceData.deleteData(id));
+        Optional<Agenda> deletedAgenda = Optional.ofNullable((Agenda) interfaceAgenda.deleteAgenda(id));
         
-        if (deletedData.isPresent()) {
+        if (deletedAgenda.isPresent()) {
        
             return ResponseEntity.status(HttpStatus.OK).body("Data deletada com sucesso");
        
@@ -80,14 +80,14 @@ public class DataController {
     }
 
     @SuppressWarnings("unchecked")
-    @GetMapping("/datas")
+    @GetMapping("/agendas")
     public ResponseEntity<Object> getAllDatas() {
         
-        List<Optional<Data>> datas = (List<Optional<Data>>) interfaceData.getAllData();
+        List<Optional<Agenda>> agendas = (List<Optional<Agenda>>) interfaceAgenda.getAllAgenda();
         
-        if(datas.isEmpty() != true){
+        if(agendas.isEmpty() != true){
 
-            return new ResponseEntity<>(datas, HttpStatus.OK);
+            return new ResponseEntity<>(agendas, HttpStatus.OK);
             
         }else{
 
@@ -98,14 +98,14 @@ public class DataController {
     }
 
     @SuppressWarnings("unchecked")
-    @GetMapping("/data/{id}")
+    @GetMapping("/agenda/{id}")
     public ResponseEntity<Object> getDataById(@PathVariable("id") String id) {
     
-        Optional<Data> foundData = Optional.ofNullable((Data) interfaceData.getData(id));
+        Optional<Agenda> foundAgenda = Optional.ofNullable((Agenda) interfaceAgenda.getAgenda(id));
         
-        if (foundData.isPresent()) {
+        if (foundAgenda.isPresent()) {
         
-            return new ResponseEntity<>(foundData, HttpStatus.OK);
+            return new ResponseEntity<>(foundAgenda, HttpStatus.OK);
         
         } else {
         

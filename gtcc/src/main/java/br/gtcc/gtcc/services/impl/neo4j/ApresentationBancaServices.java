@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.gtcc.gtcc.model.neo4j.ApresentationBanca;
-import br.gtcc.gtcc.model.neo4j.Data;
+import br.gtcc.gtcc.model.neo4j.Agenda;
 import br.gtcc.gtcc.model.neo4j.Tcc;
 import br.gtcc.gtcc.model.neo4j.repository.ApresentationBancaRepository;
-import br.gtcc.gtcc.model.neo4j.repository.DataRepository;
+import br.gtcc.gtcc.model.neo4j.repository.AgendaRepository;
 import br.gtcc.gtcc.model.neo4j.repository.TccRepository;
 import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
 import br.gtcc.gtcc.services.spec.ApresentationBancaInterface;
@@ -27,7 +27,7 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
     public TccRepository tccRepository;
 
     @Autowired
-    public DataRepository dataRepository;
+    public AgendaRepository agendaRepository;
 
     @Autowired
     public UsersRepository usersRepository;
@@ -47,10 +47,10 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                     Boolean existsTcc  = this.tccRepository.existsById(aB.getIdTcc());
                     //Verificar se a data mencionanda existe -> 4
 
-                    Data dataApresentacao = this.dataRepository.findById(aB.getIdData()).orElse(null);
-                    ApresentationBanca apresentacaoInData = dataApresentacao.getApresentacao();
+                    Agenda agendaApresentacao = this.agendaRepository.findById(aB.getIdAgenda()).orElse(null);
+                    ApresentationBanca apresentacaoInData = agendaApresentacao.getApresentacao();
                  
-                    if(existsTcc == true && dataApresentacao.getDate() != null){
+                    if(existsTcc == true && agendaApresentacao.getDate() != null){
                         
                         if(aB.getMember1() != null && aB.getMember1() != null ){
 
@@ -62,9 +62,9 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
 
                                 String memberI = aB.getMember1().getId();
                                 String memberII = aB.getMember2().getId();
-                                LocalDateTime date = dataApresentacao.getDate();
-                                LocalTime horasComeco = dataApresentacao.getHorasComeco();
-                                LocalTime horasFim = dataApresentacao.getHorasFim();
+                                LocalDateTime date = agendaApresentacao.getDate();
+                                LocalTime horasComeco = agendaApresentacao.getHorasComeco();
+                                LocalTime horasFim = agendaApresentacao.getHorasFim();
                                 
                                 //Verificar se os menbros 1 e 2 já estão alocados na data entregue pelo cliente(FRONT-END), caso não esteja continuar fluxo ->6
                                 //Caso estejam alocados verificar se a hora entregue já esta alocada para os dois menbros -> 7
@@ -73,16 +73,16 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                                 if (!isLockedMemberOneAndMemberTwo) {
 
                                     //Verificar se existe conflito de horário na apresentação presente, se ja existe um apresentação alocada no mesmo horário ->8   
-                                    Boolean isLock = dataApresentacao.getIsLock();
+                                    Boolean isLock = agendaApresentacao.getIsLock();
                                     Tcc tcc = this.tccRepository.findById(aB.getIdTcc()).get();
                                     
                                     if(isLock == false && apresentacaoInData == null ){
 
                                         Console.log("Teste salvando entidade " + aB.toString());
-                                        dataApresentacao.setApresentacao(aB);
-                                        dataApresentacao.setIsLock(true);
+                                        agendaApresentacao.setApresentacao(aB);
+                                        agendaApresentacao.setIsLock(true);
                                         
-                                        dataRepository.save(dataApresentacao);
+                                        agendaRepository.save(agendaApresentacao);
                                         
                                         aB.setTcc(tcc);
                                         return repository.save(aB);
@@ -109,16 +109,16 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
 
                         }else{
                             // Salvar a apresentação caso o tcc não tenha menbros 
-                            Boolean isLock = dataApresentacao.getIsLock();
+                            Boolean isLock = agendaApresentacao.getIsLock();
                             Tcc tcc = this.tccRepository.findById(aB.getIdTcc()).get();
                             
                             if(isLock == false && apresentacaoInData == null ){
 
                                 Console.log("Teste salvando entidade Sem menbros" + aB.toString());
-                                dataApresentacao.setApresentacao(aB);
-                                dataApresentacao.setIsLock(true);
+                                agendaApresentacao.setApresentacao(aB);
+                                agendaApresentacao.setIsLock(true);
                                 
-                                dataRepository.save(dataApresentacao);
+                                agendaRepository.save(agendaApresentacao);
                                 
                                 aB.setTcc(tcc);
                                 return repository.save(aB);

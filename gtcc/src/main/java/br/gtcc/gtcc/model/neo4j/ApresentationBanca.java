@@ -27,7 +27,7 @@ public class ApresentationBanca {
  private String idTcc;         
  
  @NonNull
- private String idData;
+ private String idAgenda;
  
  @JsonIgnore
  @NonNull

@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @lombok.Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Data {
+public class Agenda {
 
  @Id
  @GeneratedValue

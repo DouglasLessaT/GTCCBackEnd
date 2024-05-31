@@ -1,9 +1,9 @@
 package br.gtcc.gtcc.services.impl.neo4j;
 
-import br.gtcc.gtcc.services.spec.DataInterface;
+import br.gtcc.gtcc.services.spec.AgendaInterface;
+import br.gtcc.gtcc.model.neo4j.Agenda;
 
-import br.gtcc.gtcc.model.neo4j.Data;
-import br.gtcc.gtcc.model.neo4j.repository.DataRepository;
+import br.gtcc.gtcc.model.neo4j.repository.AgendaRepository;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -12,13 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DataServices implements DataInterface<Data, String>{
+public class AgendaServices implements AgendaInterface<Agenda, String>{
 
    @Autowired
-   public DataRepository repository;
+   public AgendaRepository repository;
    
    @Override
-   public  Data   createData(Data data){
+   public  Agenda   createAgenda(Agenda data){
        
        if(data.getDate() != null){
     
@@ -45,19 +45,19 @@ public class DataServices implements DataInterface<Data, String>{
    }
    
    @Override
-   public  Data   updateData(String id ,Data data){
+   public   Agenda    updateAgenda (String id , Agenda   agenda ){
 
-        if(id != null && data != null){
+        if(id != null &&  agenda  != null){
 
-            Data dataRepo = this.getData(id);
+            Agenda  dataRepo = this.getAgenda(id);
 
             if( dataRepo != null){
 
-                dataRepo.setApresentacao(data.getApresentacao());
-                dataRepo.setDate(data.getDate());     
-                dataRepo.setHorasComeco(data.getHorasComeco());
-                dataRepo.setHorasFim(data.getHorasFim());    
-                dataRepo.setIsLock(data.getIsLock());       
+                dataRepo.setApresentacao( agenda.getApresentacao());
+                dataRepo.setDate( agenda.getDate());     
+                dataRepo.setHorasComeco( agenda.getHorasComeco());
+                dataRepo.setHorasFim( agenda.getHorasFim());    
+                dataRepo.setIsLock( agenda.getIsLock());       
                 return this.repository.save(dataRepo);
 
             } else {
@@ -72,11 +72,11 @@ public class DataServices implements DataInterface<Data, String>{
    }
    
    @Override
-   public  Data   deleteData(String id){
+   public   Agenda    deleteAgenda(String id){
 
         if(id != null){
 
-            Data dataRepo = this.repository.existsById(id)==true? repository.findById(id).get() : null;
+            Agenda  dataRepo = this.repository.existsById(id)==true? repository.findById(id).get() : null;
 
             if(dataRepo != null){
 
@@ -95,7 +95,7 @@ public class DataServices implements DataInterface<Data, String>{
    
    @SuppressWarnings("unused")
     @Override
-    public  Data   getData(String id){
+    public   Agenda    getAgenda(String id){
 
         if(id != null || id != " "){
 
@@ -108,7 +108,7 @@ public class DataServices implements DataInterface<Data, String>{
     }
    
    @Override
-   public List< Data > getAllData(){
+   public List<  Agenda  > getAllAgenda(){
   
     Long listData = this.repository.count();
     
@@ -121,6 +121,5 @@ public class DataServices implements DataInterface<Data, String>{
     return null;
    
   }
-
     
 }
