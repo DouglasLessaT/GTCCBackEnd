@@ -23,9 +23,6 @@ public class AgendaServices implements AgendaInterface<Agenda, String>{
        
        if(data.getDate() != null){
     
-        Integer dia = data.getDate().getDayOfMonth();
-        Integer mes = data.getDate().getMonthValue();
-        Integer ano = data.getDate().getYear();
         LocalTime horasComeco = data.getHorasComeco();
         LocalTime horasFim = data.getHorasFim();
         
@@ -53,7 +50,19 @@ public class AgendaServices implements AgendaInterface<Agenda, String>{
 
             if( dataRepo != null){
 
-                dataRepo.setApresentacao( agenda.getApresentacao());
+                Boolean exists = repository.countByDateAndHours( agenda.getDate() , agenda.getHorasComeco() , agenda.getHorasFim() ) > 0;
+
+                if (exists) {
+
+                    return null;
+                
+                }
+
+                if(agenda.getApresentacao() != null){
+
+                    dataRepo.setApresentacao( agenda.getApresentacao());
+                
+                }
                 dataRepo.setDate( agenda.getDate());     
                 dataRepo.setHorasComeco( agenda.getHorasComeco());
                 dataRepo.setHorasFim( agenda.getHorasFim());    

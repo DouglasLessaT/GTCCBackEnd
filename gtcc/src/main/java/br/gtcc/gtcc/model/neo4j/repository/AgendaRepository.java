@@ -19,7 +19,8 @@ public interface AgendaRepository extends Neo4jRepository<Agenda, String> {
     Integer countByDayMonthYearAndHours(@Param("day") int day, @Param("month") int month, @Param("year") int year, @Param("horasComeco") LocalTime horasComeco, @Param("horasFim") LocalTime horasFim);
     
     @Query("MATCH (a:Agenda) WHERE datetime(a.date) = datetime(	$date) AND"+ 
-    "((time(a.horasComeco) > time($horasComeco) AND time(a.horasComeco) < time($horasFim)) OR "+
+    "((time(a.horasComeco) = time($horasComeco) AND time(a.horasFim) = time($horasFim) ) OR"+
+    "(time(a.horasComeco) > time($horasComeco) AND time(a.horasComeco) < time($horasFim)) OR "+
     "(time(a.horasFim) > time($horasComeco) AND time(a.horasFim) < time($horasFim)) OR "+
     "(time(a.horasComeco) < time($horasComeco) AND time(a.horasFim) > time($horasFim)) OR"+
     "(time(a.horasComeco) > time($horasComeco) AND time(a.horasFim) < time($horasFim))) RETURN COUNT(a)")

@@ -85,10 +85,8 @@ public class AgendaController {
     @GetMapping("/agendas")
     public ResponseEntity<Object> getAllAgendas() {
         
-        Console.log("TEstre controller");
         List<Optional<Agenda>> agendas = (List<Optional<Agenda>>) interfaceAgenda.getAllAgenda();
         
-        Console.log("TEstre controller II ");
         if(agendas.isEmpty() != true){
 
             return new ResponseEntity<>(agendas, HttpStatus.OK);
