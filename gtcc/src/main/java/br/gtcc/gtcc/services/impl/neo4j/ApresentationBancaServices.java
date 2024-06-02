@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import br.gtcc.gtcc.model.neo4j.ApresentationBanca;
 import br.gtcc.gtcc.model.neo4j.Agenda;
 import br.gtcc.gtcc.model.neo4j.Tcc;
+import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.model.neo4j.repository.ApresentationBancaRepository;
 import br.gtcc.gtcc.model.neo4j.repository.AgendaRepository;
 import br.gtcc.gtcc.model.neo4j.repository.TccRepository;
@@ -48,11 +49,17 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                     //Verificar se a data mencionanda existe -> 4
 
                     Agenda agendaApresentacao = this.agendaRepository.findById(aB.getIdAgenda()).orElse(null);
+                    
                     ApresentationBanca apresentacaoInData = agendaApresentacao.getApresentacao();
-                 
                     if(existsTcc == true && agendaApresentacao.getDate() != null){
                         
-                        if(aB.getMember1() != null && aB.getMember1() != null ){
+                        Boolean existsConlictTcc = this.repository.countConflictTccs(aB.getIdTcc()) > 0;
+
+                        if(!existsConlictTcc){
+                            return null;
+                        }
+
+                        if( aB.getMember1() != null && aB.getMember1() != null ){
 
                             //Verificar se os membros um e dois ja existem. -> 5
                             Boolean existsMenberI = this.usersRepository.existsById(aB.getMember1().getId());
@@ -60,16 +67,16 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
 
                             if(existsMenberI == true && existsMenberII == true){
 
-                                String memberI = aB.getMember1().getId();
-                                String memberII = aB.getMember2().getId();
                                 LocalDateTime date = agendaApresentacao.getDate();
                                 LocalTime horasComeco = agendaApresentacao.getHorasComeco();
                                 LocalTime horasFim = agendaApresentacao.getHorasFim();
+                                String memberI = aB.getMember1().getId();
+                                String memberII = aB.getMember2().getId();
                                 
                                 //Verificar se os menbros 1 e 2 já estão alocados na data entregue pelo cliente(FRONT-END), caso não esteja continuar fluxo ->6
                                 //Caso estejam alocados verificar se a hora entregue já esta alocada para os dois menbros -> 7
-                                Boolean isLockedMemberOneAndMemberTwo = repository.countByMembersDateAndTime(memberI, memberII, date, horasComeco, horasFim) > 0;
-                                Console.log("Error: " + repository.countByMembersDateAndTime(memberI, memberII, date, horasComeco, horasFim) );
+                                Boolean isLockedMemberOneAndMemberTwo = repository.countConflictingApresentationsByData( date,horasComeco, horasFim ,memberI ,memberII) > 0;
+ 
                                 if (!isLockedMemberOneAndMemberTwo) {
 
                                     //Verificar se existe conflito de horário na apresentação presente, se ja existe um apresentação alocada no mesmo horário ->8   
@@ -78,7 +85,6 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                                     
                                     if(isLock == false && apresentacaoInData == null ){
 
-                                        Console.log("Teste salvando entidade " + aB.toString());
                                         agendaApresentacao.setApresentacao(aB);
                                         agendaApresentacao.setIsLock(true);
                                         
@@ -114,7 +120,6 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                             
                             if(isLock == false && apresentacaoInData == null ){
 
-                                Console.log("Teste salvando entidade Sem menbros" + aB.toString());
                                 agendaApresentacao.setApresentacao(aB);
                                 agendaApresentacao.setIsLock(true);
                                 
@@ -158,6 +163,110 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
     @Override
     public ApresentationBanca updateApresentationBanca(String id,ApresentationBanca apresentationBanca) {
        
+        if( id == null){
+            return null;
+        }
+
+        ApresentationBanca repoApresentacao = this.getApresentationBanca(id);
+        
+        if(repoApresentacao == null ){
+            return null;
+        }
+
+      
+
+        String agendaIdRepo = apresentationBanca.getIdAgenda();
+        String tccIdRepo = apresentationBanca.getIdTcc();
+
+
+        Agenda agendaRepo = this.agendaRepository.findById(agendaIdRepo).orElse(null);
+
+        Tcc tcc = this.tccRepository.findById(tccIdRepo).orElse(null);
+        Tcc tccRepo =this.tccRepository.findById(repoApresentacao.getIdTcc()).orElse(null);
+
+        Boolean existsConlictTcc = this.repository.countConflictTccs(tccIdRepo) > 0;
+
+        if( apresentationBanca.getMember1() != null || apresentationBanca.getMember2() != null){
+            
+            String memberIdOneRepo = apresentationBanca.getMember1().getId();
+            String memberIdTwoRepo = apresentationBanca.getMember2().getId();
+
+            Boolean isLockedMemberOneAndMemberTwo = repository.countConflictingApresentationsByData( agendaRepo.getDate() ,agendaRepo.getHorasComeco() ,agendaRepo.getHorasFim() , memberIdOneRepo ,memberIdTwoRepo) > 0;
+
+            ApresentationBanca apresentacaoInData = agendaRepo.getApresentacao();
+
+            if(existsConlictTcc == false || isLockedMemberOneAndMemberTwo == false){
+
+                Boolean isLock = agendaRepo.getIsLock();
+                
+
+                if(isLock == false && apresentacaoInData == null ){
+
+                    if( agendaIdRepo == null){
+                        agendaRepo.setApresentacao(repoApresentacao);
+                        apresentationBanca.setIdAgenda(agendaIdRepo);
+                    } else {
+                        agendaRepo.setApresentacao(apresentationBanca);
+                    }
+                    
+                    if( tccIdRepo == null){
+                        apresentationBanca.setTcc(tccRepo);
+                    }else{
+                        apresentationBanca.setTcc(tcc);
+                    }
+
+                    agendaRepo.setIsLock(true);
+                    
+                    agendaRepository.save(agendaRepo);
+                    
+                    return repository.save(apresentationBanca);
+
+                }else {
+
+                    return null;
+
+                }
+
+            } else {
+
+                Boolean isLock = agendaRepo.getIsLock();
+                
+                if(!existsConlictTcc){
+                    return null;
+                }
+                
+                if(isLock == false && apresentacaoInData == null ){
+
+                    if( agendaIdRepo == null){
+                        agendaRepo.setApresentacao(repoApresentacao);
+                        apresentationBanca.setIdAgenda(agendaIdRepo);
+                    } else {
+                        agendaRepo.setApresentacao(apresentationBanca);
+                    }
+                    
+                    if( tccIdRepo == null){
+                        apresentationBanca.setTcc(tccRepo);
+                    }else{
+                        apresentationBanca.setTcc(tcc);
+                    }
+
+                    agendaRepo.setIsLock(true);
+                    
+                    agendaRepository.save(agendaRepo);
+                    
+                    apresentationBanca.setTcc(tcc);
+                    return repository.save(apresentationBanca);
+
+                }else {
+
+                    return null;
+
+                }
+
+            }
+            
+        } 
+
         return null;
     }
 

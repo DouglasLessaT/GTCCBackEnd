@@ -15,35 +15,25 @@ public interface ApresentationBancaRepository extends Neo4jRepository<Apresentat
     @Query("MATCH (a:ApresentationBanca)-[:MEMBER_OF]->(u:Users) WHERE elementId(u) IN [$member1Id, $member2Id] AND date(a.date) = date($date) AND a.horasComeco = $horasComeco AND a.horasFim = $horasFim RETURN count(a)")
     Integer countByMembersDateAndTime(@Param("member1Id") String member1Id, @Param("member2Id") String member2Id, @Param("date") LocalDateTime date, @Param("horasComeco") LocalTime horasComeco, @Param("horasFim") LocalTime horasFim);
 
-    
-    @Query("MATCH (ap1:ApresentationBanca)-[:MEMBER_ONE_OF|:MEMBER_TWO_OF]->(user:Users), " +
-           "(ap1)-[:TCC_APRESENTA_EM]->(data1:Data) " +
-           "MATCH (ap2:ApresentationBanca)-[:MEMBER_ONE_OF|:MEMBER_TWO_OF]->(user), " +
-           "(ap2)-[:TCC_APRESENTA_EM]->(data2:Data) " +
-           "WHERE ap1.id <> ap2.id " +
-           "AND data1.date = $date " +
-           "AND data1.horasComeco = $horasComeco " +
-           "AND data1.horasFim = $horasFim " +
-           "AND (user.id = $member1Id OR user.id = $member2Id) " +
-           "RETURN count(DISTINCT ap1)")
-    Integer countConflictingApresentations(String date, String horasComeco, String horasFim, String member1Id, String member2Id);
-
-    @Query("MATCH (ap:ApresentationBanca)-[:MEMBER_ONE_OF|:MEMBER_TWO_OF]->(user:Users), " +
+    @Query("MATCH (ap:ApresentationBanca)-[:MEMBER_ONE_OF|MEMBER_TWO_OF]->(user:Users), " +
            "(ap)-[:ON_DATE]->(agenda:Agenda) " +
-           "WHERE (user.id = $member1 OR user.id = $member2) " +
-           "AND agenda.date = $date " +
-           "AND agenda.horasComeco = $horasComeco " +
-           "AND agenda.horasFim = $horasFim " +
+           "WHERE (elementId(user) = $member1 OR elementId(user) = $member2) " +
+           "AND datetime(agenda.date) = datetime($date) " +
+           "AND time(agenda.horasComeco) = time($horasComeco) " +
+           "AND time(agenda.horasFim) = time($horasFim) " +
            "RETURN count(DISTINCT ap)")
-    Integer countConflictingApresentationsByData(String date, String horasComeco, String horasFim, String member1, String member2);
+    Integer countConflictingApresentationsByData(@Param("date") LocalDateTime date, LocalTime horasComeco, LocalTime horasFim, String member1, String member2);
 
-//     @Query("MATCH (ap:ApresentationBanca)-[rel:MEMBER_ONE_OF|MEMBER_TWO_OF]->(user:Users), (ap)-[:ON_DATE]->(agenda:Agenda) 
-//     WHERE user.id IN ["4:f50458d9-721d-4153-a562-bbaa6e6cc75b:9", "4:f50458d9-721d-4153-a562-bbaa6e6cc75b:2"] 
-//     AND agenda.date = datetime("2024-05-25T14:15:15.825000000") 
-//     AND agenda.horasComeco = time("10:30:00") 
-//     AND agenda.horasFim = time("11:00:00") 
-//     RETURN ap
-//     ")
+    @Query(":TCC_APRESENTA_EM]->(a:ApresentationBanca))WHERE elementId(t)= $tccId RETURN COUNT(t)")
+    Integer countConflictTccs(@Param("tccId") String tccId);
 
+    @Query("(ap:ApresentationBanca)-[:ON_DATE]->(agenda:Agenda) "+
+    "WHERE elementId(agenda) = $agendaId  AND " +
+    "AND datetime(agenda.date) = datetime($date) " + 
+    "AND time(agenda.horasComeco) = time($horasComeco) " + 
+    "AND time(agenda.horasFim) = time($horasFim)" + 
+    "RETURN count(DISTINCT ap)")
+    Integer countConflictApresentationWithoutMembers(@Param("agendaId") String agendaId ,@Param("date") LocalDateTime date, @Param("horasComeco")LocalTime horasComeco, @Param("horasFim") LocalTime horasFim);
+    
 
 }

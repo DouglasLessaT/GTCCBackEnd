@@ -38,8 +38,6 @@ public class ApresentationBancaController {
        @SuppressWarnings("unchecked")
        Optional<ApresentationBanca>  createdApresentationBanca  = Optional.ofNullable((ApresentationBanca)interfaceBanca.createApresentationBanca(apresentation));
       
-       Console.log("Depois do Optional "+createdApresentationBanca);
-      
        if (  createdApresentationBanca.isPresent()) { 
            
            return ResponseEntity.status(HttpStatus.CREATED).body("Apresentação marcada com sucesso");

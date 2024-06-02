@@ -40,7 +40,7 @@ public class TccController {
       
         } else {
       
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Falha ao criar Tcc");
       
         }
     }
