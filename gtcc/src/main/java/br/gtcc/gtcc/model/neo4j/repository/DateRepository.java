@@ -2,12 +2,12 @@ package br.gtcc.gtcc.model.neo4j.repository;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 
-import br.gtcc.gtcc.model.neo4j.Data;
+import br.gtcc.gtcc.model.neo4j.Date;
 
 import java.util.List;
 import java.util.Optional;
 
 
-public interface DataRepository extends Neo4jRepository<Data, String> {
- Optional<Data> findById(String id);
+public interface DateRepository extends Neo4jRepository<Date, String> {
+ Optional<Date> findById(String id);
 }
