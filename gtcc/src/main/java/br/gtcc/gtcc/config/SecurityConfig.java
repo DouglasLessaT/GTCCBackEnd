@@ -30,11 +30,14 @@ import br.gtcc.gtcc.config.handlers.LoginInterceptor;
 import br.gtcc.gtcc.model.UserType;
 import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
+import br.gtcc.gtcc.services.impl.neo4j.UserServices;
 import br.gtcc.gtcc.util.JWTUtil;
 
 @Configuration
 @EnableWebMvc
 public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
+    @Autowired
+    private UserServices userServices;
     @Autowired
     private UsersRepository usersRepository;
     @Autowired
@@ -47,7 +50,7 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
     private void addUsers() {
         try {
             // Verifica se o usuário Admin já existe no banco de dados
-            Optional<Users> existingAdmin = usersRepository.findByLogin("admin");
+            Optional<Users> existingAdmin = userServices.userrepository.findByLogin("admin");
             if (existingAdmin.isEmpty()) {
                 Users admin = new Users();
                 admin.setName("Admin");
@@ -61,11 +64,11 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
                 admin.getPermissoes().add("ROLE_PROFESSOR");
                 admin.getPermissoes().add("ROLE_COORDENADOR");
                 admin.getPermissoes().add("ROLE_ALUNO");
-                usersRepository.save(admin);
+                userServices.userrepository.save(admin);
             }
 
             // Verifica se o usuário Professor já existe no banco de dados
-            Optional<Users> existingProfessor = usersRepository.findByLogin("professor");
+            Optional<Users> existingProfessor = userServices.userrepository.findByLogin("professor");
             if (existingProfessor.isEmpty()) {
                 Users professor = new Users();
                 professor.setName("Professor");
@@ -76,26 +79,26 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
                 professor.setLogin("professor");
                 professor.getPermissoes().add("ROLE_USER");
                 professor.getPermissoes().add("ROLE_PROFESSOR");
-                usersRepository.save(professor);
+                userServices.userrepository.save(professor);
             }
 
             // Verifica se o usuário Coordenador já existe no banco de dados
-            Optional<Users> existingCoordinator = usersRepository.findByLogin("coordenador");
+            Optional<Users> existingCoordinator = userServices.userrepository.findByLogin("coordenador");
             if (existingCoordinator.isEmpty()) {
-                Users coordinator = new Users();
-                coordinator.setName("Coordenador");
-                coordinator.setEmail("coordenador@gmail.com");
-                coordinator.setSenha(passwordEncoder().encode("1234"));
-                coordinator.setCellphone("444444444");
-                coordinator.getUserType().add(UserType.COORDENADOR);
-                coordinator.setLogin("coordenador");
-                coordinator.getPermissoes().add("ROLE_USER");
-                coordinator.getPermissoes().add("ROLE_COORDENADOR");
-                usersRepository.save(coordinator);
+                Users coordenador = new Users();
+                coordenador.setName("Coordenador");
+                coordenador.setEmail("coordenador@gmail.com");
+                coordenador.setSenha(passwordEncoder().encode("1234"));
+                coordenador.setCellphone("444444444");
+                coordenador.getUserType().add(UserType.COORDENADOR);
+                coordenador.setLogin("coordenador");
+                coordenador.getPermissoes().add("ROLE_USER");
+                coordenador.getPermissoes().add("ROLE_COORDENADOR");
+                userServices.userrepository.save(coordenador);
             }
 
             // Verifica se o usuário Aluno já existe no banco de dados
-            Optional<Users> existingAluno = usersRepository.findByLogin("aluno");
+            Optional<Users> existingAluno = userServices.userrepository.findByLogin("aluno");
             if (existingAluno.isEmpty()) {
                 Users aluno = new Users();
                 aluno.setName("Aluno");
@@ -106,7 +109,7 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
                 aluno.setLogin("aluno");
                 aluno.getPermissoes().add("ROLE_USER");
                 aluno.getPermissoes().add("ROLE_ALUNO");
-                usersRepository.save(aluno);
+                userServices.userrepository.save(aluno);
             }
 
         } catch (Exception ex) {
@@ -121,10 +124,50 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor(usersRepository, jwtUtil))
-                .excludePathPatterns("/error**", "/index**", "/doc**", "/auth**", "/swagger-ui**", "/v3/api-docs**")
-                .addPathPatterns("/coordenacao/tcc/v1/tcc**", "/coordenacao/tcc/v1/users**",
-                        "/coordenacao/tcc/v1/apresentacao**", "/coordenacao/tcc/v1/data**",
-                        "/users-controller/createUser/");
+        registry.addInterceptor(new LoginInterceptor(userServices, usersRepository, jwtUtil))
+                .excludePathPatterns("/error**", "/index**", "/doc**", "/auth**", "/swagger-ui**")
+                .addPathPatterns("/coordenacao/tcc/v1/usuario/**" , "gtcc/coordenacao/tcc/v1/usuarios", "gtcc/coordenacao/tcc/v1/datas" , "/gtcc/coordenacao/tcc/v1/date/**");
     }
+
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {}
+
+    @Override
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {}
+
+    @Override
+    public void configureAsyncSupport(AsyncSupportConfigurer configurer) {}
+
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {}
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {}
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {}
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {}
+
+    @Override
+    public void configureViewResolvers(ViewResolverRegistry registry) {}
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {}
+
+    @Override
+    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {}
+
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {}
+
+    @Override
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {}
+
+    @Override
+    public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {}
+
+    @Override
+    public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {}
 }

@@ -11,20 +11,18 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+// import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.gtcc.gtcc.model.UserType;
 import io.micrometer.common.lang.NonNull;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Node
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 public class Users {
 
     @Id
@@ -47,15 +45,16 @@ public class Users {
     private String cellphone;                          
     
     @NonNull
-    @Relationship(type = "GERENCIA", direction = Relationship.Direction.OUTGOING)  
-    private Set<Tcc> tccsGerenciados = new HashSet<>();
-    
-    @NonNull
     private String login;
 
-    @JsonIgnore
+    @NonNull
     private String senha;
 
     private List<String> permissoes = new ArrayList<>();
+
+    @NonNull
+    @Relationship(type = "GERENCIA", direction = Relationship.Direction.OUTGOING)  
+    private Set<Tcc> tccsGerenciados = new HashSet<>();
+    
 
 }

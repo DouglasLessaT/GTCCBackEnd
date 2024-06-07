@@ -3,6 +3,7 @@ package br.gtcc.gtcc.config.handlers;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,20 +17,21 @@ import org.springframework.web.servlet.ModelAndView;
 import br.gtcc.gtcc.annotations.ValidaAcesso;
 import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
+import br.gtcc.gtcc.services.impl.neo4j.UserServices;
 import br.gtcc.gtcc.util.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-
-
 public class LoginInterceptor implements HandlerInterceptor {
 
-  private UsersRepository UsersRepository;
+  private UserServices userService;
+  private UsersRepository usersRepository;
   private JWTUtil jwtUtil;
-  private Users usersUsers;
+  private Optional<Users> user;
 
-  public LoginInterceptor(UsersRepository UsersRepository, JWTUtil jwtUtil) {
-    this.UsersRepository = UsersRepository;
+  public LoginInterceptor(UserServices userService, UsersRepository usersRepository, JWTUtil jwtUtil) {
+    this.userService = userService;
+    this.usersRepository = usersRepository;
     this.jwtUtil = jwtUtil;
   }
 
@@ -40,20 +42,25 @@ public class LoginInterceptor implements HandlerInterceptor {
       String login = jwtUtil.getUsuarioNoToken(jwttoken);
 
       if (login != null && jwtUtil.validaToken(jwttoken, login)) {
-        usersUsers = UsersRepository.findByLogin(login).get();
-        List<GrantedAuthority> listaPermissoes = new ArrayList<>();
-        usersUsers.getPermissoes().forEach(p -> {
-          listaPermissoes.add(new SimpleGrantedAuthority(p));
-        });
+        user = usersRepository.findByLogin(login);
+        if (user.isPresent()) {
+          List<GrantedAuthority> listaPermissoes = new ArrayList<>();
+          user.get().getPermissoes().forEach(p -> {
+            listaPermissoes.add(new SimpleGrantedAuthority(p));
+          });
 
-        var token = new UsernamePasswordAuthenticationToken(usersUsers.getLogin(), null, listaPermissoes);
-        SecurityContextHolder.getContext().setAuthentication(token);
+          var token = new UsernamePasswordAuthenticationToken(user.get().getLogin(), null, listaPermissoes);
+          SecurityContextHolder.getContext().setAuthentication(token);
 
-        return validaAutorizacao(request, response, handler);
+          return validaAutorizacao(request, response, handler);
+        } else {
+          request.setAttribute("jakarta.servlet.error.status_code", 401);
+          throw new RuntimeException("Usuário não encontrado");
+        }
 
       } else {
         request.setAttribute("jakarta.servlet.error.status_code", 401);
-        throw new RuntimeException("Falha no TOKEN");
+        throw new RuntimeException("Token Inválido");
       }
     } catch (Exception ex) {
       throw ex;
@@ -69,10 +76,10 @@ public class LoginInterceptor implements HandlerInterceptor {
     // caso queira alterar a forma de validação usando o endpoint
     String path = request.getRequestURI().substring(request.getContextPath().length());
 
-    if (usersUsers == null) {
+    if (user == null) {
       request.setAttribute(null, method);
       request.setAttribute("jakarta.servlet.error.status_code", 401);
-      throw new RuntimeException("Nao logado");
+      throw new RuntimeException("Não logado");
     }
 
     // se é um restcontroller
@@ -83,7 +90,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         String[] acessos = method.getDeclaringClass().getAnnotation(ValidaAcesso.class).value();
 
         for (String verificacao : acessos) {
-          if (usersUsers.getPermissoes().contains(verificacao)) {
+          if (user.get().getPermissoes().contains(verificacao)) {
             autorizadoClasse = true;
             break;
           }
@@ -97,7 +104,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         String[] acessos = method.getAnnotation(ValidaAcesso.class).value();
 
         for (String verificacao : acessos) {
-          if (usersUsers.getPermissoes().contains(verificacao)) {
+          if (user.get().getPermissoes().contains(verificacao)) {
             autorizadoMetodo = true;
             break;
           }
@@ -108,7 +115,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
       if (!autorizadoClasse || (autorizadoClasse && !autorizadoMetodo)) {
         request.setAttribute("jakarta.servlet.error.status_code", 403);
-        throw new RuntimeException("Recurso nao autorizado");
+        throw new RuntimeException("Recurso não autorizado");
       }
     }
     return true;

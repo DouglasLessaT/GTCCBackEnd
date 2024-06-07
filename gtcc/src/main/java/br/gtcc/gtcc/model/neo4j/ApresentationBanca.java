@@ -31,5 +31,5 @@ public class ApresentationBanca {
  private Users member2;
  
  @Relationship(type = "ON_DATE", direction = Direction.OUTGOING)        // Relacionamento com a data em que a apresentação esta sendo marcada 
- private br.gtcc.gtcc.model.neo4j.Data date;
+ private br.gtcc.gtcc.model.neo4j.Date date;
 }
