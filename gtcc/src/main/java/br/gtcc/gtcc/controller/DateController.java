@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.gtcc.gtcc.annotations.ValidaAcesso;
 import br.gtcc.gtcc.model.neo4j.Date;
 import br.gtcc.gtcc.services.spec.DateInterface;
 import java.util.Optional;
 
 @CrossOrigin
 @RestController
+@ValidaAcesso("ROLE_COORDENADOR")
 @RequestMapping("coordenacao/tcc/v1")
 public class DateController {
 
