@@ -114,22 +114,32 @@ public class TccServices implements TccInterface<Tcc, String> {
 
                             Users orientadorRepo = existingTcc.getOrientador();
                             Users alunoRepo = existingTcc.getAluno();
-    
-                            removeRelacionamento(orientadorRepo.getId(), id);
-                            removeRelacionamento(alunoRepo.getId(), id);
 
-                            existingTcc.setIdOrientador(tcc.getIdOrientador());
-                            existingTcc.setIdAluno(tcc.getIdAluno());
-                            existingTcc.setAluno(aluno);
-                            existingTcc.setOrientador(orientador);
+                            Boolean isEqualsAlunos = aluno.getId().equals(alunoRepo.getId());
+                            Boolean isEqualsOrientadores = orientador.getId().equals(orientadorRepo.getId());
+                            
+                            if( !isEqualsOrientadores  ){
 
-                            orientador.getTccsGerenciados().add(existingTcc);
-                            this.usersRepository.save(orientador);
-                            aluno.getTccsGerenciados().add(existingTcc);
-                            this.usersRepository.save(aluno);
+                                removeRelacionamento(orientadorRepo.getId(), id);
+                                existingTcc.setIdOrientador(tcc.getIdOrientador());
+                                orientador.getTccsGerenciados().add(existingTcc);
+                                existingTcc.setOrientador(orientador);
+                                this.usersRepository.save(orientador);
+
+                            }
+                           
+                            if( !isEqualsAlunos ){
+                                    
+                                removeRelacionamento(alunoRepo.getId(), id);
+                                existingTcc.setIdAluno(tcc.getIdAluno());
+                                aluno.getTccsGerenciados().add(existingTcc);
+                                existingTcc.setAluno(aluno);
+                                this.usersRepository.save(aluno);
+                            
+                            }
 
 
-                        } else {
+                            } else {
 
                             return null;
                         
