@@ -37,7 +37,6 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
     @Override
     public ApresentationBanca createApresentationBanca(ApresentationBanca aB) {
         
-        //Verificar se a apresentação é nula caso sim retornar null  -> 1 
         Boolean isNull = aB == null;
         if( isNull == false ){
 
@@ -49,14 +48,14 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                     //Verificar se a data mencionanda existe -> 4
 
                     Agenda agendaApresentacao = this.agendaRepository.findById(aB.getIdAgenda()).orElse(null);
-                    
-                    ApresentationBanca apresentacaoInData = agendaApresentacao.getApresentacao();
+                    ApresentationBanca apresentacaoDentroDaAgenda = agendaApresentacao.getApresentacao();
+
                     if(existsTcc == true && agendaApresentacao.getDate() != null){
                         
                         Boolean existsConlictTcc = this.repository.countConflictTccs(aB.getIdTcc()) > 0;
 
                         if(!existsConlictTcc){
-                            return null;
+                            return null; // -> Tcc já esta alocado a uma apresentação
                         }
 
                         if( aB.getMember1() != null && aB.getMember1() != null ){
@@ -83,7 +82,7 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                                     Boolean isLock = agendaApresentacao.getIsLock();
                                     Tcc tcc = this.tccRepository.findById(aB.getIdTcc()).get();
                                     
-                                    if(isLock == false && apresentacaoInData == null ){
+                                    if(isLock == false && apresentacaoDentroDaAgenda == null ){
 
                                         agendaApresentacao.setApresentacao(aB);
                                         agendaApresentacao.setIsLock(true);
@@ -95,20 +94,20 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
     
                                     }else {
 
-                                        return null;
+                                        return null;//-> esta data ja esta alocada 
 
                                     }
                                 
                                 } else {
 
-                                    return null;
+                                    return null;//-> Os menbros da apresentação ja estão alocado nesta hora de começo e fim 
                                 
                                 }
                                 
                             
                             }else {
 
-                               return null;
+                               return null;//-> Um dos menbros não existe 
 
                             }
 
@@ -118,7 +117,7 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                             Boolean isLock = agendaApresentacao.getIsLock();
                             Tcc tcc = this.tccRepository.findById(aB.getIdTcc()).get();
                             
-                            if(isLock == false && apresentacaoInData == null ){
+                            if(isLock == false && apresentacaoDentroDaAgenda == null ){
 
                                 agendaApresentacao.setApresentacao(aB);
                                 agendaApresentacao.setIsLock(true);
@@ -138,26 +137,26 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
 
                     }else{
 
-                        return null;
+                        return null;//tcc ou agenda informada não existe 
 
                     }
 
                 } else {
                     
-                    return null;
+                    return null;//->tcc nulo
 
                 }
 
             
             } else {
 
-                return null;
+                return null;//-> id não passado 
            
             }
 
         }
 
-        return null;
+        return null;//-> apresentação e banca é nula
     }
 
     @Override
@@ -172,8 +171,6 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
         if(repoApresentacao == null ){
             return null;
         }
-
-      
 
         String agendaIdRepo = apresentationBanca.getIdAgenda();
         String tccIdRepo = apresentationBanca.getIdTcc();

@@ -24,5 +24,12 @@ public interface AgendaRepository extends Neo4jRepository<Agenda, String> {
     "(time(a.horasFim) > time($horasComeco) AND time(a.horasFim) < time($horasFim)) OR "+
     "(time(a.horasComeco) < time($horasComeco) AND time(a.horasFim) > time($horasFim)) OR"+
     "(time(a.horasComeco) > time($horasComeco) AND time(a.horasFim) < time($horasFim))) RETURN COUNT(a)")
-     Integer countByDateAndHours(@Param("date") LocalDateTime date, @Param("horasComeco") LocalTime horasComeco, @Param("horasFim") LocalTime horasFim);
+    Integer countByDateAndHours(@Param("date") LocalDateTime date, @Param("horasComeco") LocalTime horasComeco, @Param("horasFim") LocalTime horasFim);
+
+    @Query("MATCH(a:Agenda)WHERE a.isLock = false RETURN a LIMIT 10")
+    List<Agenda> listAgendaFree();
+
+    @Query("MATCH(a:Agenda)WHERE datetime(a.date)=datetime($date) RETURN a")
+    List<Agenda> listAgendaByDate(@Param("date") LocalDateTime date);
+
 }
