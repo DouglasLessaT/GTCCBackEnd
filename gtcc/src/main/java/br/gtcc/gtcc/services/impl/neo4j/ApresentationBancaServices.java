@@ -169,19 +169,18 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
         ApresentationBanca repoApresentacao = this.getApresentationBanca(id);
         
         if(repoApresentacao == null ){
-            return null;
+            return null;//Apresentação não informada
         }
 
-        String agendaIdRepo = apresentationBanca.getIdAgenda();
-        String tccIdRepo = apresentationBanca.getIdTcc();
+        String agendaId = apresentationBanca.getIdAgenda();
+        String tccId = apresentationBanca.getIdTcc();
 
+        Agenda agendaRepo = this.agendaRepository.findById(agendaId).orElse(null);
 
-        Agenda agendaRepo = this.agendaRepository.findById(agendaIdRepo).orElse(null);
+        Tcc tcc= this.tccRepository.findById(tccId).orElse(null);
+        Tcc tccRepo  =this.tccRepository.findById(repoApresentacao.getIdTcc()).orElse(null);
 
-        Tcc tcc = this.tccRepository.findById(tccIdRepo).orElse(null);
-        Tcc tccRepo =this.tccRepository.findById(repoApresentacao.getIdTcc()).orElse(null);
-
-        Boolean existsConlictTcc = this.repository.countConflictTccs(tccIdRepo) > 0;
+        Boolean existsConlictTcc = this.repository.countConflictTccs(tccId) > 0;
 
         if( apresentationBanca.getMember1() != null || apresentationBanca.getMember2() != null){
             
@@ -190,23 +189,23 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
 
             Boolean isLockedMemberOneAndMemberTwo = repository.countConflictingApresentationsByData( agendaRepo.getDate() ,agendaRepo.getHorasComeco() ,agendaRepo.getHorasFim() , memberIdOneRepo ,memberIdTwoRepo) > 0;
 
-            ApresentationBanca apresentacaoInData = agendaRepo.getApresentacao();
+            ApresentationBanca apresentacaoDentroDaAgenda = agendaRepo.getApresentacao();
 
             if(existsConlictTcc == false || isLockedMemberOneAndMemberTwo == false){
 
                 Boolean isLock = agendaRepo.getIsLock();
                 
 
-                if(isLock == false && apresentacaoInData == null ){
+                if(isLock == false && apresentacaoDentroDaAgenda == null ){
 
-                    if( agendaIdRepo == null){
+                    if( agendaId == null){
                         agendaRepo.setApresentacao(repoApresentacao);
-                        apresentationBanca.setIdAgenda(agendaIdRepo);
+                        apresentationBanca.setIdAgenda(agendaId);
                     } else {
                         agendaRepo.setApresentacao(apresentationBanca);
                     }
                     
-                    if( tccIdRepo == null){
+                    if( tccId == null){
                         apresentationBanca.setTcc(tccRepo);
                     }else{
                         apresentationBanca.setTcc(tcc);
@@ -232,16 +231,16 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                     return null;
                 }
                 
-                if(isLock == false && apresentacaoInData == null ){
+                if(isLock == false && apresentacaoDentroDaAgenda == null ){
 
-                    if( agendaIdRepo == null){
+                    if( agendaId == null){
                         agendaRepo.setApresentacao(repoApresentacao);
-                        apresentationBanca.setIdAgenda(agendaIdRepo);
+                        apresentationBanca.setIdAgenda(agendaId);
                     } else {
                         agendaRepo.setApresentacao(apresentationBanca);
                     }
                     
-                    if( tccIdRepo == null){
+                    if( tccId == null){
                         apresentationBanca.setTcc(tccRepo);
                     }else{
                         apresentationBanca.setTcc(tcc);
