@@ -20,7 +20,7 @@ public interface ApresentationBancaRepository extends Neo4jRepository<Apresentat
            "RETURN count(DISTINCT ap)")
     Integer countConflictingApresentationsByData(@Param("date") LocalDateTime date, LocalTime horasComeco, LocalTime horasFim, String member1, String member2);
 
-    @Query("MATCH(t:Tcc)-[:TCC_APRESENTA_EM]->(a:ApresentationBanca))WHERE elementId(t)= $tccId RETURN COUNT(t)")
+    @Query("MATCH(t:Tcc)-[:TCC_APRESENTA_EM]->(a:ApresentationBanca)WHERE elementId(t)= $tccId RETURN COUNT(t)")
     Integer countConflictTccs(@Param("tccId") String tccId);
 
     @Query("(ap:ApresentationBanca)-[:ON_DATE]->(agenda:Agenda) "+
