@@ -40,7 +40,7 @@ public class DocConfig {
                                                 .title("API em NoSQL Neo4j GTCC")
                                                 .version("0.0.1")
                                                 .contact(new Contact().email("vix.bay.group@gmail.com")
-                                                                .name("Arthur, Alessandro Santos, Hugo Alves, Douglas Lessa, Pedro Pompermayer, Samuel Paviotti"))
+                                                                .name("Arthur, Alessandro Santos, Hugo da Cruz, Douglas Lessa, Pedro Pompermayer, Samuel Paviotti"))
                                                 .description("<h1>API GTCC</h1><p>Repositório ainda não esta disponível</p>"));
         }
 }

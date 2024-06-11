@@ -14,15 +14,15 @@ import br.gtcc.gtcc.model.neo4j.Users;
  * @author privateclasswizard
  */
 public interface UserInterface<T, E> {
-    
+
    public T createUsers(T users);
-   
+
    public T updateUsers(T users);
-   
+
    public T deleteUsers(E id);
-   
+
    public List<T> getAllUsers();
-   
+
    public T getUsers(E id);
-   
+
 }

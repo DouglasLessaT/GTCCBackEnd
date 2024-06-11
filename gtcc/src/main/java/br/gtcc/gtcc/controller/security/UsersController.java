@@ -10,6 +10,7 @@ import br.gtcc.gtcc.model.neo4j.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,96 +40,61 @@ import java.util.Optional;
 @RequestMapping("coordenacao/tcc/v1")
 public class UsersController {
 
-    @SuppressWarnings("rawtypes")
     @Autowired
-    public UserInterface usersInterface;
+    public UserInterface<Users, String> usersInterface;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @PostMapping("/usuario")
-    public ResponseEntity<Object> createUser(@RequestBody(required = true) Users users) {
-
-        @SuppressWarnings("unchecked")
-        Optional<Users> createdUsers = Optional.ofNullable((Users) usersInterface.createUsers(users));
-
+    public ResponseEntity<Object> createUser(@RequestBody(required = true) Users users) {  
+        users.setSenha(passwordEncoder.encode(users.getSenha()));
+        Optional<Users> createdUsers = Optional.ofNullable(usersInterface.createUsers(users));
         if (createdUsers.isPresent()) {
-
             return ResponseEntity.status(HttpStatus.CREATED).body("Usuário criado com sucesso");
-
         } else {
-
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
-
         }
     }
 
     @DeleteMapping("/usuario/{id}")
-    public ResponseEntity<Object> deleteUsers(@PathVariable long id) {
-
-        @SuppressWarnings("unchecked")
-        Optional<Users> deletedUsers = Optional.ofNullable((Users) usersInterface.deleteUsers(id));
-
+    public ResponseEntity<Object> deleteUsers(@PathVariable String id) {
+        Optional<Users> deletedUsers = Optional.ofNullable(usersInterface.deleteUsers(id));
         if (deletedUsers.isPresent()) {
-
             return ResponseEntity.status(HttpStatus.CREATED).body("Usuário deletado com sucesso");
-
         } else {
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuáio não encontrado");
-
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
         }
-
     }
 
     @PutMapping("/usuario/{id}")
     public ResponseEntity<Object> updateUsers(@RequestBody(required = true) Users users, @PathVariable String id) {
-
-        @SuppressWarnings("unchecked")
-        Optional<Users> updatedUser = Optional.ofNullable((Users) usersInterface.updateUsers(users));
-
+        users.setId(id); // Assegurar que o ID do Path é definido no objeto Users
+        Optional<Users> updatedUser = Optional.ofNullable(usersInterface.updateUsers(users));
         if (updatedUser.isPresent()) {
-
-            return ResponseEntity.status(HttpStatus.OK).body("Usuario alterado com sucesso");
-
+            return ResponseEntity.status(HttpStatus.OK).body("Usuário alterado com sucesso");
         } else {
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado");
-
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
         }
-
     }
 
     @GetMapping("/usuarios")
     public ResponseEntity<Object> getAllUsers() {
-
-        @SuppressWarnings("unchecked")
-        Optional<List<Users>> list = Optional.ofNullable((List<Users>) usersInterface.getAllUsers());
-
+        Optional<List<Users>> list = Optional.ofNullable(usersInterface.getAllUsers());
         if (list.isPresent()) {
-
             return new ResponseEntity<>(list, HttpStatus.FOUND);
-
         } else {
-
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuários não encontrados");
         }
-
     }
 
     @GetMapping("/usuario/{id}")
     public ResponseEntity<Object> getUser(@PathVariable String id) {
-
-        @SuppressWarnings("unchecked")
-        Optional<Users> foundUsers = Optional.ofNullable((Users) usersInterface.getUsers(id));
-
+        Optional<Users> foundUsers = Optional.ofNullable(usersInterface.getUsers(id));
         if (foundUsers.isPresent()) {
-
             return new ResponseEntity<>(foundUsers, HttpStatus.FOUND);
-
         } else {
-
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
-
         }
-
     }
-
 }

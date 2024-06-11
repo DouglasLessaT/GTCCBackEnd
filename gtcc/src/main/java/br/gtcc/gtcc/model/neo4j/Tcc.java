@@ -17,36 +17,36 @@ import org.springframework.data.neo4j.core.schema.Id;
  *
  * @author mrbee
  * 
- * Entidade que representa o TCC e a Banca 
- * Essa esntidade tem relação com a entidae usuário por meio de Id's
+ *         Entidade que representa o TCC e a Banca
+ *         Essa esntidade tem relação com a entidae usuário por meio de Id's
  */
 
- @Node
- @Data
- @NoArgsConstructor
- @AllArgsConstructor
- public class Tcc {
-    
+@Node
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Tcc {
+
     @Id
     @GeneratedValue
-    private String Id;                               // Id do Tcc
-   
+    private String Id; // Id do Tcc
+
     @NonNull
-    private String idAluno;                          // Id do aluno  que relacionado a este tcc 
-   
+    private String idAluno; // Id do aluno que relacionado a este tcc
+
     @NonNull
-    private String idOrientador;                     // Id do professor orientador deste tcc 
-   
+    private String idOrientador; // Id do professor orientador deste tcc
+
     @NonNull
-    private String title;                       // String que representa o titulo do tcc
-   
+    private String title; // String que representa o titulo do tcc
+
     @NonNull
-    private String theme;                       // String que representa o tema do tcc
-   
+    private String theme; // String que representa o tema do tcc
+
     @NonNull
-    private String curse;                       // String que representa curso do tcc
-   
+    private String curse; // String que representa curso do tcc
+
     @NonNull
-    private LocalDateTime dateOfApresentation;  // Date que representa a data de apresentação do tcc
-    
+    private LocalDateTime dateOfApresentation; // Date que representa a data de apresentação do tcc
+
 }
