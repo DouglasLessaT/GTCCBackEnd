@@ -53,8 +53,7 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                     if(existsTcc == true && agendaApresentacao.getDate() != null){
                         
                         Boolean existsConlictTcc = this.repository.countConflictTccs(aB.getIdTcc()) > 0;
-                        Console.log("Conflito de tcc "+this.repository.countConflictTccs(aB.getIdTcc()));
-                        Console.log("Conflito existe "+existsConlictTcc);
+                        
                         if(existsConlictTcc == true){
                             return null; // -> Tcc já esta alocado a uma apresentação
                         }
@@ -173,49 +172,70 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
             return null;//Apresentação não informada
         }
 
-        String agendaId = apresentationBanca.getIdAgenda();
-        String tccId = apresentationBanca.getIdTcc();
+        String newAgendaId = apresentationBanca.getIdAgenda();
+        String newTccId = apresentationBanca.getIdTcc();
 
-        Agenda agendaRepo = this.agendaRepository.findById(agendaId).orElse(null);
+        Agenda newAgendaRepo = this.agendaRepository.findById(newAgendaId).orElse(null);
 
-        Tcc tcc= this.tccRepository.findById(tccId).orElse(null);
-        Tcc tccRepo  =this.tccRepository.findById(repoApresentacao.getIdTcc()).orElse(null);
+        Tcc newTcc = this.tccRepository.findById(newTccId).orElse(null);
+        Tcc oldTccRepo  =this.tccRepository.findById(repoApresentacao.getIdTcc()).orElse(null);
 
-        Boolean existsConlictTcc = this.repository.countConflictTccs(tccId) > 0;
+        Boolean existsConlictTcc = this.repository.countConflictTccs(newTccId) > 0;
 
         if( apresentationBanca.getMember1() != null || apresentationBanca.getMember2() != null){
             
-            String memberIdOneRepo = apresentationBanca.getMember1().getId();
-            String memberIdTwoRepo = apresentationBanca.getMember2().getId();
+            String newMemberIdOneRepo = apresentationBanca.getMember1().getId();
+            String newMemberIdTwoRepo = apresentationBanca.getMember2().getId();
 
-            Boolean isLockedMemberOneAndMemberTwo = repository.countConflictingApresentationsByData( agendaRepo.getDate() ,agendaRepo.getHorasComeco() ,agendaRepo.getHorasFim() , memberIdOneRepo ,memberIdTwoRepo) > 0;
+            Boolean isLockedMemberOneAndMemberTwo = repository.countConflictingApresentationsByData( newAgendaRepo.getDate() ,newAgendaRepo.getHorasComeco() ,newAgendaRepo.getHorasFim() , newMemberIdOneRepo ,newMemberIdTwoRepo) > 0;
 
-            ApresentationBanca apresentacaoDentroDaAgenda = agendaRepo.getApresentacao();
+            ApresentationBanca apresentacaoDentroDaAgenda = newAgendaRepo.getApresentacao();
 
             if(existsConlictTcc == false || isLockedMemberOneAndMemberTwo == false){
 
-                Boolean isLock = agendaRepo.getIsLock();
+                Boolean isLock = newAgendaRepo.getIsLock();
                 
 
                 if(isLock == false && apresentacaoDentroDaAgenda == null ){
 
-                    if( agendaId == null){
-                        agendaRepo.setApresentacao(repoApresentacao);
-                        apresentationBanca.setIdAgenda(agendaId);
+                    if( newAgendaId == null){
+                        newAgendaRepo.setApresentacao(repoApresentacao);
+                        apresentationBanca.setIdAgenda(newAgendaId);
                     } else {
-                        agendaRepo.setApresentacao(apresentationBanca);
+                        
+                        Boolean isEqualsAgendas = newAgendaId.equals(repoApresentacao.getIdAgenda());
+
+                        if(isEqualsAgendas == false ){
+                            newAgendaRepo.setApresentacao(apresentationBanca);
+                            apresentationBanca.setIdAgenda(newAgendaId);
+                        }
+
                     }
+                    Agenda oldAgenda = this.agendaRepository.findById(repoApresentacao.getIdAgenda()).orElse(null);
+                    oldAgenda.setIsLock(false);
+                    oldAgenda.setApresentacao(null);
                     
-                    if( tccId == null){
-                        apresentationBanca.setTcc(tccRepo);
+                    newAgendaRepo.setIsLock(true);
+                    
+                    this.agendaRepository.save(oldAgenda);
+                    this.agendaRepository.save(newAgendaRepo);
+                    
+                    if( newTccId == null){
+                        apresentationBanca.setIdTcc(oldTccRepo.getId());
+                        apresentationBanca.setTcc(oldTccRepo);
                     }else{
-                        apresentationBanca.setTcc(tcc);
+
+                        Boolean isEqualsTcc = newTccId.equals(repoApresentacao.getIdTcc());
+                        
+                        if(isEqualsTcc == false){
+                            apresentationBanca.setIdTcc(newTccId);
+                            apresentationBanca.setTcc(newTcc);
+                        }
                     }
 
-                    agendaRepo.setIsLock(true);
+                    this.tccRepository.save(newTcc);
                     
-                    agendaRepository.save(agendaRepo);
-                    
+
                     return repository.save(apresentationBanca);
 
                 }else {
@@ -226,7 +246,7 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
 
             } else {
 
-                Boolean isLock = agendaRepo.getIsLock();
+                Boolean isLock = newAgendaRepo.getIsLock();
                 
                 if(!existsConlictTcc){
                     return null;
@@ -234,24 +254,24 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                 
                 if(isLock == false && apresentacaoDentroDaAgenda == null ){
 
-                    if( agendaId == null){
-                        agendaRepo.setApresentacao(repoApresentacao);
-                        apresentationBanca.setIdAgenda(agendaId);
+                    if( newAgendaId == null){
+                        newAgendaRepo.setApresentacao(repoApresentacao);
+                        apresentationBanca.setIdAgenda(newAgendaId);
                     } else {
-                        agendaRepo.setApresentacao(apresentationBanca);
+                        newAgendaRepo.setApresentacao(apresentationBanca);
                     }
                     
-                    if( tccId == null){
-                        apresentationBanca.setTcc(tccRepo);
+                    if( newTccId == null){
+                        apresentationBanca.setTcc(oldTccRepo);
                     }else{
-                        apresentationBanca.setTcc(tcc);
+                        apresentationBanca.setTcc(newTcc);
                     }
 
-                    agendaRepo.setIsLock(true);
+                    newAgendaRepo.setIsLock(true);
                     
-                    agendaRepository.save(agendaRepo);
+                    agendaRepository.save(newAgendaRepo);
                     
-                    apresentationBanca.setTcc(tcc);
+                    apresentationBanca.setTcc(newTcc);
                     return repository.save(apresentationBanca);
 
                 }else {
