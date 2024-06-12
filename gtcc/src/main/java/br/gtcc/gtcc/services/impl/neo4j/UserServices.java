@@ -9,7 +9,6 @@ import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.services.spec.UserInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
 
 @Service
@@ -39,7 +38,6 @@ public class UserServices implements UserInterface<Users, String> {
         existingUser.setName(users.getName());
         existingUser.setUserType(users.getUserType());
         existingUser.setPermissoes(users.getPermissoes());
-        // existingUser.setLogin(users.getLogin());
         existingUser.setTccsGerenciados(users.getTccsGerenciados());
         return userrepository.save(existingUser);
       } else {
@@ -77,4 +75,8 @@ public class UserServices implements UserInterface<Users, String> {
         .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado para o ID fornecido: " + id));
   }
 
+  @Override
+  public List<Users> getAlunos() {
+    return userrepository.findAlunos();
+  }
 }
