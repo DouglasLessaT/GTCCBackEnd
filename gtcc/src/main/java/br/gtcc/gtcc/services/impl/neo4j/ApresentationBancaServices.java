@@ -53,8 +53,9 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                     if(existsTcc == true && agendaApresentacao.getDate() != null){
                         
                         Boolean existsConlictTcc = this.repository.countConflictTccs(aB.getIdTcc()) > 0;
-
-                        if(!existsConlictTcc){
+                        Console.log("Conflito de tcc "+this.repository.countConflictTccs(aB.getIdTcc()));
+                        Console.log("Conflito existe "+existsConlictTcc);
+                        if(existsConlictTcc == true){
                             return null; // -> Tcc já esta alocado a uma apresentação
                         }
 
