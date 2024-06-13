@@ -207,17 +207,18 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                         if(isEqualsAgendas == false ){
                             newAgendaRepo.setApresentacao(apresentationBanca);
                             apresentationBanca.setIdAgenda(newAgendaId);
+                            
+                            Agenda oldAgenda = this.agendaRepository.findById(repoApresentacao.getIdAgenda()).orElse(null);
+                            oldAgenda.setIsLock(false);
+                            oldAgenda.setApresentacao(null);
+                            newAgendaRepo.setIsLock(true);
+                            
+                            this.agendaRepository.save(oldAgenda);
+                            this.agendaRepository.save(newAgendaRepo);
+                            
                         }
 
                     }
-                    Agenda oldAgenda = this.agendaRepository.findById(repoApresentacao.getIdAgenda()).orElse(null);
-                    oldAgenda.setIsLock(false);
-                    oldAgenda.setApresentacao(null);
-                    
-                    newAgendaRepo.setIsLock(true);
-                    
-                    this.agendaRepository.save(oldAgenda);
-                    this.agendaRepository.save(newAgendaRepo);
                     
                     if( newTccId == null){
                         apresentationBanca.setIdTcc(oldTccRepo.getId());
