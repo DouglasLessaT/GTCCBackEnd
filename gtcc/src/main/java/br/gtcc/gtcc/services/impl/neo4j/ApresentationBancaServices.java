@@ -205,16 +205,16 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                         Boolean isEqualsAgendas = newAgendaId.equals(repoApresentacao.getIdAgenda());
 
                         if(isEqualsAgendas == false ){
-                            newAgendaRepo.setApresentacao(apresentationBanca);
-                            apresentationBanca.setIdAgenda(newAgendaId);
                             
                             Agenda oldAgenda = this.agendaRepository.findById(repoApresentacao.getIdAgenda()).orElse(null);
                             oldAgenda.setIsLock(false);
                             oldAgenda.setApresentacao(null);
-                            newAgendaRepo.setIsLock(true);
                             
                             this.agendaRepository.save(oldAgenda);
-                            this.agendaRepository.save(newAgendaRepo);
+
+                            newAgendaRepo.setApresentacao(apresentationBanca);
+                            newAgendaRepo.setIsLock(true);
+                            apresentationBanca.setIdAgenda(newAgendaId);
                             
                         }
 
@@ -230,10 +230,15 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                         if(isEqualsTcc == false){
                             apresentationBanca.setIdTcc(newTccId);
                             apresentationBanca.setTcc(newTcc);
+                        } else {
+                            apresentationBanca.setIdTcc(oldTccRepo.getId());
+                            apresentationBanca.setTcc(oldTccRepo);
                         }
                     }
 
+
                     this.tccRepository.save(newTcc);
+                    this.agendaRepository.save(newAgendaRepo);
                     
 
                     return repository.save(apresentationBanca);
