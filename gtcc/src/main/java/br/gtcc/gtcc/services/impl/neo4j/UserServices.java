@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.services.spec.UserInterface;
+import br.gtcc.gtcc.util.Console;
 import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
 
 

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package br.gtcc.gtcc.controller;
 
 import br.gtcc.gtcc.model.neo4j.Users;
@@ -59,7 +55,7 @@ public class UsersController {
     }
 
     @DeleteMapping("/usuario/{id}")
-    public ResponseEntity<Object> deleteUsers(@PathVariable long id){
+    public ResponseEntity<Object> deleteUsers(@PathVariable String id){
     
         @SuppressWarnings("unchecked")
         Optional<Users> deletedUsers = Optional.ofNullable((Users) usersInterface.deleteUsers(id));  

@@ -23,7 +23,7 @@ public interface ApresentationBancaRepository extends Neo4jRepository<Apresentat
     @Query("MATCH(t:Tcc)-[:TCC_APRESENTA_EM]->(a:ApresentationBanca)WHERE elementId(t)= $tccId RETURN COUNT(t)")
     Integer countConflictTccs(@Param("tccId") String tccId);
 
-    @Query("(ap:ApresentationBanca)-[:ON_DATE]->(agenda:Agenda) "+
+    @Query("MATCH(ap:ApresentationBanca)-[:ON_DATE]->(agenda:Agenda) "+
     "WHERE elementId(agenda) = $agendaId  AND " +
     "AND datetime(agenda.date) = datetime($date) " + 
     "AND time(agenda.horasComeco) = time($horasComeco) " + 
