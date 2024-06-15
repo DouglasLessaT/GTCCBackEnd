@@ -169,6 +169,7 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
         return null;//-> apresentação e banca é nula
     }
 
+    @SuppressWarnings("unused")
     @Override
     public ApresentationBanca updateApresentationBanca(String id,ApresentationBanca apresentationBanca) {
        
@@ -190,7 +191,7 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
         Tcc newTcc = this.tccRepository.findById(newTccId).orElse(null);
         Tcc oldTccRepo  =this.tccRepository.findById(repoApresentacao.getIdTcc()).orElse(null);
 
-        Boolean existsConlictTcc = this.repository.countConflictTccs(newTccId) > 0;
+        Boolean existsConlictTcc = this.repository.countConflictTccs(newTccId) > 1;
         ApresentationBanca apresentacaoDentroDaAgenda = newAgendaRepo.getApresentacao();     
 
         if( apresentationBanca.getMember1() != null || apresentationBanca.getMember2() != null){
@@ -202,16 +203,17 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
 
             if(existsConlictTcc == false && isLockedMemberOneAndMemberTwo == false){
                 
-                if(apresentacaoDentroDaAgenda == null ){
+                Boolean isEqualsAgendas = newAgendaId.equals(repoApresentacao.getIdAgenda());
+
+                if( isEqualsAgendas==false ){
 
                     if( newAgendaId == null){
                         newAgendaRepo.setApresentacao(repoApresentacao);
                         apresentationBanca.setIdAgenda(newAgendaId);
                     } else {
-                        
-                        Boolean isEqualsAgendas = newAgendaId.equals(repoApresentacao.getIdAgenda());
-
-                        if(isEqualsAgendas == false ){
+                    
+                        Boolean isLock = newAgendaRepo.getIsLock();
+                        if(isLock == false && apresentacaoDentroDaAgenda == null){
                             
                             Agenda oldAgenda = this.agendaRepository.findById(repoApresentacao.getIdAgenda()).orElse(null);
                             oldAgenda.setIsLock(false);
@@ -222,53 +224,51 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                             newAgendaRepo.setApresentacao(apresentationBanca);
                             newAgendaRepo.setIsLock(true);
                             apresentationBanca.setIdAgenda(newAgendaId);
-                            
                         }
-
                     }
+                    
+                }
+
+                Boolean isEqualsTcc = newTccId.equals(repoApresentacao.getIdTcc());
+                   
+                if(isEqualsTcc == false){
                     
                     if( newTccId == null){
                         apresentationBanca.setIdTcc(oldTccRepo.getId());
                         apresentationBanca.setTcc(oldTccRepo);
                     }else{
-
-                        Boolean isEqualsTcc = newTccId.equals(repoApresentacao.getIdTcc());
-                        
+    
                         if(isEqualsTcc == false){
                             apresentationBanca.setIdTcc(newTccId);
                             apresentationBanca.setTcc(newTcc);
-                        } else {
-                            apresentationBanca.setIdTcc(oldTccRepo.getId());
-                            apresentationBanca.setTcc(oldTccRepo);
                         }
                     }
 
-                    Users usersNull = null;
-
-                    if(apresentationBanca.getMember1() == null){
-                        apresentationBanca.setMember1(usersNull);
-                    }
-                    
-                    if(apresentationBanca.getMember2() == null){
-                        apresentationBanca.setMember2(usersNull);
-                    }
-
-
-                    this.tccRepository.save(newTcc);
-                    this.agendaRepository.save(newAgendaRepo);
-                    
-
-                    return repository.save(apresentationBanca);
-
-                }else {
-
-                    return null;
-
+                }  else {
+                    apresentationBanca.setIdTcc(oldTccRepo.getId());
+                    apresentationBanca.setTcc(oldTccRepo);
                 }
+
+
+                Users usersNull = null;
+
+                if(apresentationBanca.getMember1() == null){
+                    apresentationBanca.setMember1(usersNull);
+                }
+                
+                if(apresentationBanca.getMember2() == null){
+                    apresentationBanca.setMember2(usersNull);
+                }
+
+                this.tccRepository.save(newTcc);
+                this.agendaRepository.save(newAgendaRepo);
+                
+
+                return repository.save(apresentationBanca);
 
             } else {
 
-                return null;
+                return null; // Existe conflito entre as datas ou o tcc
                
             }
             
@@ -282,20 +282,50 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
             
             if(isLock == false && apresentacaoDentroDaAgenda == null ){
 
-                if( newAgendaId == null){
-                    newAgendaRepo.setApresentacao(repoApresentacao);
-                    apresentationBanca.setIdAgenda(newAgendaId);
-                } else {
-                    newAgendaRepo.setApresentacao(apresentationBanca);
-                }
-                
-                if( newTccId == null){
-                    apresentationBanca.setTcc(oldTccRepo);
-                }else{
-                    apresentationBanca.setTcc(newTcc);
+                Boolean isEqualsAgendas = newAgendaId.equals(repoApresentacao.getIdAgenda());
+
+                if( isEqualsAgendas==false ){
+
+                    if( newAgendaId == null){
+                        newAgendaRepo.setApresentacao(repoApresentacao);
+                        apresentationBanca.setIdAgenda(newAgendaId);
+                    } else {
+                    
+                        if(isLock == false && apresentacaoDentroDaAgenda == null){
+                            
+                            Agenda oldAgenda = this.agendaRepository.findById(repoApresentacao.getIdAgenda()).orElse(null);
+                            oldAgenda.setIsLock(false);
+                            oldAgenda.setApresentacao(null);
+                            
+                            this.agendaRepository.save(oldAgenda);
+
+                            newAgendaRepo.setApresentacao(apresentationBanca);
+                            newAgendaRepo.setIsLock(true);
+                            apresentationBanca.setIdAgenda(newAgendaId);
+                        }
+                    }
+                    
                 }
 
-                newAgendaRepo.setIsLock(true);
+                Boolean isEqualsTcc = newTccId.equals(repoApresentacao.getIdTcc());
+                   
+                if(isEqualsTcc == false){
+                    
+                    if( newTccId == null){
+                        apresentationBanca.setIdTcc(oldTccRepo.getId());
+                        apresentationBanca.setTcc(oldTccRepo);
+                    }else{
+    
+                        if(isEqualsTcc == false){
+                            apresentationBanca.setIdTcc(newTccId);
+                            apresentationBanca.setTcc(newTcc);
+                        }
+                    }
+
+                }  else {
+                    apresentationBanca.setIdTcc(oldTccRepo.getId());
+                    apresentationBanca.setTcc(oldTccRepo);
+                }
                 
                 agendaRepository.save(newAgendaRepo);
                 
@@ -304,7 +334,7 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
 
             }else {
 
-                return null;
+                return null;// Existe conflito entre as datas ou o tcc
 
             }
 
