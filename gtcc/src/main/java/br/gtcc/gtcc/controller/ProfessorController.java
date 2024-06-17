@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("coordenacao/tcc/v1/Professor")
 public class ProfessorController {
 
- @Autowired
- public UserInterface<Users, String> usersInterface;
+    @Autowired
+    public UserInterface<Users, String> usersInterface;
 
     @GetMapping("/usuario/{id}")
     public ResponseEntity<Object> getUser(@PathVariable String id) {
@@ -37,7 +37,6 @@ public class ProfessorController {
         }
     }
 
-
     @GetMapping("/alunos")
     public ResponseEntity<Object> getAllAlunos() {
         Optional<List<Users>> list = Optional.ofNullable(usersInterface.getAlunos());
@@ -47,4 +46,15 @@ public class ProfessorController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuários não encontrados");
         }
     }
+
+    @GetMapping("/Professores")
+    public ResponseEntity<Object> getAllProfessores() {
+        Optional<List<Users>> list = Optional.ofNullable(usersInterface.getProfessores());
+        if (list.isPresent()) {
+            return new ResponseEntity<>(list, HttpStatus.FOUND);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuários não encontrados");
+        }
+    }
+
 }

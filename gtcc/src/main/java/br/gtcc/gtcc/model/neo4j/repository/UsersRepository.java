@@ -24,4 +24,7 @@ public interface UsersRepository extends Neo4jRepository<Users, String> {
 
  @Query("MATCH (u:Users) WHERE 'ALUNO' IN u.userType RETURN u")
  List<Users> findAlunos();
+
+ @Query("MATCH (u:Users) WHERE 'PROFESSOR' IN u.userType RETURN u ")
+ List<Users> findProfessores();
 }

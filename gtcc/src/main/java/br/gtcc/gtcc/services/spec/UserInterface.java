@@ -14,5 +14,8 @@ public interface UserInterface<T, E> {
 
    public T getUsers(E id);
    
-   public List<T> getAlunos(); // Alterado para retornar uma lista de alunos
+   public List<T> getAlunos(); 
+
+   public List<T> getProfessores();
+
 }

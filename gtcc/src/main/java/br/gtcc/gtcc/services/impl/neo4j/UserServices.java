@@ -79,4 +79,9 @@ public class UserServices implements UserInterface<Users, String> {
   public List<Users> getAlunos() {
     return userrepository.findAlunos();
   }
+  
+  @Override
+  public List<Users> getProfessores(){
+    return userrepository.findProfessores();
+  }
 }
