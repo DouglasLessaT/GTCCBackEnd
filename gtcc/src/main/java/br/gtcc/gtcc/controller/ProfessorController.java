@@ -37,13 +37,14 @@ public class ProfessorController {
         }
     }
 
+
     @GetMapping("/alunos")
     public ResponseEntity<Object> getAllAlunos() {
-        List<Users> alunos = usersInterface.getAlunos();
-        if (alunos != null && !alunos.isEmpty()) {
-            return new ResponseEntity<>(alunos, HttpStatus.OK);
+        Optional<List<Users>> list = Optional.ofNullable(usersInterface.getAlunos());
+        if (list.isPresent()) {
+            return new ResponseEntity<>(list, HttpStatus.FOUND);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum aluno encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuários não encontrados");
         }
     }
 }
