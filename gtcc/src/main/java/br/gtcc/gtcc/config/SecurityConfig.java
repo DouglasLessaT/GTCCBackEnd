@@ -47,6 +47,7 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     private void addUsers() {
         try {
             // Verifica se o usuário Admin já existe no banco de dados
@@ -126,48 +127,80 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor(userServices, usersRepository, jwtUtil))
                 .excludePathPatterns("/error**", "/index**", "/doc**", "/auth**", "/swagger-ui**")
-                .addPathPatterns("/coordenacao/tcc/v1/usuario/**" , "gtcc/coordenacao/tcc/v1/usuarios", "gtcc/coordenacao/tcc/v1/datas" , "/gtcc/coordenacao/tcc/v1/date/**");
+                .addPathPatterns("/coordenacao/tcc/v1/apresentacao",
+                        "/coordenacao/tcc/v1/apresentacao/**",
+                        "/coordenacao/tcc/v1/apresentacoes",
+                        "/coordenacao/tcc/v1/coordenador/Professores",
+                        "/coordenacao/tcc/v1/coordenador/alunos",
+                        "/coordenacao/tcc/v1/coordenador/usuario/**",
+                        "/coordenacao/tcc/v1/Professor/usuario/",
+                        "/coordenacao/tcc/v1/Professor/alunos",
+                        "/coordenacao/tcc/v1/Professor/Professores",
+                        "/coordenacao/tcc/v1/date/**",
+                        "/coordenacao/tcc/v1/date",
+                        "/coordenacao/tcc/v1/dates",
+                        "/coordenacao/tcc/v1/tcc",
+                        "/coordenacao/tcc/v1/tccs",
+                        "/coordenacao/tcc/v1/tcc/**",
+                        "/coordenacao/tcc/v1/usuario/**",
+                        "/coordenacao/tcc/v1/usuario",
+                        "/coordenacao/tcc/v1/usuarios"
+                        );
     }
 
     @Override
-    public void configurePathMatch(PathMatchConfigurer configurer) {}
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+    }
 
     @Override
-    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {}
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+    }
 
     @Override
-    public void configureAsyncSupport(AsyncSupportConfigurer configurer) {}
+    public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+    }
 
     @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {}
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+    }
 
     @Override
-    public void addFormatters(FormatterRegistry registry) {}
+    public void addFormatters(FormatterRegistry registry) {
+    }
 
     @Override
-    public void addCorsMappings(CorsRegistry registry) {}
+    public void addCorsMappings(CorsRegistry registry) {
+    }
 
     @Override
-    public void addViewControllers(ViewControllerRegistry registry) {}
+    public void addViewControllers(ViewControllerRegistry registry) {
+    }
 
     @Override
-    public void configureViewResolvers(ViewResolverRegistry registry) {}
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+    }
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {}
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+    }
 
     @Override
-    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {}
+    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {
+    }
 
     @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {}
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+    }
 
     @Override
-    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {}
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+    }
 
     @Override
-    public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {}
+    public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
+    }
 
     @Override
-    public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {}
+    public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
+    }
 }
