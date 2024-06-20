@@ -99,5 +99,16 @@ public class UserServices implements UserInterface<Users, String> {
     return null;
     
  }
+
+ @Override
+ public List<Users> getAlunos() {
+   return repository.findAlunos();
+ }
  
+ @Override
+ public List<Users> getProfessores(){
+   return repository.findProfessores();
+ 
+ }
+
 }

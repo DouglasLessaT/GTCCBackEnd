@@ -1,15 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package br.gtcc.gtcc.services.spec;
 
 import java.util.List;
 
-/**
- *
- * @author privateclasswizard
- */
 public interface UserInterface<T, E> {
     
    public T createUsers(T users);
@@ -21,5 +13,9 @@ public interface UserInterface<T, E> {
    public List<T> getAllUsers();
    
    public T getUsers(E id);
+      
+   public List<T> getAlunos(); 
+
+   public List<T> getProfessores();
    
 }
