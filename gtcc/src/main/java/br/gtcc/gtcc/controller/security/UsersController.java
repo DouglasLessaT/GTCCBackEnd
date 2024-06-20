@@ -51,7 +51,7 @@ public class UsersController {
         users.setSenha(passwordEncoder.encode(users.getSenha()));
         Optional<Users> createdUsers = Optional.ofNullable(usersInterface.createUsers(users));
         if (createdUsers.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Usuário criado com sucesso");
+            return ResponseEntity.status(HttpStatus.OK).body("Usuário criado com sucesso");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
         }
@@ -61,7 +61,7 @@ public class UsersController {
     public ResponseEntity<Object> deleteUsers(@PathVariable String id) {
         Optional<Users> deletedUsers = Optional.ofNullable(usersInterface.deleteUsers(id));
         if (deletedUsers.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Usuário deletado com sucesso");
+            return ResponseEntity.status(HttpStatus.OK).body("Usuário deletado com sucesso");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
         }
@@ -92,7 +92,7 @@ public class UsersController {
     public ResponseEntity<Object> getUser(@PathVariable String id) {
         Optional<Users> foundUsers = Optional.ofNullable(usersInterface.getUsers(id));
         if (foundUsers.isPresent()) {
-            return new ResponseEntity<>(foundUsers, HttpStatus.FOUND);
+            return new ResponseEntity<>(foundUsers, HttpStatus.OK);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
         }

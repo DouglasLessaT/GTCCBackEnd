@@ -70,7 +70,7 @@ public class DateController {
 
         if (deletedDate.isPresent()) {
 
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.OK);
 
         } else {
 

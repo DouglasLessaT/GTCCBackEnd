@@ -12,24 +12,21 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-
 /**
  *
  * @author mrbee
  * 
- * Classe usada para capturar as exeções das entidades no controllers
+ *         Classe usada para capturar as exeções das entidades no controllers
  */
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler
- extends ResponseEntityExceptionHandler {
+    extends ResponseEntityExceptionHandler {
 
-
-@ExceptionHandler(value = { Exception.class })
-protected ResponseEntity<Object> handleConflict(
-  RuntimeException ex, WebRequest request) {
- String bodyOfResponse = "{\"erro\": \"" + ex.getMessage() + "\"}";
- return handleExceptionInternal(ex, bodyOfResponse,
-   new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+  @ExceptionHandler(value = { Exception.class })
+  protected ResponseEntity<Object> handleConflict(
+      RuntimeException ex, WebRequest request) {
+    String bodyOfResponse = "{\"erro\": \"" + ex.getMessage() + "\"}";
+    return handleExceptionInternal(ex, bodyOfResponse,
+        new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+  }
 }
-}
-
