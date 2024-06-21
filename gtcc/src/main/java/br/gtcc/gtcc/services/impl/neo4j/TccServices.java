@@ -65,7 +65,8 @@ public class TccServices implements TccInterface<Tcc, String> {
                     
                     }else{
 
-                        return null;
+                        
+                        throw new IllegalArgumentException("Os funcionários não são professores ou coordenadores.");
                     
                     }
 
@@ -76,11 +77,13 @@ public class TccServices implements TccInterface<Tcc, String> {
                 
                 return tccRepository.save(tcc);
 
+            } else {
+                
+                throw new IllegalArgumentException("O Tcc já existe ou o orietador não é funcionário.");
             }
 
         }
- 
-        return null;
+        throw new IllegalArgumentException("O Tcc fornecido é inválido ou já possui um ID.");
     }
 
     @Override
@@ -88,9 +91,11 @@ public class TccServices implements TccInterface<Tcc, String> {
 
         if (tcc != null && id != null) {
 
+
             Tcc existingTcc = getTCC(id);
             
             if (existingTcc != null) {
+
 
                 existingTcc.setTitle(tcc.getTitle());
                 existingTcc.setTheme(tcc.getTheme());
@@ -99,10 +104,12 @@ public class TccServices implements TccInterface<Tcc, String> {
 
                 if(tcc.getIdAluno() != null && tcc.getIdOrientador() != null){
 
+
                     Users orientador = this.usersRepository.findById(tcc.getIdOrientador()).get();
                     Users aluno = this.usersRepository.findById(tcc.getIdAluno()).get();
 
                     if( orientador != null && aluno != null){
+
 
                         EnumSet<UserType> userTypeCoordenador = EnumSet.of(UserType.COORDENADOR);
                         EnumSet<UserType> userTypeProfessor = EnumSet.of(UserType.PROFESSOR);
@@ -141,33 +148,29 @@ public class TccServices implements TccInterface<Tcc, String> {
 
                             } else {
 
-                            return null;
-                        
+                            throw new IllegalArgumentException("Os funcionários não são professores ou coordenadores.");
                         }
 
                     } else {
                         
-                        return null;
-                    
+                        throw new IllegalArgumentException("O aluno ou orintador não existem.");
                     }
 
                 } else {
 
-                    return null;
-
+                    throw new IllegalArgumentException("O aluno ou orientador são inválidos.");
                 }
 
                 return tccRepository.save(existingTcc);
 
             } else {
 
-                return null;
+                throw new IllegalArgumentException("O Tcc não existe.");
             
             }
         } else {
 
-            return null;
-
+            throw new IllegalArgumentException("O Tcc fornecido é inválido ou já possui um ID.");
         }
     }
     
@@ -193,8 +196,8 @@ public class TccServices implements TccInterface<Tcc, String> {
             
             }
         }
-        
-        return null;
+
+        throw new IllegalArgumentException("O Tcc fornecido é inválido ou já possui um ID.");
     }
 
     @Override
@@ -206,7 +209,7 @@ public class TccServices implements TccInterface<Tcc, String> {
     
         }
 
-        return null;
+        throw new IllegalArgumentException("O Tcc fornecido é inválido ou já possui um ID.");
     }
 
     @SuppressWarnings("unused")
@@ -216,7 +219,7 @@ public class TccServices implements TccInterface<Tcc, String> {
 
             return this.tccRepository.existsById(id)==true? tccRepository.findById(id).get() : null;
         }
-        return null;
+        throw new IllegalArgumentException("O Tcc fornecido é inválido ou já possui um ID.");
     }
 
     

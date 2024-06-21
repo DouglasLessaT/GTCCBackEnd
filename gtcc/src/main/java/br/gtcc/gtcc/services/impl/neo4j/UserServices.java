@@ -47,13 +47,15 @@ public class UserServices implements UserInterface<Users, String> {
             u.setBirthdate(users.getBirthdate());
             u.setCellphone(users.getCellphone());
             u.setUserType(users.getUserType());
-
+            u.setPermissoes(users.getPermissoes());
+            u.setTccsGerenciados(users.getTccsGerenciados());
+            
             return this.repository.save(u);
 
         }
     }
 
-    return null;
+    throw new IllegalArgumentException("O usuário fornecido é inválido ou não possui um ID.");
  
 }
 
@@ -71,7 +73,7 @@ public class UserServices implements UserInterface<Users, String> {
         }
     }
 
-    return null;
+    throw new IllegalArgumentException("O usuário fornecido é inválido ou não possui um ID.");
 
  }
 
@@ -96,7 +98,7 @@ public class UserServices implements UserInterface<Users, String> {
        return repository.existsById(id)==true? repository.findById(id).get() : null;
     }
 
-    return null;
+    throw new IllegalArgumentException("O usuário fornecido é inválido ou não possui um ID.");
     
  }
 
