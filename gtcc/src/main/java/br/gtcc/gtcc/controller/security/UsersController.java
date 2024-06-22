@@ -59,8 +59,9 @@ public class UsersController {
 
     @DeleteMapping("/usuario/{id}")
     public ResponseEntity<Object> deleteUsers(@PathVariable String id) {
-        Optional<Users> deletedUsers = Optional.ofNullable(usersInterface.deleteUsers(id));
-        if (deletedUsers.isPresent()) {
+        Users user = usersInterface.getUsers(id);
+        if (user != null) {
+            usersInterface.deleteUsers(user);
             return ResponseEntity.status(HttpStatus.OK).body("Usuário deletado com sucesso");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");

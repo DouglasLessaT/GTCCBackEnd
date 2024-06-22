@@ -56,10 +56,7 @@ public class Users {
     @Relationship(type = "GERENCIA", direction = Relationship.Direction.OUTGOING)  
     private Set<Tcc> tccsGerenciados = new HashSet<>();
 
-    public Users orElseThrow(Object object) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
-    }
-    
+
+
 
 }

@@ -2,9 +2,11 @@ package br.gtcc.gtcc.services.impl.neo4j;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
+import br.gtcc.gtcc.model.UserType;
 import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.services.spec.UserInterface;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,14 +56,18 @@ public class UserServices implements UserInterface<Users, String> {
   }
 
   @Override
-  public Users deleteUsers(String id) {
-    Users deluser = this.getUsersById(id);
-    if (deluser != null) {
-      userrepository.delete(deluser);
+  public Users deleteUsers(Users users) {
+    if (users != null && users.getId() != null) {
+      Optional<Users> existingUserOpt = userrepository.findById(users.getId());
+      if (existingUserOpt.isPresent()) {
+        userrepository.delete(existingUserOpt.get());
+        return users;
+      } else {
+        throw new IllegalArgumentException("Usuário não encontrado para o ID fornecido: " + users.getId());
+      }
     } else {
-      throw new IllegalArgumentException("O Usuário é inválido ou já possui um ID.");
+      throw new IllegalArgumentException("O usuário fornecido é inválido ou não possui um ID.");
     }
-    return null;
   }
 
   @Override
@@ -83,5 +89,15 @@ public class UserServices implements UserInterface<Users, String> {
   @Override
   public List<Users> getProfessores(){
     return userrepository.findProfessores();
+  }
+
+  @Override
+  public Users createdAluno(Users users) {
+    if (users != null && users.getId() == null) {
+      users.setUserType(Set.of(UserType.ALUNO)); // Ensure the user type is set to "ALUNO"
+      return userrepository.save(users);
+    } else {
+      throw new IllegalArgumentException("O usuário fornecido é inválido ou já possui um ID.");
+    }
   }
 }
