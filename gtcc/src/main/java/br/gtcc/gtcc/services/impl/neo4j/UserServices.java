@@ -30,27 +30,28 @@ public class UserServices implements UserInterface<Users, String> {
         return this.repository.save(users);
 
     }
-    return  null;
- }
+
+    throw new IllegalArgumentException("O ID do usuário é nulo "); 
+}
 
  @Override
  public Users updateUsers(Users users , String id) {
     
     if(id != null || id != "" || id != " "){
        
-        Users u = this.getUsers(id);
+        Users userRepository = this.getUsers(id);
        
-        if(u != null){
+        if(userRepository != null){
 
-            u.setName(users.getName());
-            u.setEmail(users.getEmail());
-            u.setBirthdate(users.getBirthdate());
-            u.setCellphone(users.getCellphone());
-            u.setUserType(users.getUserType());
-            u.setPermissoes(users.getPermissoes());
-            u.setTccsGerenciados(users.getTccsGerenciados());
+            userRepository.setName(users.getName());
+            userRepository.setEmail(users.getEmail());
+            userRepository.setBirthdate(users.getBirthdate());
+            userRepository.setCellphone(users.getCellphone());
+            userRepository.setUserType(users.getUserType());
+            userRepository.setPermissoes(users.getPermissoes());
+            userRepository.setTccsGerenciados(users.getTccsGerenciados());
             
-            return this.repository.save(u);
+            return this.repository.save(userRepository);
 
         }
     }

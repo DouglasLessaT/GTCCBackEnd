@@ -72,14 +72,14 @@ public class TccServices implements TccInterface<Tcc, String> {
 
                 } else {
                 
-                    return null;
+                    throw new IllegalArgumentException("O orietador não é um funcionário.");
                 }
                 
                 return tccRepository.save(tcc);
 
             } else {
                 
-                throw new IllegalArgumentException("O Tcc já existe ou o orietador não é funcionário.");
+                throw new IllegalArgumentException("O Tcc já existe ou o orietador ou aluno não existe.");
             }
 
         }

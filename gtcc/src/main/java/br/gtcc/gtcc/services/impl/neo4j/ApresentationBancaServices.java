@@ -40,9 +40,11 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
         Boolean isNull = aB == null;
         if( isNull == false ){
 
+
             if(aB.getId() == null){
                 //Verificar se o id do tccInNewTcc é válido e existe no banco, caso não retorna null -> 3
                 if(aB.getIdTcc() != null ){
+
 
                     Boolean existsTcc  = this.tccRepository.existsById(aB.getIdTcc());
                     //Verificar se a data mencionanda existe -> 4
@@ -51,14 +53,18 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                     ApresentationBanca apresentacaoDentroDaAgenda = agendaApresentacao.getApresentacao();
 
                     if(existsTcc == true && agendaApresentacao.getDate() != null){
+
                         
                         Boolean existsConlictTcc = this.repository.countConflictTccs(aB.getIdTcc()) > 0;
                         
                         if(existsConlictTcc == true){
-                            return null; // -> Tcc já esta alocado a uma apresentação
+
+                            throw new IllegalArgumentException("O tcc já esta em outra apresentação");
+
                         }
 
                         if( aB.getMember1() != null || aB.getMember1() != null ){
+                            
 
                             //Verificar se os membros um e dois ja existem. -> 5
                             Boolean existsMenberI = this.usersRepository.existsById(aB.getMember1().getId());
@@ -104,26 +110,26 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
     
                                     }else {
 
-                                        return null;//-> esta data ja esta alocada 
+                                        throw new IllegalArgumentException("A apresentação já esta alocada");
 
                                     }
                                 
                                 } else {
 
-                                    return null;//-> Os menbros da apresentação ja estão alocado nesta hora de começo e fim 
+                                    throw new IllegalArgumentException("Os membros da apresentação ja estão alocado nesta hora de começo e fim ");
                                 
                                 }
                                 
                             
                             }else {
 
-                               return null;//-> Um dos menbros não existe 
+                                throw new IllegalArgumentException("Um dos membros não existem");
 
                             }
 
 
                         }else{
-                            // Salvar a apresentação caso o tcc não tenha menbros 
+                            
                             Boolean isLock = agendaApresentacao.getIsLock();
                             Tcc tcc = this.tccRepository.findById(aB.getIdTcc()).get();
                             
@@ -139,7 +145,7 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
 
                             }else {
 
-                                return null;
+                                throw new IllegalArgumentException("A apresentação já esta alocada");
 
                             }
 
@@ -147,26 +153,24 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
 
                     }else{
 
-                        return null;//tcc ou agenda informada não existe 
-
+                        throw new IllegalArgumentException("O tcc não existe e a data da agenda é nulo ");
                     }
 
                 } else {
                     
-                    return null;//->tcc nulo
-
+                    throw new IllegalArgumentException("O id da apresentação é nulo ");
                 }
 
             
             } else {
-
-                return null;//-> id não passado 
+       
+                throw new IllegalArgumentException("O id da apresentação já existe");
            
             }
 
         }
 
-        return null;//-> apresentação e banca é nula
+        throw new IllegalArgumentException("A apresentação é nula");
     }
 
     @SuppressWarnings("unused")
@@ -174,13 +178,15 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
     public ApresentationBanca updateApresentationBanca(String id,ApresentationBanca apresentationBanca) {
        
         if( id == null){
-            return null;
+            throw new IllegalArgumentException("A apresentação é nula");
         }
 
         ApresentationBanca repoApresentacao = this.getApresentationBanca(id);
         
         if(repoApresentacao == null ){
-            return null;//Apresentação não informada
+
+            throw new IllegalArgumentException("Apresentação não informada");
+        
         }
 
         String newAgendaId = apresentationBanca.getIdAgenda();
@@ -268,7 +274,7 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
 
             } else {
 
-                return null; // Existe conflito entre as datas ou o tcc
+                throw new IllegalArgumentException(" Existe conflito entre as datas ou o tcc");
                
             }
             
@@ -277,7 +283,9 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
             Boolean isLock = newAgendaRepo.getIsLock();
                 
             if(!existsConlictTcc){
-                return null;
+
+                throw new IllegalArgumentException("Existe conflito no tcc informado, ele esta em outra apresentação");
+            
             }
             
             if(isLock == false && apresentacaoDentroDaAgenda == null ){
@@ -290,19 +298,17 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
                         newAgendaRepo.setApresentacao(repoApresentacao);
                         apresentationBanca.setIdAgenda(newAgendaId);
                     } else {
-                    
-                        if(isLock == false && apresentacaoDentroDaAgenda == null){
-                            
-                            Agenda oldAgenda = this.agendaRepository.findById(repoApresentacao.getIdAgenda()).orElse(null);
-                            oldAgenda.setIsLock(false);
-                            oldAgenda.setApresentacao(null);
-                            
-                            this.agendaRepository.save(oldAgenda);
+                
+                        Agenda oldAgenda = this.agendaRepository.findById(repoApresentacao.getIdAgenda()).orElse(null);
+                        oldAgenda.setIsLock(false);
+                        oldAgenda.setApresentacao(null);
+                        
+                        this.agendaRepository.save(oldAgenda);
 
-                            newAgendaRepo.setApresentacao(apresentationBanca);
-                            newAgendaRepo.setIsLock(true);
-                            apresentationBanca.setIdAgenda(newAgendaId);
-                        }
+                        newAgendaRepo.setApresentacao(apresentationBanca);
+                        newAgendaRepo.setIsLock(true);
+                        apresentationBanca.setIdAgenda(newAgendaId);
+                    
                     }
                     
                 }
@@ -334,10 +340,9 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
 
             }else {
 
-                return null;// Existe conflito entre as datas ou o tcc
+                throw new IllegalArgumentException("A apresentação já esta alocada");
 
             }
-
 
         }
 
@@ -357,11 +362,10 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
 
             }
 
-            return null;
-
+            throw new IllegalArgumentException("A apresentação não existe");
         }
 
-        return null;
+        throw new IllegalArgumentException("ID nulo");
 
     }
 

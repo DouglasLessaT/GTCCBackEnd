@@ -30,14 +30,15 @@ public class AgendaServices implements AgendaInterface<Agenda, String>{
 
         if (exists) {
 
-            return null;
+            throw new IllegalArgumentException("A data fornecida ja esta acriada.");
         
         }
+        
         return this.repository.save(data);
 
        }
        
-       return null;
+        throw new IllegalArgumentException("A data fornecida é nula.");
    
    }
    
@@ -54,8 +55,8 @@ public class AgendaServices implements AgendaInterface<Agenda, String>{
 
                 if (exists) {
 
-                    return null;
-                
+                    throw new IllegalArgumentException("A data fornecida ja esta acriada.");
+                        
                 }
 
                 if(agenda.getApresentacao() != null){
@@ -70,14 +71,15 @@ public class AgendaServices implements AgendaInterface<Agenda, String>{
                 return this.repository.save(dataRepo);
 
             } else {
-
-                return null;
-            
+                
+                throw new IllegalArgumentException("A data para atualizar é nula ou não existe.");
+        
             }
 
         }
-
-       return null;
+   
+        throw new IllegalArgumentException("A data fornecida é nula.");
+   
    }
    
    @Override
@@ -92,14 +94,14 @@ public class AgendaServices implements AgendaInterface<Agenda, String>{
                 this.repository.deleteById(id);
                 return dataRepo;
 
-            }
+            } else {
 
-            return null;
+                throw new IllegalArgumentException("A data fornecida não existe.");
+            }
 
         }
 
-        return null;
-
+        throw new IllegalArgumentException("A data fornecida é nula.");
     }
    
    @SuppressWarnings("unused")
