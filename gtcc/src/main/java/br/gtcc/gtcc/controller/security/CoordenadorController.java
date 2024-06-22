@@ -21,42 +21,41 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @CrossOrigin
-@ValidaAcesso("ROLE_COODERNADOR")
+@ValidaAcesso("ROLE_COORDENADOR")
 @RestController
 @RequestMapping("coordenacao/tcc/v1/coordenador")
 public class CoordenadorController {
- @Autowired
- public UserInterface<Users, String> usersInterface;
+    @Autowired
+    public UserInterface<Users, String> usersInterface;
 
- @GetMapping("/usuario/{id}")
- public ResponseEntity<Object> getUser(@PathVariable String id) {
-     Optional<Users> foundUsers = Optional.ofNullable(usersInterface.getUsers(id));
-     if (foundUsers.isPresent()) {
-         return new ResponseEntity<>(foundUsers, HttpStatus.OK);
-     } else {
-         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
-     }
- }
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<Object> getUser(@PathVariable String id) {
+        Optional<Users> foundUsers = Optional.ofNullable(usersInterface.getUsers(id));
+        if (foundUsers.isPresent()) {
+            return new ResponseEntity<>(foundUsers, HttpStatus.CREATED);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+        }
+    }
 
- @GetMapping("/alunos")
- public ResponseEntity<Object> getAllAlunos() {
-     Optional<List<Users>> list = Optional.ofNullable(usersInterface.getAlunos());
-     if (list.isPresent()) {
-         return new ResponseEntity<>(list, HttpStatus.OK);
-     } else {
-         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuários não encontrados");
-     }
- }
+    @GetMapping("/alunos")
+    public ResponseEntity<Object> getAllAlunos() {
+        Optional<List<Users>> list = Optional.ofNullable(usersInterface.getAlunos());
+        if (list.isPresent()) {
+            return new ResponseEntity<>(list, HttpStatus.CREATED);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuários não encontrados");
+        }
+    }
 
- @GetMapping("/Professores")
- public ResponseEntity<Object> getAllProfessores() {
-     Optional<List<Users>> list = Optional.ofNullable(usersInterface.getProfessores());
-     if (list.isPresent()) {
-         return new ResponseEntity<>(list, HttpStatus.OK);
-     } else {
-         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuários não encontrados");
-     }
- }
-
+    @GetMapping("/Professores")
+    public ResponseEntity<Object> getAllProfessores() {
+        Optional<List<Users>> list = Optional.ofNullable(usersInterface.getProfessores());
+        if (list.isPresent()) {
+            return new ResponseEntity<>(list, HttpStatus.CREATED);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuários não encontrados");
+        }
+    }
 
 }
