@@ -56,9 +56,9 @@ public class AuthController extends DefaultController {
    });
 
    Map<String, Object> claims = new HashMap<>();
-   // adiciona o LOGIN no token
+   
    claims.put("LOGIN", login);
-   // adiciona o campo de permissões no token
+   
    claims.put("PERMISSOES", listaPermissoes);
    String jwttoken = jwtUtil.geraTokenUsuario(login, claims);
 

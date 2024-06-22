@@ -23,13 +23,6 @@ import br.gtcc.gtcc.util.Console;
 
 import java.util.Optional;
 
-/**
- *
- * @author mrbee
- * 
- * Controller da entidade Users, criação de rotas  
- */
-
 @CrossOrigin("*")
 @RestController
 @ValidaAcesso("ROLE_ADMIN")
@@ -79,7 +72,7 @@ public class UsersController {
     }
     
     @PutMapping("/usuario/{id}")
-    public ResponseEntity<Object> updateUsers(@RequestBody(required = true) Users users, @PathVariable("id") String id){
+    public ResponseEntity<Object> updateUsers(@RequestBody(required = true) Users users ,@PathVariable("id") String id){
         
         @SuppressWarnings("unchecked")
         Optional<Users> updatedUser = Optional.ofNullable((Users)  usersInterface.updateUsers(users , id));
