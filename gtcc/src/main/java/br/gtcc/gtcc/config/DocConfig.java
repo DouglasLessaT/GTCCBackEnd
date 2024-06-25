@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package br.gtcc.gtcc.config;
 
 import io.swagger.v3.oas.models.Components;
@@ -15,13 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
-/**
- *
- * @author mrbee
- * 
- *         Classe de configuração do Swaager para documentação da API, não é
- *         para TESTE !
- */
 @Configuration
 @Order(2)
 public class DocConfig {

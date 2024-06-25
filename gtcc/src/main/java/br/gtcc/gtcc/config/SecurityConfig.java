@@ -47,11 +47,10 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
     private void addUsers() {
         try {
             // Verifica se o usuário Admin já existe no banco de dados
-            Optional<Users> existingAdmin = userServices.userrepository.findByLogin("admin");
+            Optional<Users> existingAdmin = userServices.repository.findByLogin("admin");
             if (existingAdmin.isEmpty()) {
                 Users admin = new Users();
                 admin.setName("Admin");
@@ -65,11 +64,11 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
                 admin.getPermissoes().add("ROLE_PROFESSOR");
                 admin.getPermissoes().add("ROLE_COORDENADOR");
                 admin.getPermissoes().add("ROLE_ALUNO");
-                userServices.userrepository.save(admin);
+                userServices.repository.save(admin);
             }
 
             // Verifica se o usuário Professor já existe no banco de dados
-            Optional<Users> existingProfessor = userServices.userrepository.findByLogin("professor");
+            Optional<Users> existingProfessor = userServices.repository.findByLogin("professor");
             if (existingProfessor.isEmpty()) {
                 Users professor = new Users();
                 professor.setName("Professor");
@@ -80,11 +79,11 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
                 professor.setLogin("professor");
                 professor.getPermissoes().add("ROLE_USER");
                 professor.getPermissoes().add("ROLE_PROFESSOR");
-                userServices.userrepository.save(professor);
+                userServices.repository.save(professor);
             }
 
             // Verifica se o usuário Coordenador já existe no banco de dados
-            Optional<Users> existingCoordinator = userServices.userrepository.findByLogin("coordenador");
+            Optional<Users> existingCoordinator = userServices.repository.findByLogin("coordenador");
             if (existingCoordinator.isEmpty()) {
                 Users coordenador = new Users();
                 coordenador.setName("Coordenador");
@@ -95,11 +94,11 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
                 coordenador.setLogin("coordenador");
                 coordenador.getPermissoes().add("ROLE_USER");
                 coordenador.getPermissoes().add("ROLE_COORDENADOR");
-                userServices.userrepository.save(coordenador);
+                userServices.repository.save(coordenador);
             }
 
             // Verifica se o usuário Aluno já existe no banco de dados
-            Optional<Users> existingAluno = userServices.userrepository.findByLogin("aluno");
+            Optional<Users> existingAluno = userServices.repository.findByLogin("aluno");
             if (existingAluno.isEmpty()) {
                 Users aluno = new Users();
                 aluno.setName("Aluno");
@@ -110,7 +109,7 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
                 aluno.setLogin("aluno");
                 aluno.getPermissoes().add("ROLE_USER");
                 aluno.getPermissoes().add("ROLE_ALUNO");
-                userServices.userrepository.save(aluno);
+                userServices.repository.save(aluno);
             }
 
         } catch (Exception ex) {
