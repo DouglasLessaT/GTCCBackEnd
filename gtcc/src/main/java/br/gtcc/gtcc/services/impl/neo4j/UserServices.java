@@ -5,101 +5,118 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import br.gtcc.gtcc.model.UserType;
 import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.services.spec.UserInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import br.gtcc.gtcc.util.Console;
 import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
+
 
 @Service
 public class UserServices implements UserInterface<Users, String> {
 
   @Autowired
-  public UsersRepository userrepository;
+  public UsersRepository repository;
 
-  @Override
-  public Users createUsers(Users users) {
-    if (users != null && users.getId() == null) {
-      return userrepository.save(users);
-    } else {
-      throw new IllegalArgumentException("O usuário fornecido é inválido ou já possui um ID.");
+ @Override
+ public Users createUsers(Users users) {
+    
+    if(users.getId() == null || users.getId() == "" || users.getId() == " "){
+        
+        return  this.repository.save(users);
+    
     }
-  }
+    if( this.repository.existsById(users.getId()) != true){
 
-  @Override
-  public Users updateUsers(Users users) {
-    if (users != null && users.getId() != null) {
-      Optional<Users> existingUserOpt = userrepository.findById(users.getId());
-      if (existingUserOpt.isPresent()) {
-        Users existingUser = existingUserOpt.get();
-        existingUser.setBirthdate(users.getBirthdate());
-        existingUser.setCellphone(users.getCellphone());
-        existingUser.setEmail(users.getEmail());
-        existingUser.setName(users.getName());
-        existingUser.setUserType(users.getUserType());
-        existingUser.setPermissoes(users.getPermissoes());
-        existingUser.setTccsGerenciados(users.getTccsGerenciados());
-        return userrepository.save(existingUser);
-      } else {
-        throw new IllegalArgumentException("Usuário não encontrado para o ID fornecido: " + users.getId());
-      }
-    } else {
-      throw new IllegalArgumentException("O usuário fornecido é inválido ou não possui um ID.");
+        return this.repository.save(users);
+
     }
-  }
 
-  private Users getUsersById(String id) {
-    return userrepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado para o ID fornecido: " + id));
-  }
+    throw new IllegalArgumentException("O ID do usuário é nulo "); 
+}
 
-  @Override
-  public Users deleteUsers(Users users) {
-    if (users != null && users.getId() != null) {
-      Optional<Users> existingUserOpt = userrepository.findById(users.getId());
-      if (existingUserOpt.isPresent()) {
-        userrepository.delete(existingUserOpt.get());
-        return users;
-      } else {
-        throw new IllegalArgumentException("Usuário não encontrado para o ID fornecido: " + users.getId());
-      }
-    } else {
-      throw new IllegalArgumentException("O usuário fornecido é inválido ou não possui um ID.");
+ @Override
+ public Users updateUsers(Users users , String id) {
+    
+    if(id != null || id != "" || id != " "){
+       
+        Users userRepository = this.getUsers(id);
+       
+        if(userRepository != null){
+
+            userRepository.setName(users.getName());
+            userRepository.setEmail(users.getEmail());
+            userRepository.setBirthdate(users.getBirthdate());
+            userRepository.setCellphone(users.getCellphone());
+            userRepository.setUserType(users.getUserType());
+            userRepository.setPermissoes(users.getPermissoes());
+            userRepository.setTccsGerenciados(users.getTccsGerenciados());
+            
+            return this.repository.save(userRepository);
+
+        }
     }
-  }
 
-  @Override
-  public List<Users> getAllUsers() {
-    return userrepository.findAll();
-  }
+    throw new IllegalArgumentException("O usuário fornecido é inválido ou não possui um ID.");
+ 
+}
 
-  @Override
-  public Users getUsers(String id) {
-    return userrepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado para o ID fornecido: " + id));
-  }
+ @Override
+ public Users deleteUsers(String id) {
 
-  @Override
-  public List<Users> getAlunos() {
-    return userrepository.findAlunos();
-  }
+    if(id != "" || id != null || id != " ") {
+
+        Users u = this.getUsers(id);
+        if( u != null ){
+
+            this.repository.deleteById(id);
+            return u; 
+
+        }
+    }
+
+    throw new IllegalArgumentException("O usuário fornecido é inválido ou não possui um ID.");
+
+ }
+
+ @Override
+ public List<Users> getAllUsers() {
+
+    if(this.repository.count() > 0){
+
+        return this.repository.findAll();
+    
+    }
+    
+    return null;
+
+ }
+
+ @Override
+ public Users getUsers(String id ) {
   
-  @Override
-  public List<Users> getProfessores(){
-    return userrepository.findProfessores();
-  }
+    if(id != " " || id != null){
 
-  @Override
-  public Users createdAluno(Users users) {
-    if (users != null && users.getId() == null) {
-      users.setUserType(Set.of(UserType.ALUNO)); 
-      users.getPermissoes().add("ROLE_USER");
-      users.getPermissoes().add("ROLE_ALUNO");
-      return userrepository.save(users);
-    } else {
-      throw new IllegalArgumentException("O usuário fornecido é inválido ou já possui um ID.");
+       return repository.existsById(id)==true? repository.findById(id).get() : null;
     }
-  }
+
+    throw new IllegalArgumentException("O usuário fornecido é inválido ou não possui um ID.");
+    
+ }
+
+ @Override
+ public List<Users> getAlunos() {
+   return repository.findAlunos();
+ }
+ 
+ @Override
+ public List<Users> getProfessores(){
+   return repository.findProfessores();
+ 
+ }
+
 }

@@ -6,18 +6,12 @@ import java.util.List;
 
 public interface TccInterface<T, E> {
     public T createTcc(T tcc);
-
-    public T updateTCC(T tcc);
-
-    public T deleteTCC(E tcc);
-
-    public List<T> getAllTCC();
-
-    public T getTCC(E tcc);
-
-    // Optional<Tcc> createTcc(Tcc tcc);
-
-    // Optional<Tcc> deleteTCC(String id);
-
-    // Optional<Tcc> getTCC(String title);
+   
+   public T updateTCC(T tcc , E id);
+   
+   public T deleteTCC(E tcc);
+   
+   public List<T> getAllTCC();
+   
+   public T getTCC(E tcc);
 }

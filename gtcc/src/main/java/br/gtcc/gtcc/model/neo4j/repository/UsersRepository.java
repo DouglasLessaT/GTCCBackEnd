@@ -9,7 +9,7 @@ import org.springframework.data.neo4j.repository.query.Query;
 import br.gtcc.gtcc.model.neo4j.Users;
 
 public interface UsersRepository extends Neo4jRepository<Users, String> {
- 
+  
  Optional<Users> findById(String id);
 
  @Query("MATCH (u:Users {login: $login}) RETURN u")
