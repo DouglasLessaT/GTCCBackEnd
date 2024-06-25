@@ -7,11 +7,11 @@ public interface ApresentationBancaInterface<T , E > {
     
    public  T createApresentationBanca ( T apresentationBanca);
    
-   public  T updateApresentationBanca ( T apresentationBanca);
+   public  T updateApresentationBanca ( E id ,T apresentationBanca);
    
-   public  T deleteApresentationBanca ( E apresentationBanca);
+   public  T deleteApresentationBanca ( E id);
    
-   public  T getApresentationBanca ( E apresentationBanca);
+   public  T getApresentationBanca ( E id);
    
    public List< T > getAllApresentationBanca ();
 
