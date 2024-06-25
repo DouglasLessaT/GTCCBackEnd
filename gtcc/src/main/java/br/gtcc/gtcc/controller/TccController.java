@@ -24,50 +24,59 @@ import br.gtcc.gtcc.services.spec.TccInterface;
 @ValidaAcesso("ROLE_COORDENADOR")
 @RequestMapping("coordenacao/tcc/v1")
 public class TccController {
-
+  
+    @SuppressWarnings("rawtypes")
     @Autowired
-    private TccInterface<Tcc, String> tccInterface;
-
+    private TccInterface tccInterface; 
+ 
     @PostMapping("/tcc")
     public ResponseEntity<Object> createTcc(@RequestBody Tcc tcc) {
-        try {
-            Tcc createdTcc = tccInterface.createTcc(tcc);
-            if (createdTcc != null) {
-                return new ResponseEntity<>(createdTcc, HttpStatus.CREATED);
-            } else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        
+        @SuppressWarnings("unchecked")
+        Optional<Tcc> createdTcc = Optional.ofNullable((Tcc) tccInterface.createTcc(tcc));
+        
+        if (createdTcc.isPresent()) { 
+      
+            return ResponseEntity.status(HttpStatus.CREATED).body("Tcc criado com sucesso");
+      
+        } else {
+      
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Falha ao criar Tcc");
+      
         }
     }
 
     @PutMapping("/tcc/{id}")
     public ResponseEntity<Object> updateTcc(@PathVariable("id") String id, @RequestBody Tcc tcc) {
-        try {
-            tcc.setId(id); // Define o ID do TCC com base no caminho da URL
-            Tcc updatedTcc = tccInterface.updateTCC(tcc);
-            if (updatedTcc != null) {
-                return new ResponseEntity<>(updatedTcc, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        
+        @SuppressWarnings("unchecked")
+        Optional<Tcc> updatedTcc = Optional.ofNullable((Tcc) tccInterface.updateTCC(tcc, id));
+      
+        if (updatedTcc.isPresent()) {
+      
+            return ResponseEntity.status(HttpStatus.CREATED).body("Tcc alterado com sucesso");
+      
+        } else {
+      
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tcc não encontrado");
+      
         }
     }
 
     @DeleteMapping("/tcc/{id}")
     public ResponseEntity<Object> deleteTcc(@PathVariable("id") String id) {
-        try {
-            Tcc deletedTcc = tccInterface.deleteTCC(id);
-            if (deletedTcc != null) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        
+        @SuppressWarnings("unchecked")
+        Optional<Tcc> deletedTcc = Optional.ofNullable((Tcc) tccInterface.deleteTCC(id));
+    
+        if (deletedTcc.isPresent()) {
+    
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Tcc deletado com sucesso");
+    
+        } else {
+    
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tcc não encontrado");
+    
         }
     }
 
@@ -87,14 +96,17 @@ public class TccController {
 
     @GetMapping("/tcc/{id}")
     public ResponseEntity<Object> getTccById(@PathVariable("id") String id) {
-        try {
-            Tcc tcc = tccInterface.getTCC(id);
-            if (tcc != null) {
-                return new ResponseEntity<>(tcc, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (IllegalArgumentException e) {
+
+        @SuppressWarnings("unchecked")
+
+        Optional<Tcc> foundTcc = Optional.ofNullable( (Tcc) tccInterface.getTCC(id) ) ;
+
+        if (foundTcc.isPresent()) {
+        
+            return new ResponseEntity<>(foundTcc, HttpStatus.OK);
+        
+        } else {
+        
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
