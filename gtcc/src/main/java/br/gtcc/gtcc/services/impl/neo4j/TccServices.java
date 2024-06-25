@@ -87,14 +87,14 @@ public class TccServices implements TccInterface<Tcc, String> {
     }
 
     @Override
+    public Tcc getTCCByTitle(String title) {
+        return tccRepository.findByTitle(title);
+    }
+
+    @Override
     public Tcc updateTCC(Tcc tcc, String id) {
 
         if (tcc != null && id != null) {
-
-    @Override
-    public Tcc getTCC(String title) {
-        return tccRepository.findByTitle(title);
-    }
 
             Tcc existingTcc = getTCC(id);
             
