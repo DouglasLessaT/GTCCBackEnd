@@ -10,6 +10,7 @@ import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
 import org.springframework.data.neo4j.repository.config.EnableReactiveNeo4jRepositories;
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class }) // desativa a tela de login no inicio
+//@EnableAutoConfiguration
 @EnableNeo4jRepositories(basePackages="br.gtcc.gtcc")
 public class GtccApplication {
 
