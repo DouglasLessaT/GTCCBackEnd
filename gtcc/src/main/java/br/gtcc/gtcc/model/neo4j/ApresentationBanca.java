@@ -6,6 +6,8 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.data.neo4j.core.schema.Relationship.Direction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,17 +21,22 @@ public class ApresentationBanca {
 
  @Id
  @GeneratedValue
- private String id;                                                     // elementid da Apresentação e formação da Banca                                 
+ private String id;                                                                                   
  
  @NonNull
- private String idTcc;                                                  // elementId  do TCC na Apresentação da banca
+ private String idTcc;         
  
- @Relationship(type = "MEMBER_OF", direction = Direction.OUTGOING)      //Relacionamento entre o menbro 1 e a apresentação
+ @NonNull
+ private String idAgenda;
+ 
+ @JsonIgnore
+ @NonNull
+ @Relationship(type = "TCC_APRESENTA_EM", direction = Direction.INCOMING)     
+ private Tcc tcc;
+ 
+ @Relationship(type = "MEMBER_ONE_OF", direction = Direction.OUTGOING)     
  private Users member1;
  
- @Relationship(type = "MEMBER_OF", direction = Direction.OUTGOING)      // Relacionamento da apresentação com o menbro 2
+ @Relationship(type = "MEMBER_TWO_OF", direction = Direction.OUTGOING)      
  private Users member2;
- 
- @Relationship(type = "ON_DATE", direction = Direction.OUTGOING)        // Relacionamento com a data em que a apresentação esta sendo marcada 
- private br.gtcc.gtcc.model.neo4j.Date date;
 }
