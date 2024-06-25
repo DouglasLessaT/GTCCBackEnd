@@ -118,5 +118,15 @@ public class UserServices implements UserInterface<Users, String> {
    return repository.findProfessores();
  
  }
-
+ @Override
+ public Users createdAluno(Users users) {
+   if (users != null && users.getId() == null) {
+     users.setUserType(Set.of(UserType.ALUNO)); 
+     users.getPermissoes().add("ROLE_USER");
+     users.getPermissoes().add("ROLE_ALUNO");
+     return repository.save(users);
+   } else {
+     throw new IllegalArgumentException("O usuário fornecido é inválido ou já possui um ID.");
+   }
+ }
 }
