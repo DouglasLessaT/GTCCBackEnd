@@ -9,15 +9,26 @@ public interface UserInterface<T, E> {
    public T updateUsers(T users, E id);
    
    public T deleteUsers(E id);
-   
+
    public List<T> getAllUsers();
 
    public T getUsers(E id);
-   
+
    public T createdAluno(T users);
    
+   public T updateAluno(T users, E id);
+   
+   public T deleteAluno(E id);
+
    public List<T> getAlunos(); 
 
-   public List<T> getProfessores();
+   public T createdProfessor(T users);
+   
+   public T updateProfessor(T users, E id);
+   
+   public T deleteProfessor(E id);
 
+   public List<T> getProfessores();
+   
+   
 }
