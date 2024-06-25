@@ -14,4 +14,6 @@ public interface TccInterface<T, E> {
    public List<T> getAllTCC();
    
    public T getTCC(E tcc);
+
+   public T getTCCByTitle(E title);
 }
