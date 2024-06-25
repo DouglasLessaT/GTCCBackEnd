@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package br.gtcc.gtcc.controller.security;
 
 import br.gtcc.gtcc.annotations.ValidaAcesso;
@@ -27,75 +23,107 @@ import br.gtcc.gtcc.util.Console;
 
 import java.util.Optional;
 
-/**
- *
- * @author mrbee
- * 
- *         Controller da entidade Users, criação de rotas
- */
-
 @CrossOrigin("*")
 @RestController
 @ValidaAcesso("ROLE_ADMIN")
 @RequestMapping("coordenacao/tcc/v1")
 public class UsersController {
-
+    
+    @SuppressWarnings("rawtypes")
     @Autowired
-    public UserInterface<Users, String> usersInterface;
+    public UserInterface usersInterface;
 
     @Autowired
     PasswordEncoder passwordEncoder;
-
+        
     @PostMapping("/usuario")
-    public ResponseEntity<Object> createUser(@RequestBody(required = true) Users users) {  
+    public ResponseEntity<Object> createUser(@RequestBody(required = true) Users users){
         users.setSenha(passwordEncoder.encode(users.getSenha()));
-        Optional<Users> createdUsers = Optional.ofNullable(usersInterface.createUsers(users));
+        @SuppressWarnings("unchecked")
+        Optional<Users> createdUsers = Optional.ofNullable((Users) usersInterface.createUsers(users));
+        
         if (createdUsers.isPresent()) {
-            return ResponseEntity.status(HttpStatus.OK).body("Usuário criado com sucesso");
+        
+            return ResponseEntity.status(HttpStatus.CREATED).body("Usuário criado com sucesso");
+        
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
-        }
+        
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado"); 
+        
+        } 
     }
 
     @DeleteMapping("/usuario/{id}")
-    public ResponseEntity<Object> deleteUsers(@PathVariable String id) {
-        Users user = usersInterface.getUsers(id);
-        if (user != null) {
-            usersInterface.deleteUsers(user);
-            return ResponseEntity.status(HttpStatus.OK).body("Usuário deletado com sucesso");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
-        }
-    }
+    public ResponseEntity<Object> deleteUsers(@PathVariable String id){
+    
+        @SuppressWarnings("unchecked")
+        Optional<Users> deletedUsers = Optional.ofNullable((Users) usersInterface.deleteUsers(id));  
 
+        if (deletedUsers.isPresent()) {
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("Usuário deletado com sucesso");
+        
+        } else {
+        
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuáio não encontrado");
+        
+        } 
+
+    }
+    
     @PutMapping("/usuario/{id}")
-    public ResponseEntity<Object> updateUsers(@RequestBody(required = true) Users users, @PathVariable String id) {
-        users.setId(id); // Assegurar que o ID do Path é definido no objeto Users
-        Optional<Users> updatedUser = Optional.ofNullable(usersInterface.updateUsers(users));
+    public ResponseEntity<Object> updateUsers(@RequestBody(required = true) Users users ,@PathVariable("id") String id){
+        
+        @SuppressWarnings("unchecked")
+        Optional<Users> updatedUser = Optional.ofNullable((Users)  usersInterface.updateUsers(users , id));
+
         if (updatedUser.isPresent()) {
-            return ResponseEntity.status(HttpStatus.OK).body("Usuário alterado com sucesso");
+        
+            return ResponseEntity.status(HttpStatus.OK).body("Usuario alterado com sucesso");
+        
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
-        }
+        
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado");
+        
+        } 
+    
     }
-
+    
     @GetMapping("/usuarios")
-    public ResponseEntity<Object> getAllUsers() {
-        Optional<List<Users>> list = Optional.ofNullable(usersInterface.getAllUsers());
-        if (list.isPresent()) {
-            return new ResponseEntity<>(list, HttpStatus.FOUND);
-        } else {
+    public ResponseEntity<Object> getAllUsers(){
+        
+       @SuppressWarnings("unchecked")
+       Optional<List<Users>> list = Optional.ofNullable((List<Users>) usersInterface.getAllUsers());
+       
+       if(list.isPresent()){
+    
+            return new ResponseEntity<>( list , HttpStatus.FOUND);
+           
+       }else {
+       
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuários não encontrados");
-        }
+       }
+       
     }
-
+    
     @GetMapping("/usuario/{id}")
-    public ResponseEntity<Object> getUser(@PathVariable String id) {
-        Optional<Users> foundUsers = Optional.ofNullable(usersInterface.getUsers(id));
+    public ResponseEntity<Object> getUser(@PathVariable String id){
+        
+        @SuppressWarnings("unchecked")
+        Optional<Users> foundUsers = Optional.ofNullable( (Users) usersInterface.getUsers(id));
+        
+
         if (foundUsers.isPresent()) {
-            return new ResponseEntity<>(foundUsers, HttpStatus.OK);
+        
+            return new ResponseEntity<>(foundUsers, HttpStatus.FOUND);
+        
         } else {
+        
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+        
         }
+ 
+
     }
+    
 }
