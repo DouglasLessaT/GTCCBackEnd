@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,6 +17,7 @@ import br.gtcc.gtcc.services.spec.UserInterface;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @CrossOrigin("*")
@@ -68,4 +70,41 @@ public class ProfessorController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar o usuário");
         }
     }
+
+        @DeleteMapping("/aluno/{id}")
+    public ResponseEntity<Object> deleteAluno(@PathVariable String id){
+    
+        @SuppressWarnings("unchecked")
+        Optional<Users> deletedUsers = Optional.ofNullable((Users) usersInterface.deleteAluno(id));  
+
+        if (deletedUsers.isPresent()) {
+
+            return ResponseEntity.status(HttpStatus.OK).body("Usuário deletado com sucesso");
+        
+        } else {
+        
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuáio não encontrado");
+        
+        } 
+
+    }
+    
+    @PutMapping("/aluno/{id}")
+    public ResponseEntity<Object> updateAluno(@RequestBody(required = true) Users users ,@PathVariable("id") String id){
+        
+        @SuppressWarnings("unchecked")
+        Optional<Users> updatedUser = Optional.ofNullable((Users)  usersInterface.updateAluno(users , id));
+
+        if (updatedUser.isPresent()) {
+        
+            return ResponseEntity.status(HttpStatus.OK).body("Usuario alterado com sucesso");
+        
+        } else {
+        
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado");
+        
+        } 
+    
+    }
+    
 }
