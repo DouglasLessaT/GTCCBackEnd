@@ -34,7 +34,7 @@ public class TccController {
  
     @PostMapping("/tcc")
     public ResponseEntity<Object> createTcc(@RequestBody Tcc tcc) {
-        
+        Console.log("TESte  obj " + tcc);
         @SuppressWarnings("unchecked")
         Optional<Tcc> createdTcc = Optional.ofNullable((Tcc) tccInterface.createTcc(tcc));
         
