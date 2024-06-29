@@ -19,8 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import br.gtcc.gtcc.annotations.ValidaAcesso;
 import br.gtcc.gtcc.model.neo4j.Tcc;
 import br.gtcc.gtcc.services.spec.TccInterface;
+import br.gtcc.gtcc.util.Console;
 
-@CrossOrigin
+@CrossOrigin("*")
 @RestController
 @ValidaAcesso("ROLE_COORDENADOR")
 @RequestMapping("coordenacao/tcc/v1")
@@ -32,7 +33,7 @@ public class TccController {
  
     @PostMapping("/tcc")
     public ResponseEntity<Object> createTcc(@RequestBody Tcc tcc) {
-        
+        Console.log("TESte  obj " + tcc);
         @SuppressWarnings("unchecked")
         Optional<Tcc> createdTcc = Optional.ofNullable((Tcc) tccInterface.createTcc(tcc));
         

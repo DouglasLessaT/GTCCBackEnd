@@ -67,6 +67,9 @@ public class AuthController extends DefaultController {
    retorno.put("permissoes", listaPermissoes);
    retorno.put("token", jwttoken);
 
+   retorno.put("elementId", user.getId());
+ 
+
    ObjectMapper objectMapper = new ObjectMapper();
    String retornoDados = objectMapper.writeValueAsString(retorno);
 

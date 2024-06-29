@@ -17,6 +17,7 @@ import br.gtcc.gtcc.model.neo4j.repository.TccRepository;
 import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
 import br.gtcc.gtcc.services.spec.TccInterface;
 import br.gtcc.gtcc.util.Console;
+import ch.qos.logback.core.util.COWArrayList;
 
 @Service
 public class TccServices implements TccInterface<Tcc, String> {
@@ -48,14 +49,18 @@ public class TccServices implements TccInterface<Tcc, String> {
                 tcc.setOrientador(orientador);
 
                 EnumSet<UserType> userTypeCoordenador = EnumSet.of(UserType.COORDENADOR);
-                EnumSet<UserType> userTypeProfessor = EnumSet.of(UserType.PROFESSOR);
-                
+                EnumSet<UserType> userTypeProfessor = EnumSet.of(UserType.PROFESSOR); 
+                EnumSet<UserType> userTypeAdmin = EnumSet.of(UserType.ADMIN);
+
                 boolean isCoordenador = orientador.getUserType().equals(userTypeCoordenador);
                 boolean isProfessor = orientador.getUserType().equals(userTypeProfessor);
+                boolean isAdmin = orientador.getUserType().equals(userTypeAdmin);
                 
-                if(isCoordenador == true || isProfessor == true){
+                if(isCoordenador == true || isProfessor == true || isAdmin == true){
                     
-                    if((aluno.getTccsGerenciados().size() == 0)){
+                    boolean isMaior = aluno.getTccsGerenciados().size() == 0;
+
+                    if( isMaior == true){
 
                         orientador.getTccsGerenciados().add(tcc);  
                         aluno.getTccsGerenciados().add(tcc);
@@ -66,7 +71,7 @@ public class TccServices implements TccInterface<Tcc, String> {
                     }else{
 
                         
-                        throw new IllegalArgumentException("Os funcionários não são professores ou coordenadores.");
+                        throw new IllegalArgumentException("O aluno ja esta em outro tcc.");
                     
                     }
 
