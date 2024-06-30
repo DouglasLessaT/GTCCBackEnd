@@ -3,6 +3,7 @@ package br.gtcc.gtcc.services.impl.neo4j;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -395,6 +396,41 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
 
         return null;
    
+    }
+    
+    @Override
+      public String getTccTitlePeloIdDaApresentacao(String elementId) {
+        
+        if(elementId == null){
+            throw new IllegalArgumentException("O id da apresentação é nula");
+        }
+
+       String titulo = repository.findTccTitleByApresentationId(elementId);
+
+        if(titulo == null){
+            throw new IllegalArgumentException("O titulo do tcc ou nome do orientador não existe");
+        }
+        Console.log("Teste " + titulo);
+        return titulo;
+
+    }
+
+
+    @Override
+      public String getNomeOrintadorPeloIdDaApresentacao(String elementId) {
+        
+        if(elementId == null){
+            throw new IllegalArgumentException("O id da apresentação é nula");
+        }
+
+        String nomeOrientador = repository.findTccNomeOrientadorByApresentationId(elementId);
+
+        if(nomeOrientador == null){
+            throw new IllegalArgumentException("O titulo do tcc ou nome do orientador não existe");
+        }
+        Console.log("Teste " + nomeOrientador);
+        return nomeOrientador;
+
     }
  
 }

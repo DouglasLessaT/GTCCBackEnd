@@ -1,6 +1,7 @@
 package br.gtcc.gtcc.services.spec;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ApresentationBancaInterface<T , E > {
  
@@ -15,4 +16,7 @@ public interface ApresentationBancaInterface<T , E > {
    
    public List< T > getAllApresentationBanca ();
 
+   public String getTccTitlePeloIdDaApresentacao(E id);
+
+   public String getNomeOrintadorPeloIdDaApresentacao(E id);
 }

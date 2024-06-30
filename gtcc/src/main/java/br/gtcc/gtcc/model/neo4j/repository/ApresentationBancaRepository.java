@@ -2,6 +2,8 @@ package br.gtcc.gtcc.model.neo4j.repository;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
@@ -24,11 +26,11 @@ public interface ApresentationBancaRepository extends Neo4jRepository<Apresentat
     Integer countConflictTccs(@Param("tccId") String tccId);
 
     /*MATCH (a:Agenda) WHERE datetime(a.date) = datetime("2024-06-29T00:00:00") AND
-((time(a.horasComeco) = time("22:50:00") AND time(a.horasFim) = time("23:46:00") ) OR
-(time(a.horasComeco) > time("22:50:00") AND time(a.horasComeco) < time("23:46:00")) OR
-(time(a.horasFim) > time("22:50:00") AND time(a.horasFim) < time("23:46:00")) OR 
-(time(a.horasComeco) <= time("22:50:00") AND time(a.horasFim) >= time("23:46:00")) OR
-(time(a.horasComeco) > time("22:50:00") AND time(a.horasFim) < time("23:46:00"))) RETURN count(a)  */
+    ((time(a.horasComeco) = time("22:50:00") AND time(a.horasFim) = time("23:46:00") ) OR
+    (time(a.horasComeco) > time("22:50:00") AND time(a.horasComeco) < time("23:46:00")) OR
+    (time(a.horasFim) > time("22:50:00") AND time(a.horasFim) < time("23:46:00")) OR 
+    (time(a.horasComeco) <= time("22:50:00") AND time(a.horasFim) >= time("23:46:00")) OR
+    (time(a.horasComeco) > time("22:50:00") AND time(a.horasFim) < time("23:46:00"))) RETURN count(a)  */
     @Query("MATCH(ap:ApresentationBanca)-[:ON_DATE]->(agenda:Agenda) "+
     "WHERE elementId(agenda) = $agendaId  AND " +
     "AND datetime(agenda.date) = datetime($date) " + 
@@ -37,5 +39,17 @@ public interface ApresentationBancaRepository extends Neo4jRepository<Apresentat
     "RETURN count(DISTINCT ap)")
     Integer countConflictApresentationWithoutMembers(@Param("agendaId") String agendaId ,@Param("date") LocalDateTime date, @Param("horasComeco")LocalTime horasComeco, @Param("horasFim") LocalTime horasFim);
     
+    @Query("MATCH (t:Tcc)-[:TCC_APRESENTA_EM]->(a:ApresentationBanca), " +
+    "(o:Users)-[:ORIENTA]->(t) " +
+    "WHERE elementId(a) = $elementId " +
+    "RETURN t.title AS tituloTcc")
+    String findTccTitleByApresentationId(String elementId);
+
+    @Query("MATCH (t:Tcc)-[:TCC_APRESENTA_EM]->(a:ApresentationBanca), " +
+    "(o:Users)-[:ORIENTA]->(t) " +
+    "WHERE elementId(a) = $elementId " +
+    "RETURN o.name AS nomeOrientador")
+    String findTccNomeOrientadorByApresentationId(String elementId);
 
 }
+

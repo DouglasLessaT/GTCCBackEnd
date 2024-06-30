@@ -23,6 +23,7 @@ import br.gtcc.gtcc.services.spec.ApresentationBancaInterface;
 import br.gtcc.gtcc.util.Console;
 
 import java.util.List;// pode usar para apresentaçao
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin
@@ -144,6 +145,31 @@ public class ApresentationBancaController {
         } else {
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sem datas cadatradas");
+
+        }
+
+    }
+
+    @SuppressWarnings("unchecked")
+    @GetMapping("/apresentacao-titulo-nome/{id}")
+    public ResponseEntity<Object> getTituloENomeOrientador(@PathVariable("id") String id) {
+
+        Optional<String> nome = Optional.ofNullable((String) interfaceBanca.getNomeOrintadorPeloIdDaApresentacao(id));
+
+        Optional<String> titulo = Optional.ofNullable((String) interfaceBanca.getTccTitlePeloIdDaApresentacao(id));
+
+        boolean nomeIsPresent = nome.isPresent() ;
+        boolean tituloIsPresent = titulo.isPresent();
+
+        if (nomeIsPresent!= false && tituloIsPresent != false) {
+
+            String resultado = ""+nome.get()+":"+titulo.get();
+            Console.log(resultado);
+            return new ResponseEntity<>(resultado, HttpStatus.OK);
+
+        } else {
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sem titlo ou nome encontrados");
 
         }
 
