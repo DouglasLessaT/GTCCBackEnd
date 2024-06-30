@@ -26,7 +26,9 @@ public class AgendaServices implements AgendaInterface<Agenda, String>{
         LocalTime horasComeco = data.getHorasComeco();
         LocalTime horasFim = data.getHorasFim();
         
-        Boolean exists = repository.countByDateAndHours( data.getDate() ,horasComeco ,horasFim ) > 0;
+        Integer countAgenda =  repository.countByDateAndHours( data.getDate() ,horasComeco ,horasFim );
+
+        Boolean exists = countAgenda > 0;
 
         if (exists) {
 
@@ -131,6 +133,22 @@ public class AgendaServices implements AgendaInterface<Agenda, String>{
 
     return null;
    
-  }
+   }
+
+   @Override
+   public List<  Agenda  > getAllAgendasFree(){
     
+    Long countAgendas = this.repository.count();
+    
+    if(countAgendas > 0){
+
+        return this.repository.listAgendaFree();
+
+    }
+
+    return null;
+   
+  }
+   
+  
 }

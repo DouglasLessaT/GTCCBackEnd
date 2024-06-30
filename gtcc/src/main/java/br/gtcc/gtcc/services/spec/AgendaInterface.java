@@ -13,5 +13,7 @@ public interface AgendaInterface<T, E> {
    public  T getAgenda (E id);
    
    public List<T> getAllAgenda ();
+
+   public List<T> getAllAgendasFree();
     
 }

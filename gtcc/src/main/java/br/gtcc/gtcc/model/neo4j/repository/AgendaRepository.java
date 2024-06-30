@@ -18,11 +18,11 @@ public interface AgendaRepository extends Neo4jRepository<Agenda, String> {
     @Query("MATCH (d:Agenda) WHERE date(d.date).day = $day AND date(d.date).month = $month AND date(d.date).year = $year AND d.horasComeco = $horasComeco AND d.horasFim = $horasFim RETURN count(d)")
     Integer countByDayMonthYearAndHours(@Param("day") int day, @Param("month") int month, @Param("year") int year, @Param("horasComeco") LocalTime horasComeco, @Param("horasFim") LocalTime horasFim);
     
-    @Query("MATCH (a:Agenda) WHERE datetime(a.date) = datetime(	$date) AND"+ 
+    @Query("MATCH (a:Agenda) WHERE datetime(a.date) = datetime($date) AND"+ 
     "((time(a.horasComeco) = time($horasComeco) AND time(a.horasFim) = time($horasFim) ) OR"+
     "(time(a.horasComeco) > time($horasComeco) AND time(a.horasComeco) < time($horasFim)) OR "+
     "(time(a.horasFim) > time($horasComeco) AND time(a.horasFim) < time($horasFim)) OR "+
-    "(time(a.horasComeco) < time($horasComeco) AND time(a.horasFim) > time($horasFim)) OR"+
+    "(time(a.horasComeco) <= time($horasComeco) AND time(a.horasFim) >= time($horasFim)) OR"+
     "(time(a.horasComeco) > time($horasComeco) AND time(a.horasFim) < time($horasFim))) RETURN COUNT(a)")
     Integer countByDateAndHours(@Param("date") LocalDateTime date, @Param("horasComeco") LocalTime horasComeco, @Param("horasFim") LocalTime horasFim);
 
