@@ -135,7 +135,7 @@ public class ApresentationBancaController {
     @GetMapping("/agendasLivres")
     public ResponseEntity<Object> getAllAgendas() {
 
-        List<Optional<Agenda>> agendas = (List<Optional<Agenda>>) interfaceAgenda.getAllAgenda();
+        List<Optional<Agenda>> agendas = (List<Optional<Agenda>>) interfaceAgenda.getAllAgendasFree();
 
         if (agendas.isEmpty() != true) {
 
@@ -148,5 +148,4 @@ public class ApresentationBancaController {
         }
 
     }
-
 }

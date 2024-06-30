@@ -29,4 +29,9 @@ public class RestResponseEntityExceptionHandler
     return handleExceptionInternal(ex, bodyOfResponse,
         new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
   }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
