@@ -107,4 +107,20 @@ public class ProfessorController {
     
     }
     
+    @GetMapping("/alunofree/")
+    public ResponseEntity<Object> getAlunosSemTcc(){
+        
+        Optional<List<Users>> getAlunosSemTcc = Optional.ofNullable(usersInterface.getAlunosSemTcc());
+
+        if (getAlunosSemTcc.isPresent()) {
+        
+            return ResponseEntity.status(HttpStatus.OK).body(getAlunosSemTcc);
+        
+        } else {
+        
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado");
+        
+        } 
+    
+    }
 }

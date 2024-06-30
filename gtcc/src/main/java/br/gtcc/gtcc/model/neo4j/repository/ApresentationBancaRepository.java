@@ -23,6 +23,12 @@ public interface ApresentationBancaRepository extends Neo4jRepository<Apresentat
     @Query("MATCH(t:Tcc)-[:TCC_APRESENTA_EM]->(a:ApresentationBanca)WHERE elementId(t)= $tccId RETURN COUNT(t)")
     Integer countConflictTccs(@Param("tccId") String tccId);
 
+    /*MATCH (a:Agenda) WHERE datetime(a.date) = datetime("2024-06-29T00:00:00") AND
+((time(a.horasComeco) = time("22:50:00") AND time(a.horasFim) = time("23:46:00") ) OR
+(time(a.horasComeco) > time("22:50:00") AND time(a.horasComeco) < time("23:46:00")) OR
+(time(a.horasFim) > time("22:50:00") AND time(a.horasFim) < time("23:46:00")) OR 
+(time(a.horasComeco) <= time("22:50:00") AND time(a.horasFim) >= time("23:46:00")) OR
+(time(a.horasComeco) > time("22:50:00") AND time(a.horasFim) < time("23:46:00"))) RETURN count(a)  */
     @Query("MATCH(ap:ApresentationBanca)-[:ON_DATE]->(agenda:Agenda) "+
     "WHERE elementId(agenda) = $agendaId  AND " +
     "AND datetime(agenda.date) = datetime($date) " + 

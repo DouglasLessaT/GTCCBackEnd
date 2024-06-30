@@ -230,4 +230,18 @@ public class UserServices implements UserInterface<Users, String> {
 
   }
 
+  @Override
+  public List<Users> getAlunosSemTcc() {
+    
+    Long listaDeAlunosSemTcc = this.repository.countUsersSemTccRelacionado();
+    if(listaDeAlunosSemTcc > 0){
+      
+      return repository.getUsersSemTccRelacionado();
+    }
+  
+    throw new IllegalArgumentException("Não existe alunos livres.");
+    
+  }
+
+
 }

@@ -29,6 +29,8 @@ public interface UserInterface<T, E> {
    public T deleteProfessor(E id);
 
    public List<T> getProfessores();
+
+   public List<T> getAlunosSemTcc();
    
    
 }

@@ -27,4 +27,11 @@ public interface UsersRepository extends Neo4jRepository<Users, String> {
 
  @Query("MATCH (u:Users) WHERE 'PROFESSOR' IN u.userType RETURN u ")
  List<Users> findProfessores();
+
+ @Query("MATCH (a:Users) WHERE NOT EXISTS((a)-[:REALIZA]->(:Tcc)) AND a.userType=['ALUNO']RETURN a")
+ List<Users> getUsersSemTccRelacionado();
+
+ @Query("MATCH (a:Users) WHERE NOT EXISTS((a)-[:REALIZA]->(:Tcc)) AND a.userType=['ALUNO']RETURN COUNT(a) AS numUsers")
+ Long countUsersSemTccRelacionado();
+ 
 }
