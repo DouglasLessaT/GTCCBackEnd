@@ -21,4 +21,10 @@ public interface TccRepository extends Neo4jRepository<Tcc, String> {
 
     @Query("MATCH(u:Users)WHERE elementId(u)=$idElement RETURN u")
     Users getUsers(@Param("idElement") String idElement);
+
+    @Query("MATCH(t:Tcc)WHERE NOT EXISTS((t)-[:TCC_APRESENTA_EM]->(:ApresentationBanca)) RETURN COUNT(t)")
+    Long countTccInApresentation();
+
+    @Query("MATCH(t:Tcc)WHERE NOT EXISTS((t)-[:TCC_APRESENTA_EM]->(:ApresentationBanca)) RETURN t")
+    List<Tcc> getTccInApresentation();
 }

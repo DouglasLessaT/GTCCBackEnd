@@ -131,4 +131,21 @@ public class TccController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tcc não encontrado");
         }
     }
+
+    @GetMapping("/tcc/sem-apresentacoes")
+    public ResponseEntity<Object> getTccSemApresentation() {
+
+        @SuppressWarnings("unchecked")
+
+        Optional<List<Tcc>> foundTcc = Optional.ofNullable( (List<Tcc>) tccInterface.getTccSemApresentacao() ) ;
+
+        if (foundTcc.isPresent()) {
+        
+            return new ResponseEntity<>(foundTcc, HttpStatus.OK);
+        
+        } else {
+        
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tcc não encontrado");
+        }
+    }
 }

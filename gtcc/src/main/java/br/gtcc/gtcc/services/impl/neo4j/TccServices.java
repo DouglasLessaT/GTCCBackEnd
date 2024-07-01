@@ -234,5 +234,19 @@ public class TccServices implements TccInterface<Tcc, String> {
         
         return tccRepository.findByTitle(trimmedTitle);
     }
-    
+
+    @Override
+    public List<Tcc> getTccSemApresentacao() {
+        
+        Long countTccSemApresentacao = this.tccRepository.countTccInApresentation();
+
+        if(countTccSemApresentacao < 0){
+            throw new IllegalArgumentException("Não existe tcc a ser relacionado a apreentaçoes");
+        }
+
+        List<Tcc> listTccSemApresentacao = this.tccRepository.getTccInApresentation();
+        
+        return listTccSemApresentacao;
+    }
+
 }
