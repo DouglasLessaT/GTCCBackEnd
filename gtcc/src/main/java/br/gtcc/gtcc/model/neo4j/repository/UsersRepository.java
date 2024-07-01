@@ -25,7 +25,7 @@ public interface UsersRepository extends Neo4jRepository<Users, String> {
  @Query("MATCH (u:Users) WHERE 'ALUNO' IN u.userType RETURN u")
  List<Users> findAlunos();
 
- @Query("MATCH (u:Users) WHERE 'PROFESSOR' IN u.userType RETURN u ")
+ @Query("MATCH (u:Users) WHERE 'PROFESSOR' IN u.userType OR 'COORDENADOR' IN u.userType RETURN u ")
  List<Users> findProfessores();
 
  @Query("MATCH (a:Users) WHERE NOT EXISTS((a)-[:REALIZA]->(:Tcc)) AND a.userType=['ALUNO']RETURN a")
