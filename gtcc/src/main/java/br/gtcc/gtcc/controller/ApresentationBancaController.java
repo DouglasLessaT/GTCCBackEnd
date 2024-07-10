@@ -6,13 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-// import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.gtcc.gtcc.annotations.ValidaAcesso;
@@ -21,9 +19,9 @@ import br.gtcc.gtcc.model.neo4j.ApresentationBanca;
 import br.gtcc.gtcc.services.spec.AgendaInterface;
 import br.gtcc.gtcc.services.spec.ApresentationBancaInterface;
 import br.gtcc.gtcc.util.Console;
+import br.gtcc.gtcc.util.UtilController;
 
-import java.util.List;// pode usar para apresentaçao
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin
@@ -44,54 +42,26 @@ public class ApresentationBancaController {
     public ResponseEntity<Object> createApresentantion(@RequestBody ApresentationBanca apresentation) {
 
         @SuppressWarnings("unchecked")
-        Optional<ApresentationBanca> createdApresentationBanca = Optional
-                .ofNullable((ApresentationBanca) interfaceBanca.createApresentationBanca(apresentation));
-
-        if (createdApresentationBanca.isPresent()) {
-
-            return ResponseEntity.status(HttpStatus.CREATED).body("Apresentação marcada com sucesso");
-
-        } else {
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Apresentação não marcada");
-
-        }
+        Optional<ApresentationBanca> createdApresentationBanca = Optional.ofNullable((ApresentationBanca) interfaceBanca.createApresentationBanca(apresentation));
+        return UtilController.buildResponseFromOptional( createdApresentationBanca, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Apresentação criada com sucesso", "Erro ao criar apresentação");
+        
     }
 
     @DeleteMapping("/apresentacao/{id}")
     public ResponseEntity<Object> deleteApresentationBanca(@PathVariable("id") String id) {
 
-        Optional<ApresentationBanca> deletedApresentationBanca = Optional
-                .ofNullable((ApresentationBanca) interfaceBanca.deleteApresentationBanca(id));
-
-        if (deletedApresentationBanca.isPresent()) {
-
-            return new ResponseEntity<>(deletedApresentationBanca, HttpStatus.OK);
-
-        } else {
-
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        }
-
+        @SuppressWarnings("unchecked")
+        Optional<ApresentationBanca> deletedApresentationBanca = Optional.ofNullable((ApresentationBanca) interfaceBanca.deleteApresentationBanca(id));
+        return UtilController.buildResponseFromOptional( deletedApresentationBanca, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Apresentação deletada com sucesso", "Erro ao deletar apresentação");
+        
     }
 
     @PutMapping("/apresentacao/{id}")
-    public ResponseEntity<Object> updateApresentationBanca(@PathVariable("id") String id,
-            @RequestBody(required = true) ApresentationBanca apresentation) {
+    public ResponseEntity<Object> updateApresentationBanca(@PathVariable("id") String id,@RequestBody(required = true) ApresentationBanca apresentation) {
 
-        Optional<ApresentationBanca> updatedApresentationBanca = Optional
-                .ofNullable((ApresentationBanca) interfaceBanca.updateApresentationBanca(id, apresentation));
-
-        if (updatedApresentationBanca.isPresent()) {
-
-            return new ResponseEntity<>(updatedApresentationBanca, HttpStatus.OK);
-
-        } else {
-
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        }
+        @SuppressWarnings("unchecked")
+        Optional<ApresentationBanca> updatedApresentationBanca = Optional.ofNullable((ApresentationBanca) interfaceBanca.updateApresentationBanca(id, apresentation));
+        return UtilController.buildResponseFromOptional( updatedApresentationBanca, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Apresentação alterada com sucesso", "Erro ao alterar apresentação");
 
     }
 
@@ -99,63 +69,35 @@ public class ApresentationBancaController {
     public ResponseEntity<Object> getApresentationBancaById(@PathVariable("id") String id) {
 
         @SuppressWarnings("unchecked")
-        Optional<ApresentationBanca> getApresentationBanca = Optional
-                .ofNullable((ApresentationBanca) interfaceBanca.getApresentationBanca(id));
-
-        if (getApresentationBanca.isPresent()) {
-
-            return new ResponseEntity<>(getApresentationBanca, HttpStatus.OK);
-
-        } else {
-
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        }
+        Optional<ApresentationBanca> getApresentationBanca = Optional.ofNullable((ApresentationBanca) interfaceBanca.getApresentationBanca(id));
+        return UtilController.buildResponseFromOptional( getApresentationBanca, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Apresentação encontrada", "Erro ao buscar apresentação");
 
     }
 
     @GetMapping("/apresentacoes")
     public ResponseEntity<Object> getAllApresentationBanca() {
 
-        Optional<List<ApresentationBanca>> getApresentationBancaList = Optional
-                .ofNullable((List<ApresentationBanca>) interfaceBanca.getAllApresentationBanca());
-
-        if (getApresentationBancaList.isPresent()) {
-
-            return new ResponseEntity<>(getApresentationBancaList, HttpStatus.OK);
-
-        } else {
-
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        }
+        @SuppressWarnings("unchecked")
+        Optional<List<ApresentationBanca>> getApresentationBancaList = Optional.ofNullable((List<ApresentationBanca>) interfaceBanca.getAllApresentationBanca());
+        return UtilController.buildResponseFromOptional( getApresentationBancaList, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de apresentação", "Lista Vazia");
 
     }
 
-    @SuppressWarnings("unchecked")
     @GetMapping("/agendasLivres")
     public ResponseEntity<Object> getAllAgendas() {
 
-        List<Optional<Agenda>> agendas = (List<Optional<Agenda>>) interfaceAgenda.getAllAgendasFree();
-
-        if (agendas.isEmpty() != true) {
-
-            return new ResponseEntity<>(agendas, HttpStatus.OK);
-
-        } else {
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sem datas cadatradas");
-
-        }
+        @SuppressWarnings("unchecked")
+        Optional<List<Agenda>> agendas = Optional.ofNullable( interfaceAgenda.getAllAgendasFree());
+        return UtilController.buildResponseFromOptional( agendas, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de agendas livres", "Lista Vazia");
 
     }
 
-    @SuppressWarnings("unchecked")
     @GetMapping("/apresentacao-titulo-nome/{id}")
     public ResponseEntity<Object> getTituloENomeOrientador(@PathVariable("id") String id) {
 
+        @SuppressWarnings("unchecked")
         Optional<String> nome = Optional.ofNullable((String) interfaceBanca.getNomeOrintadorPeloIdDaApresentacao(id));
-
+        @SuppressWarnings("unchecked")
         Optional<String> titulo = Optional.ofNullable((String) interfaceBanca.getTccTitlePeloIdDaApresentacao(id));
 
         boolean nomeIsPresent = nome.isPresent() ;

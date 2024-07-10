@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import br.gtcc.gtcc.services.spec.UserInterface;
 import br.gtcc.gtcc.util.Console;
+import br.gtcc.gtcc.util.UtilController;
 
 import java.util.Optional;
 
@@ -38,19 +39,12 @@ public class UsersController {
         
     @PostMapping("/usuario")
     public ResponseEntity<Object> createUser(@RequestBody(required = true) Users users){
+        
         users.setSenha(passwordEncoder.encode(users.getSenha()));
         @SuppressWarnings("unchecked")
         Optional<Users> createdUsers = Optional.ofNullable((Users) usersInterface.createUsers(users));
-        
-        if (createdUsers.isPresent()) {
-        
-            return ResponseEntity.status(HttpStatus.CREATED).body("Usuário criado com sucesso");
-        
-        } else {
-        
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado"); 
-        
-        } 
+        return UtilController.buildResponseFromOptional( createdUsers, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Usuário criado com sucesso", "Erro ao criar usuarios");
+
     }
 
     @DeleteMapping("/usuario/{id}")
@@ -58,16 +52,7 @@ public class UsersController {
     
         @SuppressWarnings("unchecked")
         Optional<Users> deletedUsers = Optional.ofNullable((Users) usersInterface.deleteUsers(id));  
-
-        if (deletedUsers.isPresent()) {
-
-            return ResponseEntity.status(HttpStatus.CREATED).body("Usuário deletado com sucesso");
-        
-        } else {
-        
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuáio não encontrado");
-        
-        } 
+        return UtilController.buildResponseFromOptional( deletedUsers, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Usuário deletado com sucesso", "Erro ao deletar usuarios");
 
     }
     
@@ -76,17 +61,8 @@ public class UsersController {
         
         @SuppressWarnings("unchecked")
         Optional<Users> updatedUser = Optional.ofNullable((Users)  usersInterface.updateUsers(users , id));
+        return UtilController.buildResponseFromOptional( updatedUser, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Usuário alterado com sucesso", "Erro ao alterado usuarios");
 
-        if (updatedUser.isPresent()) {
-        
-            return ResponseEntity.status(HttpStatus.OK).body("Usuario alterado com sucesso");
-        
-        } else {
-        
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado");
-        
-        } 
-    
     }
     
     @GetMapping("/usuarios")
@@ -94,15 +70,7 @@ public class UsersController {
         
        @SuppressWarnings("unchecked")
        Optional<List<Users>> list = Optional.ofNullable((List<Users>) usersInterface.getAllUsers());
-       
-       if(list.isPresent()){
-    
-            return new ResponseEntity<>( list , HttpStatus.FOUND);
-           
-       }else {
-       
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuários não encontrados");
-       }
+       return UtilController.buildResponseFromOptional( list, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de usuários", "Lista Vazia");
        
     }
     
@@ -110,19 +78,8 @@ public class UsersController {
     public ResponseEntity<Object> getUser(@PathVariable String id){
         
         @SuppressWarnings("unchecked")
-        Optional<Users> foundUsers = Optional.ofNullable( (Users) usersInterface.getUsers(id));
-        
-
-        if (foundUsers.isPresent()) {
-        
-            return new ResponseEntity<>(foundUsers, HttpStatus.FOUND);
-        
-        } else {
-        
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
-        
-        }
- 
+        Optional<Users> foundUsers = Optional.ofNullable( (Users) usersInterface.getUser(id));
+        return UtilController.buildResponseFromOptional( foundUsers, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Usuário encontrado", "Usuário não econtrado");        
 
     }
     

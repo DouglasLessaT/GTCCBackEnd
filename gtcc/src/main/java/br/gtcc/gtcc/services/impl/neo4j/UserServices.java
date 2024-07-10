@@ -42,7 +42,7 @@ public class UserServices implements UserInterface<Users, String> {
 
     if (id != null || id != "" || id != " ") {
 
-      Users userRepository = this.getUsers(id);
+      Users userRepository = this.getUser(id);
 
       if (userRepository != null) {
 
@@ -68,7 +68,7 @@ public class UserServices implements UserInterface<Users, String> {
 
     if (id != "" || id != null || id != " ") {
 
-      Users u = this.getUsers(id);
+      Users u = this.getUser(id);
       if (u != null) {
 
         this.repository.deleteById(id);
@@ -95,7 +95,7 @@ public class UserServices implements UserInterface<Users, String> {
   }
 
   @Override
-  public Users getUsers(String id) {
+  public Users getUser(String id) {
 
     if (id != " " || id != null) {
 
@@ -132,7 +132,7 @@ public class UserServices implements UserInterface<Users, String> {
   public Users updateAluno(Users users, String id) {
 
     if (id != null || id != "" || id != " ") {
-      Users userRepository = this.getUsers(id);
+      Users userRepository = this.getUser(id);
       if (userRepository != null) {
         userRepository.setName(users.getName());
         userRepository.setEmail(users.getEmail());
@@ -153,7 +153,7 @@ public class UserServices implements UserInterface<Users, String> {
 
     if (id != "" || id != null || id != " ") {
 
-      Users u = this.getUsers(id);
+      Users u = this.getUser(id);
       if (u != null) {
 
         this.repository.deleteById(id);
@@ -193,7 +193,7 @@ public class UserServices implements UserInterface<Users, String> {
 
     if (id != null || id != "" || id != " ") {
 
-      Users userRepository = this.getUsers(id);
+      Users userRepository = this.getUser(id);
 
       if (userRepository != null) {
 
@@ -217,7 +217,7 @@ public class UserServices implements UserInterface<Users, String> {
 
     if (id != "" || id != null || id != " ") {
 
-      Users u = this.getUsers(id);
+      Users u = this.getUser(id);
       if (u != null) {
 
         this.repository.deleteById(id);

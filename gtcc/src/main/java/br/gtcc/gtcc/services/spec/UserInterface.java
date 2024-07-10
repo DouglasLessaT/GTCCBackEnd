@@ -12,7 +12,7 @@ public interface UserInterface<T, E> {
 
    public List<T> getAllUsers();
 
-   public T getUsers(E id);
+   public T getUser(E id);
 
    public T createdAluno(T users);
    

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.gtcc.gtcc.annotations.ValidaAcesso;
 import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.services.spec.UserInterface;
+import br.gtcc.gtcc.util.UtilController;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,81 +34,50 @@ public class CoordenadorController {
     public UserInterface<Users, String> usersInterface;
 
     @GetMapping("/usuario/{id}")
-    public ResponseEntity<Object> getUser(@PathVariable String id) {
-        Optional<Users> foundUsers = Optional.ofNullable(usersInterface.getUsers(id));
-        if (foundUsers.isPresent()) {
-            return new ResponseEntity<>(foundUsers, HttpStatus.CREATED);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
-        }
+    public ResponseEntity<Object> getUserByCoordenador(@PathVariable String id) {
+
+        Optional<Users> foundUsers = Optional.ofNullable(usersInterface.getUser(id));
+        return UtilController.buildResponseFromOptional( foundUsers, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Usuário econtrado", "Usuario não encontrado");
+        
     }
 
     @GetMapping("/alunos")
-    public ResponseEntity<Object> getAllAlunos() {
+    public ResponseEntity<Object> getAllAlunosByCoordenador() {
+        
         Optional<List<Users>> list = Optional.ofNullable(usersInterface.getAlunos());
-        if (list.isPresent()) {
-            return new ResponseEntity<>(list, HttpStatus.CREATED);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuários não encontrados");
-        }
+        return UtilController.buildResponseFromOptional( list, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de Usuários", "Lista Vázia");
+        
     }
 
     @GetMapping("/professores")
-    public ResponseEntity<Object> getAllProfessores() {
+    public ResponseEntity<Object> getAllProfessoresByCoordenador() {
+        
         Optional<List<Users>> list = Optional.ofNullable(usersInterface.getProfessores());
-        if (list.isPresent()) {
-            return new ResponseEntity<>(list, HttpStatus.CREATED);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuários não encontrados");
-        }
+        return UtilController.buildResponseFromOptional( list, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de professores", "Lista Vazia");
+        
     }
 
-        @PostMapping("/professor")
-    public ResponseEntity<Object> createProfessor(@RequestBody Users users) {
-        try {
-            Users createdUser = usersInterface.createdProfessor(users);
-            return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar o usuário");
-        }
-    }
-
-        @DeleteMapping("/professor/{id}")
-    public ResponseEntity<Object> deleteProfessor(@PathVariable String id){
+    @PostMapping("/professor")
+    public ResponseEntity<Object> createProfessorByCoordenador(@RequestBody Users users) {
     
-        @SuppressWarnings("unchecked")
-        Optional<Users> deletedUsers = Optional.ofNullable((Users) usersInterface.deleteProfessor(id));  
+        Optional<Users> createdUser = Optional.of(usersInterface.createdProfessor(users));
+        return UtilController.buildResponseFromOptional( createdUser, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Professor criado com sucesso", "Erro ao criar professor");
+    
+    }
 
-        if (deletedUsers.isPresent()) {
-
-            return ResponseEntity.status(HttpStatus.OK).body("Usuário deletado com sucesso");
-        
-        } else {
-        
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuáio não encontrado");
-        
-        } 
-
+    @DeleteMapping("/professor/{id}")
+    public ResponseEntity<Object> deleteProfessorByCoordenador(@PathVariable String id){
+    
+        Optional<Users> deletedUsers = Optional.ofNullable((Users) usersInterface.deleteProfessor(id));      
+        return UtilController.buildResponseFromOptional( deletedUsers, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Professor deletado com sucesso", "Erro ao deletar professor");
+    
     }
     
     @PutMapping("/professor/{id}")
-    public ResponseEntity<Object> updateProfessor(@RequestBody(required = true) Users users ,@PathVariable("id") String id){
+    public ResponseEntity<Object> updateProfessorByCoordenador(@RequestBody(required = true) Users users ,@PathVariable("id") String id){
         
-        @SuppressWarnings("unchecked")
-        Optional<Users> updatedUser = Optional.ofNullable((Users)  usersInterface.updateProfessor(users , id));
-
-        if (updatedUser.isPresent()) {
-        
-            return ResponseEntity.status(HttpStatus.OK).body("Usuario alterado com sucesso");
-        
-        } else {
-        
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado");
-        
-        } 
+        Optional<Users> updatedUser = Optional.ofNullable((Users)  usersInterface.updateProfessor(users ,id));
+        return UtilController.buildResponseFromOptional( updatedUser, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Professor alterado com sucesso", "Erro ao alterar profesor");
     
     }
-    
 }

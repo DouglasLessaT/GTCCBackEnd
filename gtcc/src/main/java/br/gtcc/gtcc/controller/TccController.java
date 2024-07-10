@@ -21,6 +21,7 @@ import br.gtcc.gtcc.annotations.ValidaAcesso;
 import br.gtcc.gtcc.model.neo4j.Tcc;
 import br.gtcc.gtcc.services.spec.TccInterface;
 import br.gtcc.gtcc.util.Console;
+import br.gtcc.gtcc.util.UtilController;
 
 @CrossOrigin("*")
 @RestController
@@ -34,19 +35,11 @@ public class TccController {
  
     @PostMapping("/tcc")
     public ResponseEntity<Object> createTcc(@RequestBody Tcc tcc) {
-        Console.log("TESte  obj " + tcc);
+        
         @SuppressWarnings("unchecked")
         Optional<Tcc> createdTcc = Optional.ofNullable((Tcc) tccInterface.createTcc(tcc));
+        return UtilController.buildResponseFromOptional( createdTcc, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Tcc criado com sucesso", "Erro ao criar tcc");
         
-        if (createdTcc.isPresent()) { 
-      
-            return ResponseEntity.status(HttpStatus.CREATED).body("Tcc criado com sucesso");
-      
-        } else {
-      
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Falha ao criar Tcc");
-      
-        }
     }
 
     @PutMapping("/tcc/{id}")
@@ -54,16 +47,8 @@ public class TccController {
         
         @SuppressWarnings("unchecked")
         Optional<Tcc> updatedTcc = Optional.ofNullable((Tcc) tccInterface.updateTCC(tcc, id));
-      
-        if (updatedTcc.isPresent()) {
-      
-            return ResponseEntity.status(HttpStatus.CREATED).body("Tcc alterado com sucesso");
-      
-        } else {
-      
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tcc não encontrado");
-      
-        }
+        return UtilController.buildResponseFromOptional( updatedTcc, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Tcc celetado com sucesso", "Erro ao deletar tcc");
+       
     }
 
     @DeleteMapping("/tcc/{id}")
@@ -71,81 +56,43 @@ public class TccController {
         
         @SuppressWarnings("unchecked")
         Optional<Tcc> deletedTcc = Optional.ofNullable((Tcc) tccInterface.deleteTCC(id));
+        return UtilController.buildResponseFromOptional( deletedTcc, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Tcc deletado com sucesso", "Erro ao deletar tcc");
     
-        if (deletedTcc.isPresent()) {
-    
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Tcc deletado com sucesso");
-    
-        } else {
-    
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tcc não encontrado");
-    
-        }
     }
-
-    @SuppressWarnings("unchecked")
+    
     @GetMapping("/tccs")
     public ResponseEntity<Object> getAllTccs() {
-        try {
-            List<Optional<Tcc>> tccs = ( List<Optional<Tcc>>) tccInterface.getAllTCC();
-            if (!tccs.isEmpty()) {
-                return new ResponseEntity<>(tccs, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        
+        @SuppressWarnings("unchecked")
+        Optional<List<Tcc>> list = Optional.ofNullable( tccInterface.getAllTCC());
+        return UtilController.buildResponseFromOptional( list, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de Tcc", "Lista Vazia");
+    
     }
 
     @GetMapping("/tcc/{id}")
     public ResponseEntity<Object> getTccById(@PathVariable("id") String id) {
 
         @SuppressWarnings("unchecked")
-
         Optional<Tcc> foundTcc = Optional.ofNullable( (Tcc) tccInterface.getTCC(id) ) ;
-
-        if (foundTcc.isPresent()) {
-        
-            return new ResponseEntity<>(foundTcc, HttpStatus.OK);
-        
-        } else {
-        
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return UtilController.buildResponseFromOptional( foundTcc, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de Tcc", "Lista Vazia");
+    
     }
 
     @GetMapping("/tcc/")
     public ResponseEntity<Object> getTccByTitle(@RequestParam("title") String title) {
 
         @SuppressWarnings("unchecked")
-
         Optional<Tcc> foundTcc = Optional.ofNullable( (Tcc) tccInterface.getTCCByTitle(title) ) ;
+        return UtilController.buildResponseFromOptional( foundTcc, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Titulo do tcc econtrado", "Erro ao buscar tcc");
 
-        if (foundTcc.isPresent()) {
-        
-            return new ResponseEntity<>(foundTcc, HttpStatus.OK);
-        
-        } else {
-        
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tcc não encontrado");
-        }
     }
 
     @GetMapping("/tcc/sem-apresentacoes")
     public ResponseEntity<Object> getTccSemApresentation() {
 
         @SuppressWarnings("unchecked")
-
         Optional<List<Tcc>> foundTcc = Optional.ofNullable( (List<Tcc>) tccInterface.getTccSemApresentacao() ) ;
+        return UtilController.buildResponseFromOptional( foundTcc, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de tcc sem apresentações", "Lista Vazia");
 
-        if (foundTcc.isPresent()) {
-        
-            return new ResponseEntity<>(foundTcc, HttpStatus.OK);
-        
-        } else {
-        
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tcc não encontrado");
-        }
     }
 }

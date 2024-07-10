@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.gtcc.gtcc.model.neo4j.Agenda;
 import br.gtcc.gtcc.services.spec.AgendaInterface;
 import br.gtcc.gtcc.util.Console;
+import br.gtcc.gtcc.util.UtilController;
 
 import java.util.Optional;
 
@@ -34,17 +35,9 @@ public class AgendaController {
     public ResponseEntity<Object> createAgenda(@RequestBody Agenda agenda) {
         
         @SuppressWarnings("unchecked")
-        Optional<Agenda> createdData = Optional.ofNullable((Agenda) interfaceAgenda.createAgenda(agenda));
+        Optional<Agenda> createdAgenda = Optional.ofNullable((Agenda) interfaceAgenda.createAgenda(agenda));
+        return UtilController.buildResponseFromOptional( createdAgenda, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Agenda criado com sucesso", "Erro ao criar agenda");
         
-        if (createdData.isPresent()) {
-            
-            return ResponseEntity.status(HttpStatus.CREATED).body("Data criada com sucesso");
-        
-        } else {
-        
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao criar Data");
-        
-        }
     }
 
     @PutMapping("/agenda/{id}")
@@ -52,67 +45,34 @@ public class AgendaController {
        
         @SuppressWarnings("unchecked")
         Optional<Agenda> updatedAgenda = Optional.ofNullable((Agenda) interfaceAgenda.updateAgenda(id ,agenda));
-       
-        if (updatedAgenda.isPresent()) {
-       
-            return ResponseEntity.status(HttpStatus.OK).body("Data atualizada com sucesso");
-       
-        } else {
-       
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro ao atualizar Data");
-       
-        }
+        return UtilController.buildResponseFromOptional( updatedAgenda, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Agenda alterada com sucesso", "Erro ao alterar agenda");
+        
     }
 
-    @SuppressWarnings("unchecked")
     @DeleteMapping("/agenda/{id}")
     public ResponseEntity<Object> deleteAgenda(@PathVariable("id") String id ) {
-       
+
+        @SuppressWarnings("unchecked")
         Optional<Agenda> deletedAgenda = Optional.ofNullable((Agenda) interfaceAgenda.deleteAgenda(id));
+        return UtilController.buildResponseFromOptional( deletedAgenda, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Agenda deletada com sucesso", "Erro ao deletar agenda");
         
-        if (deletedAgenda.isPresent()) {
-       
-            return ResponseEntity.status(HttpStatus.OK).body("Data deletada com sucesso");
-       
-        } else {
-       
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro ao deletar Data");
-       
-        }
     }
 
-    @SuppressWarnings("unchecked")
     @GetMapping("/agendas")
     public ResponseEntity<Object> getAllAgendas() {
-        
-        List<Optional<Agenda>> agendas = (List<Optional<Agenda>>) interfaceAgenda.getAllAgenda();
-        
-        if(agendas.isEmpty() != true){
 
-            return new ResponseEntity<>(agendas, HttpStatus.OK);
-            
-        }else{
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sem datas cadatradas");
-            
-        }
+        @SuppressWarnings("unchecked")
+        Optional<List<Agenda>> agendas = Optional.ofNullable(interfaceAgenda.getAllAgenda());
+        return UtilController.buildResponseFromOptional( agendas, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de agendas", "Lista Vazia");
             
     }
 
-    @SuppressWarnings("unchecked")
     @GetMapping("/agenda/{id}")
     public ResponseEntity<Object> getDataById(@PathVariable("id") String id) {
-    
+
+        @SuppressWarnings("unchecked")
         Optional<Agenda> foundAgenda = Optional.ofNullable((Agenda) interfaceAgenda.getAgenda(id));
-        
-        if (foundAgenda.isPresent()) {
-        
-            return new ResponseEntity<>(foundAgenda, HttpStatus.OK);
-        
-        } else {
-        
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Data não encontrada");
-            
-        }
+        return UtilController.buildResponseFromOptional( foundAgenda, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Agenda encontrada", "Erro ao encontrar agenda");
+
     }
 }
