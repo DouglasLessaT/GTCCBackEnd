@@ -32,14 +32,18 @@ import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
 import br.gtcc.gtcc.services.impl.neo4j.UserServices;
 import br.gtcc.gtcc.util.JWTUtil;
+import br.gtcc.gtcc.util.services.UserUtil;
 
 @Configuration
 @EnableWebMvc
 public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
+    
+    @Autowired
+    private UserUtil userUtil;
+
     @Autowired
     private UserServices userServices;
-    @Autowired
-    private UsersRepository usersRepository;
+
     @Autowired
     JWTUtil jwtUtil;
 
@@ -50,7 +54,7 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
     private void addUsers() {
         try {
             // Verifica se o usuário Admin já existe no banco de dados
-            Optional<Users> existingAdmin = userServices.repository.findByLogin("admin");
+            Optional<Users> existingAdmin = userUtil.repository.findByLogin("admin");
             if (existingAdmin.isEmpty()) {
                 Users admin = new Users();
                 admin.setName("Admin");
@@ -64,11 +68,11 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
                 admin.getPermissoes().add("ROLE_PROFESSOR");
                 admin.getPermissoes().add("ROLE_COORDENADOR");
                 admin.getPermissoes().add("ROLE_ALUNO");
-                userServices.repository.save(admin);
+                userUtil.repository.save(admin);
             }
 
             // Verifica se o usuário Professor já existe no banco de dados
-            Optional<Users> existingProfessor = userServices.repository.findByLogin("professor");
+            Optional<Users> existingProfessor = userUtil.repository.findByLogin("professor");
             if (existingProfessor.isEmpty()) {
                 Users professor = new Users();
                 professor.setName("Professor");
@@ -79,11 +83,11 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
                 professor.setLogin("professor");
                 professor.getPermissoes().add("ROLE_USER");
                 professor.getPermissoes().add("ROLE_PROFESSOR");
-                userServices.repository.save(professor);
+                userUtil.repository.save(professor);
             }
 
             // Verifica se o usuário Coordenador já existe no banco de dados
-            Optional<Users> existingCoordinator = userServices.repository.findByLogin("coordenador");
+            Optional<Users> existingCoordinator = userUtil.repository.findByLogin("coordenador");
             if (existingCoordinator.isEmpty()) {
                 Users coordenador = new Users();
                 coordenador.setName("Coordenador");
@@ -94,11 +98,11 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
                 coordenador.setLogin("coordenador");
                 coordenador.getPermissoes().add("ROLE_USER");
                 coordenador.getPermissoes().add("ROLE_COORDENADOR");
-                userServices.repository.save(coordenador);
+                userUtil.repository.save(coordenador);
             }
 
             // Verifica se o usuário Aluno já existe no banco de dados
-            Optional<Users> existingAluno = userServices.repository.findByLogin("aluno");
+            Optional<Users> existingAluno = userUtil.repository.findByLogin("aluno");
             if (existingAluno.isEmpty()) {
                 Users aluno = new Users();
                 aluno.setName("Aluno");
@@ -109,7 +113,7 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
                 aluno.setLogin("aluno");
                 aluno.getPermissoes().add("ROLE_USER");
                 aluno.getPermissoes().add("ROLE_ALUNO");
-                userServices.repository.save(aluno);
+                userUtil.repository.save(aluno);
             }
 
         } catch (Exception ex) {
@@ -124,7 +128,7 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor(userServices, usersRepository, jwtUtil))
+        registry.addInterceptor(new LoginInterceptor(userServices,  userUtil.repository, jwtUtil))
                 .excludePathPatterns("/error**", "/index**", "/doc**", "/auth**", "/swagger-ui**")
                 .addPathPatterns("/coordenacao/tcc/v1/apresentacao",
                         "/coordenacao/tcc/v1/apresentacao/**",

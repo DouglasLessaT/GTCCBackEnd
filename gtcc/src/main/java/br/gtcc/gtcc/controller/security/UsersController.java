@@ -40,7 +40,6 @@ public class UsersController {
     @PostMapping("/usuario")
     public ResponseEntity<Object> createUser(@RequestBody(required = true) Users users){
         
-        users.setSenha(passwordEncoder.encode(users.getSenha()));
         @SuppressWarnings("unchecked")
         Optional<Users> createdUsers = Optional.ofNullable((Users) usersInterface.createUsers(users));
         return UtilController.buildResponseFromOptional( createdUsers, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Usuário criado com sucesso", "Erro ao criar usuarios");
