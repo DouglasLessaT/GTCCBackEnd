@@ -2,7 +2,6 @@ package br.gtcc.gtcc.services.impl.neo4j;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
@@ -12,55 +11,43 @@ import br.gtcc.gtcc.model.UserType;
 import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.services.spec.UserInterface;
 import br.gtcc.gtcc.util.Console;
-import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
+import br.gtcc.gtcc.util.services.UserUtil;
+
 
 @Service
 public class UserServices implements UserInterface<Users, String> {
 
   @Autowired
-  public UsersRepository repository;
+  public UserUtil utilUser;
 
   @Override
   public Users createUsers(Users users) {
 
-    if (users.getId() == null || users.getId() == "" || users.getId() == " ") {
+    users = this.utilUser.validaUser(users);
 
-      return this.repository.save(users);
+    users.setSenha(this.utilUser.enconder(users.getSenha()));
 
-    }
-    if (this.repository.existsById(users.getId()) != true) {
-
-      return this.repository.save(users);
-
-    }
-
-    throw new IllegalArgumentException("O ID do usuário é nulo ");
+    return this.utilUser.salvarUser(users);
+   
   }
 
   @Override
   public Users updateUsers(Users users, String id) {
 
-    if (id != null || id != "" || id != " ") {
+    this.utilUser.validaId(id);
+    this.utilUser.checkExistsUser(users.getId());
 
-      Users userRepository = this.getUser(id);
+    Users userRepository = this.getUser(id);
 
-      if (userRepository != null) {
-
-        userRepository.setName(users.getName());
-        userRepository.setEmail(users.getEmail());
-        userRepository.setBirthdate(users.getBirthdate());
-        userRepository.setCellphone(users.getCellphone());
-        userRepository.setUserType(users.getUserType());
-        userRepository.setPermissoes(users.getPermissoes());
-        userRepository.setTccsGerenciados(users.getTccsGerenciados());
-
-        return this.repository.save(userRepository);
-
-      }
-    }
-
-    throw new IllegalArgumentException("O usuário fornecido é inválido ou não possui um ID.");
-
+    userRepository.setName(users.getName());
+    userRepository.setEmail(users.getEmail());
+    userRepository.setBirthdate(users.getBirthdate());
+    userRepository.setCellphone(users.getCellphone());
+    userRepository.setUserType(users.getUserType());
+    userRepository.setPermissoes(users.getPermissoes());
+    userRepository.setTccsGerenciados(users.getTccsGerenciados());
+  
+    return this.utilUser.salvarUser(userRepository);
   }
 
   @Override
@@ -71,7 +58,7 @@ public class UserServices implements UserInterface<Users, String> {
       Users u = this.getUser(id);
       if (u != null) {
 
-        this.repository.deleteById(id);
+        this.utilUser.repository.deleteById(id);
         return u;
 
       }
@@ -84,9 +71,9 @@ public class UserServices implements UserInterface<Users, String> {
   @Override
   public List<Users> getAllUsers() {
 
-    if (this.repository.count() > 0) {
+    if (this.utilUser.repository.count() > 0) {
 
-      return this.repository.findAll();
+      return this.utilUser.repository.findAll();
 
     }
 
@@ -99,19 +86,18 @@ public class UserServices implements UserInterface<Users, String> {
 
     if (id != " " || id != null) {
 
-      return repository.existsById(id) == true ? repository.findById(id).get() : null;
+      return this.utilUser.repository.existsById(id) == true ? this.utilUser.repository.findById(id).get() : null;
     }
 
     throw new IllegalArgumentException("O usuário fornecido é inválido ou não possui um ID.");
 
   }
 
-
   // Metodos aluno 
-
   @Override
   public List<Users> getAlunos() {
-    return repository.findAlunos();
+
+    return this.utilUser.repository.findAlunos();
   }
 
 
@@ -122,7 +108,7 @@ public class UserServices implements UserInterface<Users, String> {
       users.setPermissoes(new LinkedList<String>());
       users.getPermissoes().add("ROLE_USER");
       users.getPermissoes().add("ROLE_ALUNO");
-      return repository.save(users);
+      return this.utilUser.repository.save(users);
     } else {
       throw new IllegalArgumentException("O usuário fornecido é inválido ou já possui um ID.");
     }
@@ -130,6 +116,7 @@ public class UserServices implements UserInterface<Users, String> {
 
   @Override
   public Users updateAluno(Users users, String id) {
+
 
     if (id != null || id != "" || id != " ") {
       Users userRepository = this.getUser(id);
@@ -139,7 +126,7 @@ public class UserServices implements UserInterface<Users, String> {
         userRepository.setBirthdate(users.getBirthdate());
         userRepository.setCellphone(users.getCellphone());
         userRepository.setTccsGerenciados(users.getTccsGerenciados());
-        return this.repository.save(userRepository);
+        return this.utilUser.repository.save(userRepository);
 
       }
     }
@@ -156,7 +143,7 @@ public class UserServices implements UserInterface<Users, String> {
       Users u = this.getUser(id);
       if (u != null) {
 
-        this.repository.deleteById(id);
+        this.utilUser.repository.deleteById(id);
         return u;
 
       }
@@ -166,23 +153,24 @@ public class UserServices implements UserInterface<Users, String> {
 
   }
 
-// metodos Professores
 
-
+  // metodos Professores
   @Override
   public List<Users> getProfessores() {
-    return repository.findProfessores();
+
+    return this.utilUser.repository.findProfessores();
 
   }
 
   @Override
   public Users createdProfessor(Users users) {
+
     if (users != null && users.getId() == null) {
       users.setUserType(Set.of(UserType.PROFESSOR));
       users.setPermissoes(new LinkedList<String>());
       users.getPermissoes().add("ROLE_USER");
       users.getPermissoes().add("ROLE_PROFESSOR");
-      return repository.save(users);
+      return this.utilUser.repository.save(users);
     } else {
       throw new IllegalArgumentException("O usuário fornecido é inválido ou já possui um ID.");
     }
@@ -190,6 +178,7 @@ public class UserServices implements UserInterface<Users, String> {
 
   @Override
   public Users updateProfessor(Users users, String id) {
+
 
     if (id != null || id != "" || id != " ") {
 
@@ -203,7 +192,7 @@ public class UserServices implements UserInterface<Users, String> {
         userRepository.setCellphone(users.getCellphone());
         userRepository.setTccsGerenciados(users.getTccsGerenciados());
 
-        return this.repository.save(userRepository);
+        return this.utilUser.repository.save(userRepository);
 
       }
     }
@@ -215,12 +204,13 @@ public class UserServices implements UserInterface<Users, String> {
   @Override
   public Users deleteProfessor(String id) {
 
+
     if (id != "" || id != null || id != " ") {
 
       Users u = this.getUser(id);
       if (u != null) {
 
-        this.repository.deleteById(id);
+        this.utilUser.repository.deleteById(id);
         return u;
 
       }
@@ -232,11 +222,12 @@ public class UserServices implements UserInterface<Users, String> {
 
   @Override
   public List<Users> getAlunosSemTcc() {
+
     
-    Long listaDeAlunosSemTcc = this.repository.countUsersSemTccRelacionado();
+    Long listaDeAlunosSemTcc = this.utilUser.repository.countUsersSemTccRelacionado();
     if(listaDeAlunosSemTcc > 0){
       
-      return repository.getUsersSemTccRelacionado();
+      return this.utilUser.repository.getUsersSemTccRelacionado();
     }
   
     throw new IllegalArgumentException("Não existe alunos livres.");
