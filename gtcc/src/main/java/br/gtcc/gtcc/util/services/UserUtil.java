@@ -3,13 +3,11 @@ package br.gtcc.gtcc.util.services;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-import javax.swing.text.StyledEditorKit.BoldAction;
-
+import javax.management.RuntimeErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Component;
 import br.gtcc.gtcc.model.UserType;
 import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
+import br.gtcc.gtcc.util.Console;
 
 @Component
 public class UserUtil {
@@ -139,8 +138,113 @@ public class UserUtil {
     public Boolean validaId(String id){
         
         if (id == null || id == "" || id == " ")
-            throw new RuntimeException("O id informado é inválido");;
+            throw new RuntimeException("O id informado é inválido");
 
+        return true;
+    }
+
+    public Users buscaUsersById(String id){
+        return this.repository.findById(id).get();
+    }
+
+    public List<Users> buscarTodosUsuários(){
+        return this.repository.findAll();
+    }
+
+    public List<Users> buscarTodosAlunos(){
+        return this.repository.findAlunos();
+    }
+
+    public Boolean checkRepositoryIsEmpty(){
+        
+        if(this.repository.count() == 0){
+
+            return true;
+
+        }
+
+        return false;
+    
+    }
+
+    public Boolean checkAlunosRepositoryIsEmpty(){
+
+        if(this.repository.countAlunos() == 0){
+
+            return true;
+
+        }
+
+        return false;
+    
+    }
+
+    public Users moldeAluno(Users user){
+
+        user.setUserType(Set.of(UserType.ALUNO));
+        user.setPermissoes(new LinkedList<String>());
+        user.getPermissoes().add("ROLE_USER");
+        user.getPermissoes().add("ROLE_ALUNO");
+        user.setLogin(null);
+        user.setSenha(null);
+
+        return user;
+
+    }
+
+    public void deleteUsers(String id){
+        this.repository.deleteById(id);
+    }
+
+    public Long countAlunosSemTccRelacionado(){
+
+        Long listaDeAlunosSemTcc = this.repository.countUsersSemTccRelacionado();
+        if(listaDeAlunosSemTcc < 0){
+            throw new RuntimeException("Não existe alunos livres.");
+        }
+        return listaDeAlunosSemTcc;
+    }
+
+    public List<Users> buscarTodosOsALunosSemTccRelacionados(){
+        return this.repository.getUsersSemTccRelacionado();
+    }
+
+    public List<Users> buscarProfessores(){
+        return this.repository.findProfessores();
+    }
+
+    public Long countProfessores(){
+    
+        Long listaDePRofessores = this.repository.countProfessores();
+        if(listaDePRofessores < 0){
+            throw new RuntimeException("Não existe Professores cadastrados.");
+        }
+        return listaDePRofessores;
+    
+    }
+
+    public Boolean checkExistsProfessor(String id){
+
+        Boolean existsProfessor = this.repository.existsById(id);
+        if(existsProfessor == true){
+            throw new RuntimeException("Professor já existe ");
+        }
+        return false;
+    }
+
+    public Users moldeProfessor(Users user){
+
+        user.setUserType(Set.of(UserType.PROFESSOR));
+        user.setPermissoes(new LinkedList<String>());
+        user.getPermissoes().add("ROLE_USER");
+        user.getPermissoes().add("ROLE_PROFESSOR");
+
+        return user;
+    }
+
+    public Boolean checkExistsProfessorParaDelete(String id ){
+        if(this.repository.existsById(id) == false)
+            throw new RuntimeException("Professor não existe");
         return true;
     }
 
