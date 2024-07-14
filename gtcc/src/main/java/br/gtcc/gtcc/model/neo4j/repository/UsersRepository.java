@@ -11,13 +11,13 @@ import br.gtcc.gtcc.model.neo4j.Users;
 public interface UsersRepository extends Neo4jRepository<Users, String> {
   
  Optional<Users> findById(String id);
+ 
+ List<Users> findAllByLoginOrderByLogin(String login);
+ 
+ List<Users> findAllByOrderByLoginAsc();
 
  @Query("MATCH (u:Users {login: $login}) RETURN u")
  Optional<Users> findByLogin(String login);
-
- List<Users> findAllByLoginOrderByLogin(String login);
-
- List<Users> findAllByOrderByLoginAsc();
 
  @Query("MATCH (u:Users {email: $0}) RETURN u")
  Users findByEmail(String email);
@@ -34,4 +34,10 @@ public interface UsersRepository extends Neo4jRepository<Users, String> {
  @Query("MATCH (a:Users) WHERE NOT EXISTS((a)-[:REALIZA]->(:Tcc)) AND a.userType=['ALUNO']RETURN COUNT(a) AS numUsers")
  Long countUsersSemTccRelacionado();
  
+ @Query("MATCH (u:Users) WHERE 'ALUNO' IN u.userType RETURN COUNT(u)")
+ Long countAlunos();
+
+ @Query("MATCH (u:Users) WHERE 'PROFESSOR' IN u.userType OR 'COORDENADOR' IN u.userType RETURN COUNT(u) ")
+ Long countProfessores();
+
 }
