@@ -1,94 +1,57 @@
     package br.gtcc.gtcc.services.impl.neo4j;
 
-import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import org.neo4j.cypherdsl.core.Use;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import br.gtcc.gtcc.model.UserType;
 import br.gtcc.gtcc.model.neo4j.Tcc;
 import br.gtcc.gtcc.model.neo4j.Users;
-import br.gtcc.gtcc.model.neo4j.repository.TccRepository;
-import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
 import br.gtcc.gtcc.services.spec.TccInterface;
+import br.gtcc.gtcc.util.services.TccUtil;
+import br.gtcc.gtcc.util.services.UserUtil;
 import br.gtcc.gtcc.util.Console;
-import ch.qos.logback.core.util.COWArrayList;
 
 @Service
 public class TccServices implements TccInterface<Tcc, String> {
 
     @Autowired
-    public TccRepository tccRepository;
+    public TccUtil tccUtil;
 
     @Autowired
-    public UsersRepository usersRepository;
+    public UserUtil userUtil;
 
     @Override
     public Tcc createTcc(Tcc tcc) {
        
         String idAluno = tcc.getIdAluno();
-
         String idOrientador = tcc.getIdOrientador();
+        String idTcc = tcc.getId();
 
-        if((idAluno != " " || idAluno != null) && (idOrientador != " " || idOrientador != null) ){
-            
-            Boolean existsAluno = this.usersRepository.existsById(idAluno);
-            Boolean existsOrientador = this.usersRepository.existsById(idOrientador); 
+        this.tccUtil.validaIdOrientador(idOrientador);
+        this.tccUtil.validaIdAluno(idAluno);
+        this.tccUtil.validaIdTccParaCriacao(idTcc);
 
-            if ((tcc.getId() != null || tcc.getId() != " ") && (existsAluno == true && existsOrientador == true)) {
-                
-                Users aluno = this.usersRepository.findById(idAluno).get();
-                Users orientador = this.usersRepository.findById(idOrientador).get();
+        this.tccUtil.checkExistsTccpParaCriacao(idTcc);
+        this.tccUtil.existsAluno(idAluno);
+        this.tccUtil.existsOrientador(idOrientador); 
 
-                tcc.setAluno(aluno);
-                tcc.setOrientador(orientador);
+        Users aluno = this.userUtil.buscaUsersById(idAluno);
+        Users orientador = this.userUtil.buscaUsersById(idOrientador);
 
-                EnumSet<UserType> userTypeCoordenador = EnumSet.of(UserType.COORDENADOR);
-                EnumSet<UserType> userTypeProfessor = EnumSet.of(UserType.PROFESSOR); 
-                EnumSet<UserType> userTypeAdmin = EnumSet.of(UserType.ADMIN);
+        tcc = this.tccUtil.adicionarAlunoNoTcc(tcc ,aluno);
+        tcc = this.tccUtil.adicionarOrientadorNoTcc(tcc ,orientador);
 
-                boolean isCoordenador = orientador.getUserType().equals(userTypeCoordenador);
-                boolean isProfessor = orientador.getUserType().equals(userTypeProfessor);
-                boolean isAdmin = orientador.getUserType().equals(userTypeAdmin);
-                
-                if(isCoordenador == true || isProfessor == true || isAdmin == true){
+        this.tccUtil.isEqualsType(orientador);
+
+        this.tccUtil.checkSeAlunoTemTcc(aluno);
+
+        orientador = this.tccUtil.adicionarTccNoOrientador(tcc, orientador);
+        aluno = this.tccUtil.adicionarTccNoAluno(tcc, aluno);
+
+        this.userUtil.salvarUser(orientador);
+        this.userUtil.salvarUser(aluno);
                     
-                    boolean isMaior = aluno.getTccsGerenciados().size() == 0;
+        return this.tccUtil.salvarTcc(tcc);
 
-                    if( isMaior == true){
-
-                        orientador.getTccsGerenciados().add(tcc);  
-                        aluno.getTccsGerenciados().add(tcc);
-
-                        this.usersRepository.save(orientador);
-                        this.usersRepository.save(aluno);
-                    
-                    }else{
-
-                        
-                        throw new IllegalArgumentException("O aluno ja esta em outro tcc.");
-                    
-                    }
-
-                } else {
-                
-                    throw new IllegalArgumentException("O orietador não é um funcionário.");
-                }
-                
-                return tccRepository.save(tcc);
-
-            } else {
-                
-                throw new IllegalArgumentException("O Tcc já existe ou o orietador ou aluno não existe.");
-            }
-
-        }
-        throw new IllegalArgumentException("O Tcc fornecido é inválido ou já possui um ID.");
     }
 
     @Override
