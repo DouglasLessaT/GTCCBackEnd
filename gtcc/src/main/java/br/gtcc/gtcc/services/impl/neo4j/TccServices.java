@@ -1,4 +1,4 @@
-    package br.gtcc.gtcc.services.impl.neo4j;
+package br.gtcc.gtcc.services.impl.neo4j;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,14 +49,14 @@ public class TccServices implements TccInterface<Tcc, String> {
 
         this.userUtil.salvarUser(orientador);
         this.userUtil.salvarUser(aluno);
-                    
+    
         return this.tccUtil.salvarTcc(tcc);
 
     }
 
     @Override
     public Tcc updateTCC(Tcc tcc, String id) {
-
+        
         String idOrientador = tcc.getIdOrientador();
         String idAluno = tcc.getIdAluno();
 
@@ -67,7 +67,7 @@ public class TccServices implements TccInterface<Tcc, String> {
         this.tccUtil.checkExistsTcc(id);
         this.tccUtil.existsAluno(idAluno);
         this.tccUtil.existsOrientador(idOrientador);
-
+        
         Users orientador = this.userUtil.buscaUsersById(idOrientador);
         Users aluno = this.userUtil.buscaUsersById(idAluno);
 
@@ -80,17 +80,17 @@ public class TccServices implements TccInterface<Tcc, String> {
         Users orientadorRepo = tccRepo.getOrientador();
         Users alunoRepo = tccRepo.getAluno();
 
-                            Boolean isEqualsAlunos = aluno.getId().equals(alunoRepo.getId());
-                            Boolean isEqualsOrientadores = orientador.getId().equals(orientadorRepo.getId());
-                            
-                            if( !isEqualsOrientadores  ){
+        Boolean isEqualsAlunos = aluno.getId().equals(alunoRepo.getId());
+        Boolean isEqualsOrientadores = orientador.getId().equals(orientadorRepo.getId());
+        
+        if( !isEqualsOrientadores  ){
 
             tccRepo = this.tccUtil.trocandoORelacionamentoDeProfessorComTcc(tccRepo, orientador, orientadorRepo, id);
-
-                            }
-                           
-                            if( !isEqualsAlunos ){
-                                    
+            
+        }
+    
+        if( !isEqualsAlunos ){
+            
             Boolean checkSeAlunoTemTcc = this.tccUtil._checkSeAlunoTemTccSemExecao(aluno);
             
             if( !checkSeAlunoTemTcc)
@@ -119,48 +119,68 @@ public class TccServices implements TccInterface<Tcc, String> {
 
     @Override
     public List<Tcc> getAllTCC() {
-        
-        if(this.tccRepository.count() > 0){
-
-            return tccRepository.findAll();
     
-        }
-
-        throw new IllegalArgumentException("O Tcc fornecido é inválido ou já possui um ID.");
+        this.tccUtil.countDeTccs();
+        return this.tccUtil.buscarTodosOsTcc();
+    
     }
 
-    @SuppressWarnings("unused")
     @Override
     public Tcc getTCC(String id) {
-        if(id != null || id != " "){
+                
+        this.tccUtil.validaIdTcc(id);
+        this.tccUtil.checkExistsTcc(id);
+        Tcc tccEncontrado = this.tccUtil.buscarTcc(id);
+        return tccEncontrado;
 
-            return this.tccRepository.existsById(id)==true? tccRepository.findById(id).get() : null;
-        }
-        throw new IllegalArgumentException("O Tcc fornecido é inválido ou já possui um ID.");
     }
 
     @Override
     public Tcc getTCCByTitle(String title) {
         
         String trimmedTitle = title.trim();
-        
-        // String normalizedTitle = trimmedTitle.toLowerCase();
-        
-        return tccRepository.findByTitle(trimmedTitle);
-    }
+        return this.tccUtil.buscarTccPorTitulo(trimmedTitle);
+    } 
 
     @Override
     public List<Tcc> getTccSemApresentacao() {
-        
-        Long countTccSemApresentacao = this.tccRepository.countTccInApresentation();
 
-        if(countTccSemApresentacao < 0){
-            throw new IllegalArgumentException("Não existe tcc a ser relacionado a apreentaçoes");
-        }
-
-        List<Tcc> listTccSemApresentacao = this.tccRepository.getTccInApresentation();
-        
-        return listTccSemApresentacao;
+        this.tccUtil.countDeTccsSemApresentacao();
+        return this.tccUtil.listaDeTccSemApresentacao();
     }
+
+   @Override
+   public Tcc adicionarOrientadorEmTcc(String idTcc ,String idOrientador){
+        
+        this.tccUtil.validaIdOrientador(idOrientador);
+        this.tccUtil.validaIdTcc(idOrientador);
+        
+        this.tccUtil.checkExistsTcc(idTcc);
+        this.userUtil.checkExistsUser(idOrientador);
+        
+        Tcc tcc = this.tccUtil.buscarTcc(idTcc);
+        Users orientador = this.userUtil.buscaUsersById(idOrientador);
+
+        this.tccUtil.adicionarOrientadorEmTcc(tcc, orientador);
+        
+        return tcc;
+   }
+
+   @Override 
+   public Tcc adicionarAlunoEmTcc(String idTcc ,String idAluno){
+ 
+        this.tccUtil.validaIdOrientador(idAluno);
+        this.tccUtil.validaIdTcc(idAluno);
+
+        this.tccUtil.checkExistsTcc(idTcc);
+        this.userUtil.checkExistsUser(idAluno);
+
+        Tcc tcc = this.tccUtil.buscarTcc(idTcc);
+        Users aluno = this.userUtil.buscaUsersById(idAluno);
+
+        this.tccUtil.adicionarAlunoEmTcc(tcc, aluno);
+
+        return tcc;
+   }
 
 }
