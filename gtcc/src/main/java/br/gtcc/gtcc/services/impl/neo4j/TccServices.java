@@ -57,113 +57,64 @@ public class TccServices implements TccInterface<Tcc, String> {
     @Override
     public Tcc updateTCC(Tcc tcc, String id) {
 
-        if (tcc != null && id != null) {
+        String idOrientador = tcc.getIdOrientador();
+        String idAluno = tcc.getIdAluno();
 
-            Tcc existingTcc = getTCC(id);
-            
-            if (existingTcc != null) {
-                existingTcc.setIdAluno(tcc.getIdAluno());
-                existingTcc.setTitle(tcc.getTitle());
-                existingTcc.setTheme(tcc.getTheme());
-                existingTcc.setCurse(tcc.getCurse());
-                existingTcc.setDateOfApresentation(tcc.getDateOfApresentation());
+        this.tccUtil.validaIdOrientador(idOrientador);
+        this.tccUtil.validaIdAluno(idAluno);
+        this.tccUtil.validaIdTcc(id);
 
-                if(tcc.getIdAluno() != null && tcc.getIdOrientador() != null){
+        this.tccUtil.checkExistsTcc(id);
+        this.tccUtil.existsAluno(idAluno);
+        this.tccUtil.existsOrientador(idOrientador);
 
+        Users orientador = this.userUtil.buscaUsersById(idOrientador);
+        Users aluno = this.userUtil.buscaUsersById(idAluno);
 
-                    Users orientador = this.usersRepository.findById(tcc.getIdOrientador()).get();
-                    Users aluno = this.usersRepository.findById(tcc.getIdAluno()).get();
+        this.tccUtil.isEqualsType(orientador); 
+        this.tccUtil.userTypeIsAluno(aluno);
 
-                    if( orientador != null && aluno != null){
+        Tcc tccRepo = this.tccUtil.buscarTcc(id);
+        tccRepo = this.tccUtil.moldeBasicoTcc(tccRepo ,tcc);
 
-
-                        EnumSet<UserType> userTypeCoordenador = EnumSet.of(UserType.COORDENADOR);
-                        EnumSet<UserType> userTypeProfessor = EnumSet.of(UserType.PROFESSOR);
-                        
-                        boolean isCoordenador = orientador.getUserType().equals(userTypeCoordenador);
-                        boolean isProfessor = orientador.getUserType().equals(userTypeProfessor);
-         
-                        if(isCoordenador == true || isProfessor == true){
-
-                            Users orientadorRepo = existingTcc.getOrientador();
-                            Users alunoRepo = existingTcc.getAluno();
+        Users orientadorRepo = tccRepo.getOrientador();
+        Users alunoRepo = tccRepo.getAluno();
 
                             Boolean isEqualsAlunos = aluno.getId().equals(alunoRepo.getId());
                             Boolean isEqualsOrientadores = orientador.getId().equals(orientadorRepo.getId());
                             
                             if( !isEqualsOrientadores  ){
 
-                                removeRelacionamento(orientadorRepo.getId(), id);
-                                existingTcc.setIdOrientador(tcc.getIdOrientador());
-                                orientador.getTccsGerenciados().add(existingTcc);
-                                existingTcc.setOrientador(orientador);
-                                this.usersRepository.save(orientador);
+            tccRepo = this.tccUtil.trocandoORelacionamentoDeProfessorComTcc(tccRepo, orientador, orientadorRepo, id);
 
                             }
                            
                             if( !isEqualsAlunos ){
                                     
-                                removeRelacionamento(alunoRepo.getId(), id);
-                                existingTcc.setIdAluno(tcc.getIdAluno());
-                                aluno.getTccsGerenciados().add(existingTcc);
-                                existingTcc.setAluno(aluno);
-                                this.usersRepository.save(aluno);
-                            
-                            }
-
-
-                            } else {
-
-                            throw new IllegalArgumentException("Os funcionários não são professores ou coordenadores.");
-                        }
-
-                    } else {
-                        
-                        throw new IllegalArgumentException("O aluno ou orintador não existem.");
-                    }
-
-                } else {
-
-                    throw new IllegalArgumentException("O aluno ou orientador são inválidos.");
-                }
-
-                return tccRepository.save(existingTcc);
-
-            } else {
-
-                throw new IllegalArgumentException("O Tcc não existe.");
+            Boolean checkSeAlunoTemTcc = this.tccUtil._checkSeAlunoTemTccSemExecao(aluno);
             
-            }
-        } else {
+            if( !checkSeAlunoTemTcc)
 
-            throw new IllegalArgumentException("O Tcc fornecido é inválido ou já possui um ID.");
+                this.tccUtil.removendoAlunoDeUmTcc(idAluno ,aluno );
+            
+            tccRepo = this.tccUtil.trocandoORelacionamentoDeAlunoComTcc(tccRepo, aluno, alunoRepo, id);
+        
         }
-    }
-    
-    public void removeRelacionamento(String idUsuario, String idTcc) {
-        this.tccRepository.removeRelacaoEntreUsuarioTcc(idUsuario, idTcc);
+
+        return this.tccUtil.salvarTcc(tccRepo);
+   
     }
 
-    @SuppressWarnings("unused")
     @Override
     public Tcc deleteTCC(String id) {
         
-        if( id != " " || id != null || id != "")  {
+        this.tccUtil.validaIdTcc(id);
+        this.tccUtil.checkExistsTcc(id);
+        Tcc tccDeletado = this.tccUtil.buscarTcc(id);
 
-            Tcc delTcc = this.getTCC(id);
-            if (delTcc != null) {    
+        this.tccUtil.deleteTcc(id);
+        return tccDeletado;
 
-                this.tccRepository.deleteById(id);
-                return delTcc;
-
-            } else {
-                
-                return null;
-            
-            }
-        }
-
-        throw new IllegalArgumentException("O Tcc fornecido é inválido ou já possui um ID.");
     }
 
     @Override
