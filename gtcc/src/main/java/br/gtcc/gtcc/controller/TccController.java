@@ -47,7 +47,7 @@ public class TccController {
         
         @SuppressWarnings("unchecked")
         Optional<Tcc> updatedTcc = Optional.ofNullable((Tcc) tccInterface.updateTCC(tcc, id));
-        return UtilController.buildResponseFromOptional( updatedTcc, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Tcc celetado com sucesso", "Erro ao deletar tcc");
+        return UtilController.buildResponseFromOptional( updatedTcc, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Tcc alterado com sucesso", "Erro ao alterado tcc");
        
     }
 
@@ -74,7 +74,7 @@ public class TccController {
 
         @SuppressWarnings("unchecked")
         Optional<Tcc> foundTcc = Optional.ofNullable( (Tcc) tccInterface.getTCC(id) ) ;
-        return UtilController.buildResponseFromOptional( foundTcc, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de Tcc", "Lista Vazia");
+        return UtilController.buildResponseFromOptional( foundTcc, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Tcc econtrado", "Lista Vazia");
     
     }
 
@@ -93,6 +93,24 @@ public class TccController {
         @SuppressWarnings("unchecked")
         Optional<List<Tcc>> foundTcc = Optional.ofNullable( (List<Tcc>) tccInterface.getTccSemApresentacao() ) ;
         return UtilController.buildResponseFromOptional( foundTcc, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de tcc sem apresentações", "Lista Vazia");
+
+    }
+
+    @GetMapping("/tcc/adicionar-aluno/{idTcc}/aluno/{idAluno}") // Não testado
+    public ResponseEntity<Object> adicionarAlunoEmTcc(@PathVariable("idTcc") String idTcc , @PathVariable("idAluno") String idAluno) {
+
+        @SuppressWarnings("unchecked")
+        Optional<Tcc> tcc = Optional.ofNullable( (Tcc) tccInterface.adicionarAlunoEmTcc(idTcc ,idAluno) ) ;
+        return UtilController.buildResponseFromOptional( tcc, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Aluno adicionado ao tcc", "Erro ao adicionar o aluno no tcc");
+
+    }
+
+    @GetMapping("/tcc/adicionar-aluno/{idTcc}/orientador/{idOrientador}")// Não testado
+    public ResponseEntity<Object> adicionarOrientadorEmTcc(@PathVariable("idTcc") String idTcc , @PathVariable("idOrientador") String idOrientador) {
+
+        @SuppressWarnings("unchecked")
+        Optional<Tcc> tcc = Optional.ofNullable( (Tcc) tccInterface.adicionarAlunoEmTcc(idTcc ,idOrientador) ) ;
+        return UtilController.buildResponseFromOptional( tcc, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Orientador adicionado ao tcc", "Erro ao adicionar o aluno no tcc");
 
     }
 }

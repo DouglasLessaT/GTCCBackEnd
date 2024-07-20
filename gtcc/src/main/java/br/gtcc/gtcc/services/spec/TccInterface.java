@@ -1,8 +1,6 @@
 package br.gtcc.gtcc.services.spec;
 
 import java.util.List;
-// import java.util.Optional;
-
 
 public interface TccInterface<T, E> {
     public T createTcc(T tcc);
@@ -18,4 +16,9 @@ public interface TccInterface<T, E> {
    public T getTCCByTitle(E title);
 
    public List<T> getTccSemApresentacao();
+
+   public T adicionarOrientadorEmTcc(E idTcc ,E idAluno);
+
+   public T adicionarAlunoEmTcc(E idTcc ,E idAluno );
+
 }
