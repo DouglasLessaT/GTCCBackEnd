@@ -51,5 +51,8 @@ public interface ApresentationBancaRepository extends Neo4jRepository<Apresentat
     "RETURN o.name AS nomeOrientador")
     String findTccNomeOrientadorByApresentationId(String elementId);
 
+    @Query("MATCH(a:Apresentacao)WHERE NOT EXISTS((a)-[:ON_DATE]->(:Agenda)) AND elementId(a)=$idApresentacao RETURN a")
+    ApresentationBanca buscarApresentacaoSemAgenda(@Param("idApresentacao") String idApresentacao);
+
 }
 

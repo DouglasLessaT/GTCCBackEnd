@@ -1,7 +1,6 @@
 package br.gtcc.gtcc.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +13,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import br.gtcc.gtcc.model.neo4j.Agenda;
 import br.gtcc.gtcc.services.spec.AgendaInterface;
-import br.gtcc.gtcc.util.Console;
 import br.gtcc.gtcc.util.UtilController;
-
 import java.util.Optional;
+import br.gtcc.gtcc.util.Console;
 
 @CrossOrigin
 @RestController
@@ -73,6 +70,24 @@ public class AgendaController {
         @SuppressWarnings("unchecked")
         Optional<Agenda> foundAgenda = Optional.ofNullable((Agenda) interfaceAgenda.getAgenda(id));
         return UtilController.buildResponseFromOptional( foundAgenda, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Agenda encontrada", "Erro ao encontrar agenda");
+
+    }
+
+    @GetMapping("/agendas-livres")
+    public ResponseEntity<Object> getAllAgendasFree() {
+
+        @SuppressWarnings("unchecked")
+        Optional<List<Agenda>> agendas = Optional.ofNullable( interfaceAgenda.getAllAgendasFree());
+        return UtilController.buildResponseFromOptional( agendas, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de agendas livres", "Lista Vazia");
+
+    }
+
+    @PostMapping("/agenda/{idAgenda}/adiciona/{idApresentacao}")
+    public ResponseEntity<Object> adicionarApresentacaoEmAgenda(@PathVariable("idAgenda") String idAgenda ,@PathVariable("idApresentaoca") String idApresencao) {
+
+        @SuppressWarnings("unchecked")
+        Optional<Agenda> agendas = Optional.ofNullable( (Agenda) interfaceAgenda.adicionarApresentacaoEemAgenda(idAgenda ,idApresencao));
+        return UtilController.buildResponseFromOptional( agendas, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Apresentacao adicionada a Agenda", "Erro ao adicionar apresentacao");
 
     }
 }

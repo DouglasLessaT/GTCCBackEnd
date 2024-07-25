@@ -12,15 +12,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import br.gtcc.gtcc.annotations.ValidaAcesso;
-import br.gtcc.gtcc.model.neo4j.Agenda;
 import br.gtcc.gtcc.model.neo4j.ApresentationBanca;
-import br.gtcc.gtcc.services.spec.AgendaInterface;
 import br.gtcc.gtcc.services.spec.ApresentationBancaInterface;
 import br.gtcc.gtcc.util.Console;
 import br.gtcc.gtcc.util.UtilController;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -29,10 +25,6 @@ import java.util.Optional;
 @ValidaAcesso("ROLE_PROFESSOR")
 @RequestMapping("coordenacao/tcc/v1")
 public class ApresentationBancaController {
-
-    @SuppressWarnings("rawtypes")
-    @Autowired
-    private AgendaInterface interfaceAgenda;
 
     @SuppressWarnings("rawtypes")
     @Autowired
@@ -80,15 +72,6 @@ public class ApresentationBancaController {
         @SuppressWarnings("unchecked")
         Optional<List<ApresentationBanca>> getApresentationBancaList = Optional.ofNullable((List<ApresentationBanca>) interfaceBanca.getAllApresentationBanca());
         return UtilController.buildResponseFromOptional( getApresentationBancaList, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de apresentação", "Lista Vazia");
-
-    }
-
-    @GetMapping("/agendasLivres")
-    public ResponseEntity<Object> getAllAgendas() {
-
-        @SuppressWarnings("unchecked")
-        Optional<List<Agenda>> agendas = Optional.ofNullable( interfaceAgenda.getAllAgendasFree());
-        return UtilController.buildResponseFromOptional( agendas, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de agendas livres", "Lista Vazia");
 
     }
 

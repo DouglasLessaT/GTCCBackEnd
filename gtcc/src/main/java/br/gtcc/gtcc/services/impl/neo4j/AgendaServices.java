@@ -21,12 +21,12 @@ public class AgendaServices implements AgendaInterface<Agenda, String>{
 
    @Autowired
    public ApresentacaoUtil aprUtil;
-   
+
    @Override
    public Agenda createAgenda(Agenda data){
        
         this.agendaUtil.validaIdAgendaParaCriacao(data.getId());
-    
+        
         LocalDateTime agenda = data.getDate();
         LocalTime horasComeco = data.getHorasComeco();
         LocalTime horasFim = data.getHorasFim();
@@ -36,7 +36,7 @@ public class AgendaServices implements AgendaInterface<Agenda, String>{
         this.agendaUtil.countConflicts(agenda, horasComeco, horasFim);
 
         return this.agendaUtil.salvarAgenda(data);
-   
+
    }
    
    @Override
@@ -66,7 +66,7 @@ public class AgendaServices implements AgendaInterface<Agenda, String>{
         this.agendaUtil.checkExistAgenda(id);
         Agenda dataRepo = this.agendaUtil.buscarAgenda(id);
         this.agendaUtil.deletarAgenda(id);
-                return dataRepo;
+        return dataRepo; 
 
     }
    
@@ -81,10 +81,10 @@ public class AgendaServices implements AgendaInterface<Agenda, String>{
    
    @Override
    public List<Agenda> getAllAgenda(){
-    
+
         this.agendaUtil.countAgendas();
         return this.agendaUtil.buscarTodasAgendas();
-   
+
    }
 
    @Override
@@ -98,11 +98,21 @@ public class AgendaServices implements AgendaInterface<Agenda, String>{
   @Override
   public Agenda adicionarApresentacaoEemAgenda(String idApresentacao , String idAgenda){
 
-    }
+        this.agendaUtil.validaId(idAgenda);
+        this.agendaUtil.validaId(idApresentacao);
 
-    return null;
-   
+        this.agendaUtil.checkExistAgenda(idAgenda);
+        this.aprUtil.checkExistsApresentacao(idApresentacao);
+
+        Agenda agenda = this.agendaUtil.buscarAgendaSemApresentacao(idAgenda);
+        ApresentationBanca apresentacao = this.aprUtil.buscarApresentacaoSemAgenda(idAgenda);
+
+        apresentacao.setIdAgenda(idAgenda);
+        agenda.setApresentacao(apresentacao);
+        
+        this.agendaUtil.salvarAgenda(agenda);
+        this.aprUtil.salvar(apresentacao);
+        return agenda;
   }
-   
   
 }

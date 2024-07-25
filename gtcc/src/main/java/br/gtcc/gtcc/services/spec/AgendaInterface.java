@@ -15,5 +15,7 @@ public interface AgendaInterface<T, E> {
    public List<T> getAllAgenda ();
 
    public List<T> getAllAgendasFree();
-    
+
+   public T adicionarApresentacaoEemAgenda(E idAgenda ,E idApresentacao);
+
 }
