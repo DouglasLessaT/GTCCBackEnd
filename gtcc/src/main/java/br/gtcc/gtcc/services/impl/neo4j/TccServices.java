@@ -160,6 +160,7 @@ public class TccServices implements TccInterface<Tcc, String> {
         
         Tcc tcc = this.tccUtil.buscarTcc(idTcc);
         Users orientador = this.userUtil.buscaUsersById(idOrientador);
+        this.tccUtil.isEqualsType(orientador);
 
         this.tccUtil.adicionarOrientadorEmTcc(tcc, orientador);
         
@@ -175,8 +176,10 @@ public class TccServices implements TccInterface<Tcc, String> {
         this.tccUtil.checkExistsTcc(idTcc);
         this.userUtil.checkExistsUser(idAluno);
 
+        
         Tcc tcc = this.tccUtil.buscarTcc(idTcc);
         Users aluno = this.userUtil.buscaUsersById(idAluno);
+        this.tccUtil.userTypeIsAluno(aluno);
 
         this.tccUtil.adicionarAlunoEmTcc(tcc, aluno);
 

@@ -96,7 +96,7 @@ public class TccController {
 
     }
 
-    @GetMapping("/tcc/adicionar-aluno/{idTcc}/aluno/{idAluno}") // Não testado
+    @PostMapping("/tcc/adicionar-aluno/{idTcc}/aluno/{idAluno}") 
     public ResponseEntity<Object> adicionarAlunoEmTcc(@PathVariable("idTcc") String idTcc , @PathVariable("idAluno") String idAluno) {
 
         @SuppressWarnings("unchecked")
@@ -105,7 +105,7 @@ public class TccController {
 
     }
 
-    @GetMapping("/tcc/adicionar-aluno/{idTcc}/orientador/{idOrientador}")// Não testado
+    @PostMapping("/tcc/adicionar-aluno/{idTcc}/orientador/{idOrientador}")
     public ResponseEntity<Object> adicionarOrientadorEmTcc(@PathVariable("idTcc") String idTcc , @PathVariable("idOrientador") String idOrientador) {
 
         @SuppressWarnings("unchecked")
