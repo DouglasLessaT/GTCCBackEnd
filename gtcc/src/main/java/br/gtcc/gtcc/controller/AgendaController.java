@@ -83,7 +83,7 @@ public class AgendaController {
     }
 
     @PostMapping("/agenda/{idAgenda}/adiciona/{idApresentacao}")
-    public ResponseEntity<Object> adicionarApresentacaoEmAgenda(@PathVariable("idAgenda") String idAgenda ,@PathVariable("idApresentaoca") String idApresencao) {
+    public ResponseEntity<Object> adicionarApresentacaoEmAgenda(@PathVariable("idAgenda") String idAgenda ,@PathVariable("idApresentacao") String idApresencao) {
 
         @SuppressWarnings("unchecked")
         Optional<Agenda> agendas = Optional.ofNullable( (Agenda) interfaceAgenda.adicionarApresentacaoEemAgenda(idAgenda ,idApresencao));
