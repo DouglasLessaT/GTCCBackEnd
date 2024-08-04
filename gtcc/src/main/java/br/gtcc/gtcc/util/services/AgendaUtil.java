@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import br.gtcc.gtcc.model.neo4j.Agenda;
+import br.gtcc.gtcc.model.neo4j.ApresentationBanca;
 import br.gtcc.gtcc.model.neo4j.repository.AgendaRepository;
 
 @Component
@@ -22,23 +23,29 @@ public class AgendaUtil {
         this.repository.deleteById(id);
    }
 
+   public Boolean agendaIsNull(Agenda agenda){
+     if(agenda == null)
+          return true;
+     throw new RuntimeException("O id da Agenda");  
+   }
+
    public Boolean validaId(String id){
    
         if (id == null || id == "" || id == " ")
-            throw new RuntimeException("O id do Tcc informado é inválido");
+            throw new RuntimeException("O id do Agenda informado é inválido");
         return true; 
    }
 
    public Boolean validaIdAgendaParaCriacao(String id){
         if (id == null || id == "" || id == " ")
             return true;
-        throw new RuntimeException("O id do Tcc informado é inválido");
+        throw new RuntimeException("O id do Agenda informado é inválido");
    }
    
    public Boolean validaData(LocalDateTime date){
         if(date != null)
             return true;
-        throw new RuntimeException("O id do Tcc informado é inválido");
+        throw new RuntimeException("O id do Agenda informado é inválido");
    }
 
    public Boolean validaHoras(LocalTime horasComeco ,LocalTime horasFim){
@@ -108,5 +115,39 @@ public class AgendaUtil {
             return true; 
         throw new RuntimeException("Existe conflito de agendas");
    }
+
+   public Boolean agendaIsLock(Agenda agendaApresentacao){
+        Boolean isLock = agendaApresentacao.getIsLock();
+        if(isLock == true)
+          throw new RuntimeException("Existe conflito nesta data");
+        return false;
+   }
+
+    public Agenda adicionarApresentacaoDentroDaAgenda(ApresentationBanca ap ,Agenda agenda){
+          
+          agenda.setApresentacao(ap);
+          agenda.setIsLock(true);
+
+          return agenda;
+    }
+
+    public void liberarAgenda(Agenda agenda){
+
+          agenda.setIsLock(false);
+          this.repository.save(agenda);
+    }
+ 
+    public void trocarAgendaDentroApresentacao(String newAgendaId ,ApresentationBanca apresentationBanca ,Agenda oldAgenda ,Agenda newAgendaRepo){
+
+          oldAgenda.setIsLock(false);
+          oldAgenda.setApresentacao(null);
+
+          this.repository.save(oldAgenda);
+
+          newAgendaRepo.setApresentacao(apresentationBanca);
+          newAgendaRepo.setIsLock(true);
+          apresentationBanca.setIdAgenda(newAgendaId);
+     
+    }
 
 }

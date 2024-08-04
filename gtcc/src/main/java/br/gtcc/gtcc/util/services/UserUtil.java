@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-import javax.management.RuntimeErrorException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 import br.gtcc.gtcc.model.UserType;
 import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
-import br.gtcc.gtcc.util.Console;
 
 @Component
 public class UserUtil {
@@ -33,6 +32,12 @@ public class UserUtil {
     @Autowired
     @Lazy
     public PasswordEncoder passwordEncoder;
+
+    public Boolean usersIsNull(Users user){
+        if(user == null)
+            throw new RuntimeException("Usuário é nulo");
+        return false;
+    }   
 
     public Users salvarUser(Users user){
         
@@ -143,6 +148,21 @@ public class UserUtil {
         return true;
     }
 
+    public Boolean validaIdMembro1(String id){
+        
+        if (id == null || id == "" || id == " ")
+            return false;
+
+        return true;
+    }
+
+    public Boolean validaIdMembro2(String id){
+        
+        if (id == null || id == "" || id == " ")
+             return false;
+        return true;
+    }
+
     public Users buscaUsersById(String id){
         return this.repository.findById(id).get();
     }
@@ -230,6 +250,15 @@ public class UserUtil {
             throw new RuntimeException("Professor já existe ");
         }
         return false;
+    }
+
+    public Boolean checkExistsProfessorOuCoordenador(String id){
+
+        Boolean existsProfessorOuCoordenador = this.repository.existsById(id);
+        if(existsProfessorOuCoordenador == true){
+            return true;
+        }
+        throw new RuntimeException("Professor ou Coordenador não existe ");
     }
 
     public Users moldeProfessor(Users user){

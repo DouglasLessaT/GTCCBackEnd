@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.gtcc.gtcc.model.UserType;
+import br.gtcc.gtcc.model.neo4j.ApresentationBanca;
 import br.gtcc.gtcc.model.neo4j.Tcc;
 import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.model.neo4j.repository.TccRepository;
@@ -307,4 +308,8 @@ public class TccUtil {
         this.tccRepository.removeRelacaoRealizaaEntreUsuarioTcc(idUsuario, idTcc);
     }
 
+    public void trocaTccDentroApresentacao(String idTcc ,ApresentationBanca apresentationBanca ,Tcc tcc){
+        apresentationBanca.setIdTcc(idTcc);
+        apresentationBanca.setTcc(tcc);
+    }
 } 
