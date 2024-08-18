@@ -7,11 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import br.gtcc.gtcc.model.neo4j.ApresentationBanca;
 import br.gtcc.gtcc.model.neo4j.Agenda;
-import br.gtcc.gtcc.model.neo4j.Tcc;
-import br.gtcc.gtcc.model.neo4j.Users;
-import br.gtcc.gtcc.model.neo4j.repository.ApresentationBancaRepository;
-import br.gtcc.gtcc.model.neo4j.repository.AgendaRepository;
-import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
+import br.gtcc.gtcc.model.neo4j.Tcc;  
 import br.gtcc.gtcc.services.spec.ApresentationBancaInterface;
 import br.gtcc.gtcc.util.services.AgendaUtil;
 import br.gtcc.gtcc.util.services.ApresentacaoUtil;
@@ -31,7 +27,7 @@ public class ApresentationBancaServices implements ApresentationBancaInterface<A
     @Autowired
     public AgendaUtil agendaUtil;
 
-    @Autowired
+    @Autowired 
     public UserUtil userUtil;
 
     @Override

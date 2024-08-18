@@ -28,7 +28,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import br.gtcc.gtcc.config.handlers.LoginInterceptor;
 import br.gtcc.gtcc.model.UserType;
-import br.gtcc.gtcc.model.neo4j.Users;
+import br.gtcc.gtcc.model.mysql.Usuario;
 import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
 import br.gtcc.gtcc.services.impl.neo4j.UserServices;
 import br.gtcc.gtcc.util.JWTUtil;
@@ -54,15 +54,14 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
     private void addUsers() {
         try {
             // Verifica se o usuário Admin já existe no banco de dados
-            Optional<Users> existingAdmin = userUtil.repository.findByLogin("admin");
+            Optional<Usuario> existingAdmin = userUtil.repository.findByLogin("admin");
             if (existingAdmin.isEmpty()) {
-                Users admin = new Users();
-                admin.setName("Admin");
+                Usuario admin = new Usuario();
+                admin.setNome("Admin");
                 admin.setEmail("admin@gmail.com");
                 admin.setSenha(passwordEncoder().encode("1234"));
-                admin.setCellphone("123456789");
-                admin.getUserType().add(UserType.ADMIN);
-                admin.setLogin("admin");
+                admin.setTelefone("123456789");
+                //admin.getUserType().add(UserType.ADMIN);
                 admin.getPermissoes().add("ROLE_USER");
                 admin.getPermissoes().add("ROLE_ADMIN");
                 admin.getPermissoes().add("ROLE_PROFESSOR");
@@ -72,45 +71,42 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
             }
 
             // Verifica se o usuário Professor já existe no banco de dados
-            Optional<Users> existingProfessor = userUtil.repository.findByLogin("professor");
+            Optional<Usuario> existingProfessor = userUtil.repository.findByLogin("professor");
             if (existingProfessor.isEmpty()) {
-                Users professor = new Users();
-                professor.setName("Professor");
+                Usuario professor = new Usuario();
+                professor.setNome("Professor");
                 professor.setEmail("professor@gmail.com");
                 professor.setSenha(passwordEncoder().encode("1234"));
-                professor.setCellphone("987654321");
-                professor.getUserType().add(UserType.PROFESSOR);
-                professor.setLogin("professor");
+                professor.setTelefone("987654321");
+                //professor.getUserType().add(UserType.PROFESSOR);
                 professor.getPermissoes().add("ROLE_USER");
                 professor.getPermissoes().add("ROLE_PROFESSOR");
                 userUtil.repository.save(professor);
             }
 
             // Verifica se o usuário Coordenador já existe no banco de dados
-            Optional<Users> existingCoordinator = userUtil.repository.findByLogin("coordenador");
+            Optional<Usuario> existingCoordinator = userUtil.repository.findByLogin("coordenador");
             if (existingCoordinator.isEmpty()) {
-                Users coordenador = new Users();
-                coordenador.setName("Coordenador");
+                Usuario coordenador = new Usuario();
+                coordenador.setNome("Coordenador");
                 coordenador.setEmail("coordenador@gmail.com");
                 coordenador.setSenha(passwordEncoder().encode("1234"));
-                coordenador.setCellphone("444444444");
-                coordenador.getUserType().add(UserType.COORDENADOR);
-                coordenador.setLogin("coordenador");
+                coordenador.setTelefone("444444444");
+                //coordenador.getUserType().add(UserType.COORDENADOR);
                 coordenador.getPermissoes().add("ROLE_USER");
                 coordenador.getPermissoes().add("ROLE_COORDENADOR");
                 userUtil.repository.save(coordenador);
             }
 
             // Verifica se o usuário Aluno já existe no banco de dados
-            Optional<Users> existingAluno = userUtil.repository.findByLogin("aluno");
+            Optional<Usuario> existingAluno = userUtil.repository.findByEmail("aluno@gmail.com");
             if (existingAluno.isEmpty()) {
-                Users aluno = new Users();
-                aluno.setName("Aluno");
+                Usuario aluno = new Usuario();
+                aluno.setNome("Aluno");
                 aluno.setEmail("aluno@gmail.com");
                 aluno.setSenha(passwordEncoder().encode("1234"));
-                aluno.setCellphone("555555555");
-                aluno.getUserType().add(UserType.ALUNO);
-                aluno.setLogin("aluno");
+                aluno.setTelefone("555555555");
+                //aluno.getUserType().add(UserType.ALUNO);
                 aluno.getPermissoes().add("ROLE_USER");
                 aluno.getPermissoes().add("ROLE_ALUNO");
                 userUtil.repository.save(aluno);
