@@ -30,16 +30,16 @@ import br.gtcc.gtcc.config.handlers.LoginInterceptor;
 import br.gtcc.gtcc.model.UserType;
 import br.gtcc.gtcc.model.mysql.Usuario;
 import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
-import br.gtcc.gtcc.services.impl.neo4j.UserServices;
+import br.gtcc.gtcc.services.impl.mysql.UserServices;
 import br.gtcc.gtcc.util.JWTUtil;
-import br.gtcc.gtcc.util.services.UserUtil;
+import br.gtcc.gtcc.util.services.UsuarioUtil;
 
 @Configuration
 @EnableWebMvc
 public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
     
     @Autowired
-    private UserUtil userUtil;
+    private UsuarioUtil userUtil;
 
     @Autowired
     private UserServices userServices;
@@ -54,62 +54,74 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
     private void addUsers() {
         try {
             // Verifica se o usuário Admin já existe no banco de dados
-            Optional<Usuario> existingAdmin = userUtil.repository.findByLogin("admin");
+            Optional<Usuario> existingAdmin = Optional.of(userUtil.findByLogin("admin"));
             if (existingAdmin.isEmpty()) {
                 Usuario admin = new Usuario();
                 admin.setNome("Admin");
+                admin.setMatricula("0001");
+                admin.setLogin("admin");
                 admin.setEmail("admin@gmail.com");
                 admin.setSenha(passwordEncoder().encode("1234"));
-                admin.setTelefone("123456789");
-                //admin.getUserType().add(UserType.ADMIN);
+                admin.setTelefone("(11) 00000-0000");
+                admin.setDataNascimento("1980-01-01");
+                admin.setAtivo(1);
                 admin.getPermissoes().add("ROLE_USER");
                 admin.getPermissoes().add("ROLE_ADMIN");
                 admin.getPermissoes().add("ROLE_PROFESSOR");
                 admin.getPermissoes().add("ROLE_COORDENADOR");
                 admin.getPermissoes().add("ROLE_ALUNO");
-                userUtil.repository.save(admin);
+                userUtil.salvarUser(admin);
             }
 
             // Verifica se o usuário Professor já existe no banco de dados
-            Optional<Usuario> existingProfessor = userUtil.repository.findByLogin("professor");
+            Optional<Usuario> existingProfessor = Optional.of(userUtil.findByLogin("professor"));
             if (existingProfessor.isEmpty()) {
                 Usuario professor = new Usuario();
                 professor.setNome("Professor");
+                professor.setMatricula("0002");
+                professor.setLogin("professor");
                 professor.setEmail("professor@gmail.com");
                 professor.setSenha(passwordEncoder().encode("1234"));
-                professor.setTelefone("987654321");
-                //professor.getUserType().add(UserType.PROFESSOR);
+                professor.setTelefone("(11) 11111-1111");
+                professor.setDataNascimento("1985-01-01");
+                professor.setAtivo(1);
                 professor.getPermissoes().add("ROLE_USER");
                 professor.getPermissoes().add("ROLE_PROFESSOR");
-                userUtil.repository.save(professor);
+                userUtil.salvarUser(professor);
             }
 
             // Verifica se o usuário Coordenador já existe no banco de dados
-            Optional<Usuario> existingCoordinator = userUtil.repository.findByLogin("coordenador");
+            Optional<Usuario> existingCoordinator = Optional.of(userUtil.findByLogin("coordenador"));
             if (existingCoordinator.isEmpty()) {
                 Usuario coordenador = new Usuario();
                 coordenador.setNome("Coordenador");
+                coordenador.setMatricula("0003");
+                coordenador.setLogin("coordenador");
                 coordenador.setEmail("coordenador@gmail.com");
                 coordenador.setSenha(passwordEncoder().encode("1234"));
-                coordenador.setTelefone("444444444");
-                //coordenador.getUserType().add(UserType.COORDENADOR);
+                coordenador.setTelefone("(11) 22222-2222");
+                coordenador.setDataNascimento("1990-01-01");
+                coordenador.setAtivo(1);
                 coordenador.getPermissoes().add("ROLE_USER");
                 coordenador.getPermissoes().add("ROLE_COORDENADOR");
-                userUtil.repository.save(coordenador);
+                userUtil.salvarUser(coordenador);
             }
 
             // Verifica se o usuário Aluno já existe no banco de dados
-            Optional<Usuario> existingAluno = userUtil.repository.findByEmail("aluno@gmail.com");
+            Optional<Usuario> existingAluno = Optional.of(userUtil.findByEmail("aluno@gmail.com"));
             if (existingAluno.isEmpty()) {
                 Usuario aluno = new Usuario();
                 aluno.setNome("Aluno");
+                aluno.setMatricula("0004");
+                aluno.setLogin("aluno");
                 aluno.setEmail("aluno@gmail.com");
                 aluno.setSenha(passwordEncoder().encode("1234"));
-                aluno.setTelefone("555555555");
-                //aluno.getUserType().add(UserType.ALUNO);
+                aluno.setTelefone("(11) 33333-3333");
+                aluno.setDataNascimento("1995-01-01");
+                aluno.setAtivo(1);
                 aluno.getPermissoes().add("ROLE_USER");
                 aluno.getPermissoes().add("ROLE_ALUNO");
-                userUtil.repository.save(aluno);
+                userUtil.salvarUser(aluno);
             }
 
         } catch (Exception ex) {
@@ -124,7 +136,7 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor(userServices,  userUtil.repository, jwtUtil))
+        registry.addInterceptor(new LoginInterceptor(userServices, null, jwtUtil))
                 .excludePathPatterns("/error**", "/index**", "/doc**", "/auth**", "/swagger-ui**")
                 .addPathPatterns("/coordenacao/tcc/v1/apresentacao",
                         "/coordenacao/tcc/v1/apresentacao/**",

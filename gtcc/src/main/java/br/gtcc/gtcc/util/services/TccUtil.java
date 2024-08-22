@@ -11,8 +11,8 @@ import br.gtcc.gtcc.model.UserType;
 import br.gtcc.gtcc.model.neo4j.ApresentationBanca;
 import br.gtcc.gtcc.model.neo4j.Tcc;
 import br.gtcc.gtcc.model.neo4j.Users;
-import br.gtcc.gtcc.model.neo4j.repository.TccRepository;
-import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
+import br.gtcc.gtcc.model.mysql.repository.TccRepository;
+import br.gtcc.gtcc.model.mysql.repository.UsuarioRepository;
 
 @Component
 public class TccUtil {
@@ -26,43 +26,43 @@ public class TccUtil {
     public TccRepository tccRepository;
 
     @Autowired
-    public UsersRepository usersRepository;
+    public UsuarioRepository usersRepository;
 
     public Tcc salvarTcc(Tcc tcc){
         return this.tccRepository.save(tcc);
     } 
 
-    public void deleteTcc(String id){
+    public void deleteTcc(Long id){
          this.tccRepository.deleteById(id);
     }
 
-    public Boolean validaIdTccParaCriacao(String id){
+    public Boolean validaIdTccParaCriacao(Long id){
         if (id == null || id == "" || id == " ")
             return true;
         throw new RuntimeException("O id do Tcc informado é inválido");
     }
 
-    public Boolean validaIdTcc(String id){
+    public Boolean validaIdTcc(Long id){
         if (id == null || id == "" || id == " ")
             throw new RuntimeException("O id do Tcc informado é inválido");        
         return true;
     }
 
-    public Boolean validaIdAluno(String id){
+    public Boolean validaIdAluno(Long id){
         if (id == null || id == "" || id == " ")
             throw new RuntimeException("O id do aluno informado é inválido");
 
         return true;
     }
 
-    public Boolean validaIdOrientador(String id){
+    public Boolean validaIdOrientador(Long id){
         if (id == null || id == "" || id == " ")
             throw new RuntimeException("O id do orientador informado é inválido");
 
         return true;
     }
     
-    public Boolean existsAluno(String id){
+    public Boolean existsAluno(Long id){
 
         if(this.usersRepository.existsById(id))
             return true;
@@ -71,7 +71,7 @@ public class TccUtil {
                 
     }
 
-    public Boolean existsOrientador(String id){
+    public Boolean existsOrientador(Long id){
 
         if(this.usersRepository.existsById(id))
             return true;
@@ -137,7 +137,7 @@ public class TccUtil {
 
     }
 
-    public Boolean checkExistsTcc(String id){
+    public Boolean checkExistsTcc(Long id){
 
         if(this.tccRepository.existsById(id))
             return true;
@@ -145,7 +145,7 @@ public class TccUtil {
         
     }
 
-    public Boolean checkExistsTccpParaCriacao(String id){
+    public Boolean checkExistsTccpParaCriacao(Long id){
 
         if(this.tccRepository.existsById(id))
             throw new RuntimeException("Tcc já existe no banco");
@@ -153,7 +153,7 @@ public class TccUtil {
         
     }
 
-    public Tcc buscarTcc(String id){
+    public Tcc buscarTcc(Long id){
         return this.tccRepository.findById(id).get();
     }
 

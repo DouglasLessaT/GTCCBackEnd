@@ -31,6 +31,9 @@ public interface UserInterface<T, E> {
    public List<T> getProfessores();
 
    public List<T> getAlunosSemTcc();
-   
+
+   public List<T> getMatricula(T users);
+
+   public List<T> getEmail(E id);
    
 }

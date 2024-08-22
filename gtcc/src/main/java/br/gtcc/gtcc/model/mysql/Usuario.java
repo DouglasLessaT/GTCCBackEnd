@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import io.micrometer.common.lang.NonNull;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -43,11 +45,17 @@ public class Usuario {
     @NotEmpty
     @Column(name = "matricula", nullable = false, length = 20)
     private String matricula;
+
+
+    @NonNull
+    @NotEmpty
+    @Column(name = "login", nullable = false, length = 20)
+    private String Login;
     
     @NonNull
     @NotEmpty
     @Column(name = "email", nullable = false, length = 150)
-    private String email;
+    private String Email;
     
     @NonNull
     @NotEmpty
@@ -67,8 +75,9 @@ public class Usuario {
     @Pattern(regexp = "^\\(\\d{2}\\) 00000-0000$", message = "O número de telefone deve seguir o padrão brasileiro.")
     private String telefone;
     
-    @NonNull
-    @NotEmpty
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "usuario_permissoes", joinColumns = @JoinColumn(name = "usuario_id"))
+    @Column(name = "permissao")
     private List<String> permissoes = new ArrayList<>();
 
     @ManyToOne(targetEntity=Grupo.class, fetch=FetchType.EAGER)
