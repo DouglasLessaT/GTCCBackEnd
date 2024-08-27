@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.gtcc.gtcc.model.UserType;
-import br.gtcc.gtcc.model.neo4j.ApresentationBanca;
-import br.gtcc.gtcc.model.neo4j.Tcc;
-import br.gtcc.gtcc.model.neo4j.Users;
+import br.gtcc.gtcc.model.mysql.Apresentacao;
+import br.gtcc.gtcc.model.mysql.Tcc;
+import br.gtcc.gtcc.model.mysql.Usuario;
 import br.gtcc.gtcc.model.mysql.repository.TccRepository;
 import br.gtcc.gtcc.model.mysql.repository.UsuarioRepository;
+import br.gtcc.gtcc.model.neo4j.ApresentationBanca;
+import br.gtcc.gtcc.model.neo4j.Users;
 
 @Component
 public class TccUtil {
@@ -37,26 +39,26 @@ public class TccUtil {
     }
 
     public Boolean validaIdTccParaCriacao(Long id){
-        if (id == null || id == "" || id == " ")
+        if (id == null )
             return true;
         throw new RuntimeException("O id do Tcc informado é inválido");
     }
 
     public Boolean validaIdTcc(Long id){
-        if (id == null || id == "" || id == " ")
+        if (id == null )
             throw new RuntimeException("O id do Tcc informado é inválido");        
         return true;
     }
 
     public Boolean validaIdAluno(Long id){
-        if (id == null || id == "" || id == " ")
+        if (id == null )
             throw new RuntimeException("O id do aluno informado é inválido");
 
         return true;
     }
 
     public Boolean validaIdOrientador(Long id){
-        if (id == null || id == "" || id == " ")
+        if (id == null )
             throw new RuntimeException("O id do orientador informado é inválido");
 
         return true;
@@ -80,32 +82,29 @@ public class TccUtil {
 
     }
 
-    public Tcc adicionarAlunoNoTcc(Tcc tcc ,Users aluno){
-        tcc.setAluno(aluno);
+    public Tcc adicionarAlunoNoTcc(Tcc tcc ,Usuario aluno){
+        tcc.setUsuario(aluno);
         return tcc;
     }
 
-    public Tcc adicionarOrientadorNoTcc(Tcc tcc ,Users orientador){
-        tcc.setOrientador(orientador);
-        return tcc;
-    }
+    //Método vai buscar da tela GRUPO ainda inexistente
+    //Retorna false
+    // public Boolean isEqualsType(Usuario user){
+        
+    //     Boolean isEqualsAdmin = user.getUserType().equals(TYPE_ADMIN);
+    //     Boolean isEqualsProfessor = user.getUserType().equals(TYPE_PROFESSOR);
+    //     Boolean isEqualsCoordenador = user.getUserType().equals(TYPE_COORDENADOR);
+        
+    //     if(isEqualsAdmin || isEqualsProfessor || isEqualsCoordenador)
+    //         return true;
 
-    public Boolean isEqualsType(Users user){
+    //     throw new RuntimeException("O Usuário é do tipo aluno, ele não pode criar um Tcc");
         
-        Boolean isEqualsAdmin = user.getUserType().equals(TYPE_ADMIN);
-        Boolean isEqualsProfessor = user.getUserType().equals(TYPE_PROFESSOR);
-        Boolean isEqualsCoordenador = user.getUserType().equals(TYPE_COORDENADOR);
-        
-        if(isEqualsAdmin || isEqualsProfessor || isEqualsCoordenador)
-            return true;
+    // }
 
-        throw new RuntimeException("O Usuário é do tipo aluno, ele não pode criar um Tcc");
+    public Boolean userTypeIsAluno(Usuario user){
         
-    }
-
-    public Boolean userTypeIsAluno(Users user){
-        
-        Boolean isAluno = user.getUserType().equals(TYPE_ALUNO);
+        Boolean isAluno = user.getGrupo().equals(TYPE_ALUNO);
         
         if( isAluno )
             return true;
@@ -114,27 +113,13 @@ public class TccUtil {
         
     }
 
-    public Boolean checkSeAlunoTemTcc(Users aluno){
-        Boolean isEqualsAZeroTccAluno =  aluno.getTccsGerenciados().size() == 0;
+    public Boolean checkSeAlunoTemTcc(Usuario aluno){
+        Boolean isEqualsAZeroTccAluno =  usersRepository.countUsersSemTccRelacionado() == 0;
         if(isEqualsAZeroTccAluno)
             return true;
         
         throw new RuntimeException("O aluno ja esta em outro tcc.");
         
-    }
-
-    public Users adicionarTccNoOrientador(Tcc tcc ,Users orientador){
-
-        orientador.getTccsGerenciados().add(tcc);
-        return orientador;
-
-    }
-
-    public Users adicionarTccNoAluno(Tcc tcc ,Users aluno){
-
-        aluno.getTccsGerenciados().add(tcc);
-        return aluno;
-
     }
 
     public Boolean checkExistsTcc(Long id){
@@ -160,42 +145,37 @@ public class TccUtil {
     public Tcc moldeBasicoTcc(Tcc oldTcc ,Tcc newTcc){
 
         oldTcc.setId(newTcc.getId());
-        oldTcc.setIdAluno(newTcc.getIdAluno());
-        oldTcc.setIdOrientador(newTcc.getIdOrientador());
-        oldTcc.setTitle(newTcc.getTitle());
-        oldTcc.setTheme(newTcc.getTheme());
-        oldTcc.setCurse(newTcc.getCurse());
-        oldTcc.setDateOfApresentation(newTcc.getDateOfApresentation());
+        oldTcc.setUsuario(newTcc.getUsuario());
+        oldTcc.setTitulo(newTcc.getTitulo());
+        oldTcc.setTema(newTcc.getTema());
+        oldTcc.setCurso(newTcc.getCurso());
         
         return oldTcc;
     }
 
-    public Tcc trocandoORelacionamentoDeProfessorComTcc(Tcc tcc ,Users newOrientador ,Users oldOrientador ,String idTcc){
+    //Isso aqui vai ser feito em outro tabela não nessa tabela banca 
+    // public Tcc trocandoORelacionamentoDeProfessorComTcc(Tcc tcc ,Users newOrientador ,Users oldOrientador ,String idTcc){
         
-        this.removerRelacionamentoOrienta( oldOrientador.getId(), idTcc);
-        tcc.setOrientador(newOrientador);
-        tcc.setIdOrientador(newOrientador.getId());
-        this.removeRelacionamentoDeTccsGerenciados( oldOrientador.getId(), idTcc);
-        oldOrientador.getTccsGerenciados().removeIf( tccItem -> tccItem.getId().equals(idTcc));
-        newOrientador.getTccsGerenciados().add(tcc);
+    //     this.removerRelacionamentoOrienta( oldOrientador.getId(), idTcc);
+    //     this.removeRelacionamentoDeTccsGerenciados( oldOrientador.getId(), idTcc);
+    //     oldOrientador.getTccsGerenciados().removeIf( tccItem -> tccItem.getId().equals(idTcc));
+    //     newOrientador.getTccsGerenciados().add(tcc);
         
-        this.usersRepository.save(newOrientador);
+    //     this.usersRepository.save(newOrientador);
 
-        return tcc;
+    //     return tcc;
         
-    }
+    // }
 
-    public Tcc trocandoORelacionamentoDeAlunoComTcc(Tcc tcc ,Users newAluno ,Users oldAluno ,String idTcc){
+    public Tcc trocandoORelacionamentoDeAlunoComTcc(Tcc tcc ,Usuario newAluno ,Usuario oldAluno ,Long idTcc){
 
-        this.removerRelacionamentoRealiza(oldAluno.getId() , idTcc);
-        tcc.setAluno (newAluno);
-        tcc.setIdAluno(newAluno.getId());
-        
-        this.removeRelacionamentoDeTccsGerenciados(oldAluno.getId(), idTcc);
-        oldAluno.getTccsGerenciados().clear();
-        newAluno.getTccsGerenciados().add(tcc);
+        //Alterar essa remocao de relacionamento
+        //this.removerRelacionamento(oldAluno.getId() , idTcc);
+        //Adicionar tcc ao usuario  
+        tcc.setUsuario(newAluno);
+        //Atualizar tabela de tcc
+        //Atualizar tabela de aluno
         this.usersRepository.save(newAluno);
-
         return tcc;
     }
 
@@ -211,20 +191,21 @@ public class TccUtil {
         return tccRepository.findAll();
     }
 
-    public Tcc buscarTccPorTitulo(String title){
-        return this.tccRepository.buscarTccPorTitulo(title);
+    public List<Tcc> buscarTccPorTitulo(String title){
+        return this.tccRepository.listTccByTitulo(title);
     }
 
+    //Essa query pode ser feita com a tabela tb_banca ou pode usar a tcc.
     public Long countDeTccsSemApresentacao(){
 
-        if(this.tccRepository.countTccInApresentation() > 0)
-            return this.tccRepository.countTccInApresentation();
+        if(this.tccRepository.countTccComApresentcao() > 0)
+            return this.tccRepository.countTccComApresentcao();
         throw new RuntimeException("Não existe tcc a ser relacionado a apreentaçoes");
 
     }   
 
     public List<Tcc> listaDeTccSemApresentacao(){
-        return this.tccRepository.getTccInApresentation();
+        return this.tccRepository.listTccComApresentcao();
     }
 
     public Boolean _checkSeAlunoTemTccSemExecao(Users aluno){
@@ -236,80 +217,19 @@ public class TccUtil {
         return false;
     }
 
-    public void removendoAlunoDeUmTcc(String idAluno ,Users aluno ){
-
-        Iterator<Tcc> iterator = aluno.getTccsGerenciados().iterator();
-        Tcc oldTcc = iterator.next();
-
-        String idTcc = oldTcc.getId();
-
-        this.tccRepository.removeRelacaoEntreUsuarioTcc(idAluno, idTcc);
-        aluno.getTccsGerenciados().clear();
-
-        this.tccRepository.removeRelacaoRealizaaEntreUsuarioTcc(idAluno ,idTcc);
-        oldTcc.setAluno(null);
-        oldTcc.setIdAluno(null);
-
-        this.usersRepository.save(aluno);
-        this.tccRepository.save(oldTcc);
+    public void adicionarAlunoEmTcc(Tcc tcc ,Usuario aluno){
         
-    }
-
-    public void removendoOrientadorDeUmTcc(String idOrientador ,Users orientador ){
-
-        Iterator<Tcc> iterator = orientador.getTccsGerenciados().iterator();
-        Tcc oldTcc = iterator.next();
-
-        String idTcc = oldTcc.getId();
-
-        this.tccRepository.removeRelacaoEntreUsuarioTcc(idOrientador, idTcc);
-        orientador.getTccsGerenciados().clear();
-
-        this.tccRepository.removeRelacaoRealizaaEntreUsuarioTcc(idOrientador ,idTcc);
-        oldTcc.setOrientador(null);
-        oldTcc.setIdOrientador(null);
-
-        this.usersRepository.save(orientador);
-        this.tccRepository.save(oldTcc);
-        
-    }
-
-    public void adicionarAlunoEmTcc(Tcc tcc ,Users aluno){
-        
-        tcc.setAluno(aluno);
-        tcc.setIdAluno(aluno.getId());
-        aluno.getTccsGerenciados().add(tcc);
-
-        this.usersRepository.save(aluno);
+        tcc.setUsuario(aluno);
         this.tccRepository.save(tcc);
         
     }
 
-    public void adicionarOrientadorEmTcc(Tcc tcc ,Users orientador){
-
-        tcc.setOrientador(orientador);
-        tcc.setIdOrientador( orientador.getId());
-        orientador.getTccsGerenciados().add(tcc);
-
-        this.usersRepository.save(orientador);
-        this.tccRepository.save(tcc);
-        
-    }
-
-    public void removeRelacionamentoDeTccsGerenciados(String idUsuario, String idTcc) {
+    public void removerRelacionamentoEntreUsuarioETcc(Long idUsuario, Long idTcc){
         this.tccRepository.removeRelacaoEntreUsuarioTcc(idUsuario, idTcc);
     }
 
-    public void removerRelacionamentoOrienta(String idUsuario, String idTcc){
-        this.tccRepository.removeRelacaoOrientaEntreUsuarioTcc(idUsuario, idTcc);
-    }
-
-    public void removerRelacionamentoRealiza(String idUsuario, String idTcc){
-        this.tccRepository.removeRelacaoRealizaaEntreUsuarioTcc(idUsuario, idTcc);
-    }
-
-    public void trocaTccDentroApresentacao(String idTcc ,ApresentationBanca apresentationBanca ,Tcc tcc){
-        apresentationBanca.setIdTcc(idTcc);
-        apresentationBanca.setTcc(tcc);
+    public void trocaTccDentroApresentacao(Long idTcc ,Apresentacao apresentacao ,Tcc tcc){
+        apresentacao.setTcc(tcc);
+        this.tccRepository.save(tcc);
     }
 } 
