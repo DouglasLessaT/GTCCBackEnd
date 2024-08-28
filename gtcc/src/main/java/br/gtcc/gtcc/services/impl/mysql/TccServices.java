@@ -37,8 +37,6 @@ public class TccServices implements TccInterface<Tcc, Long> {
 
         this.tccUtil.checkSeAlunoTemTcc(aluno);
 
-        aluno = this.tccUtil.adicionarTccNoAluno(tcc, aluno);
-
         this.userUtil.salvarUser(aluno);
     
         return this.tccUtil.salvarTcc(tcc);
@@ -56,32 +54,24 @@ public class TccServices implements TccInterface<Tcc, Long> {
         this.tccUtil.checkExistsTcc(id);
         this.tccUtil.existsAluno(idAluno);
         
-        Long aluno = this.userUtil.buscaUsersById(idAluno);
+        Usuario aluno = this.userUtil.buscaUsersById(idAluno);
 
         this.tccUtil.userTypeIsAluno(aluno);
 
         Tcc tccRepo = this.tccUtil.buscarTcc(id);
         tccRepo = this.tccUtil.moldeBasicoTcc(tccRepo ,tcc);
 
-        Long orientadorRepo = tccRepo.getOrientador();
-        Long alunoRepo = tccRepo.getAluno();
+        Usuario alunoRepo = tccRepo.getUsuario();
 
         Boolean isEqualsAlunos = aluno.getId().equals(alunoRepo.getId());
-
-        
-        if( !isEqualsOrientadores  ){
-
-            tccRepo = this.tccUtil.trocandoORelacionamentoDeProfessorComTcc(tccRepo, orientador, orientadorRepo, id);
-            
-        }
     
         if( !isEqualsAlunos ){
             
-            Boolean checkSeAlunoTemTcc = this.tccUtil._checkSeAlunoTemTccSemExecao(aluno);
+            Boolean checkSeAlunoTemTcc = this.tccUtil.checkSeAlunoTemTccSemExecao(aluno);
             
             if( !checkSeAlunoTemTcc)
 
-                this.tccUtil.removendoAlunoDeUmTcc(idAluno ,aluno );
+                this.tccUtil.removendoAlunoDeUmTcc(idAluno);
             
             tccRepo = this.tccUtil.trocandoORelacionamentoDeAlunoComTcc(tccRepo, aluno, alunoRepo, id);
         
@@ -125,7 +115,7 @@ public class TccServices implements TccInterface<Tcc, Long> {
     public Tcc getTCCByTitle(String title) {
         
         String trimmedTitle = title.trim();
-        return (Tcc) this.tccUtil.buscarTccPorTitulo(trimmedTitle);
+        return this.tccUtil.buscarTccPorTitulo(trimmedTitle);
     } 
 
     @Override
@@ -135,7 +125,7 @@ public class TccServices implements TccInterface<Tcc, Long> {
         return this.tccUtil.listaDeTccSemApresentacao();
     }
 
-   @Override //Esse servico vai para banca 
+   @Override //Esse servico vai para banca -> Migrar para outro servico 
    public Tcc adicionarOrientadorEmTcc(Long idTcc ,Long idOrientador){
         
         this.tccUtil.validaIdOrientador(idOrientador);
@@ -146,9 +136,9 @@ public class TccServices implements TccInterface<Tcc, Long> {
         
         Tcc tcc = this.tccUtil.buscarTcc(idTcc);
         Usuario orientador = this.userUtil.buscaUsersById(idOrientador);
-        this.tccUtil.isEqualsType(orientador);
+        // this.tccUtil.isEqualsType(orientador);
 
-        this.tccUtil.adicionarOrientadorEmTcc(tcc, orientador);
+        // this.tccUtil.adicionarOrientadorEmTcc(tcc, orientador);
         
         return tcc;
    }
@@ -167,7 +157,7 @@ public class TccServices implements TccInterface<Tcc, Long> {
         this.tccUtil.userTypeIsAluno(aluno);
 
         this.tccUtil.adicionarAlunoEmTcc(tcc, aluno);
-
+        this.tccUtil.salvarTcc(tcc);
         return tcc;
    }
 

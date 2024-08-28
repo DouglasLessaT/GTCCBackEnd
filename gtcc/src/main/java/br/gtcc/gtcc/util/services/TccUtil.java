@@ -191,7 +191,7 @@ public class TccUtil {
         return tccRepository.findAll();
     }
 
-    public List<Tcc> buscarTccPorTitulo(String title){
+    public Tcc buscarTccPorTitulo(String title){
         return this.tccRepository.listTccByTitulo(title);
     }
 
@@ -208,20 +208,25 @@ public class TccUtil {
         return this.tccRepository.listTccComApresentcao();
     }
 
-    public Boolean _checkSeAlunoTemTccSemExecao(Users aluno){
+    public Boolean checkSeAlunoTemTccSemExecao(Usuario aluno){
 
-        Boolean isEqualsAZeroTccAluno =  aluno.getTccsGerenciados().size() == 0;
+        Long idAluno = aluno.getId();
+        Boolean isEqualsAZeroTccAluno =  this.tccRepository.buscaTccAluno(idAluno) == 0;
         if(isEqualsAZeroTccAluno)
             return true;
         
         return false;
     }
 
-    public void adicionarAlunoEmTcc(Tcc tcc ,Usuario aluno){
+    public Usuario adicionarAlunoEmTcc(Tcc tcc ,Usuario aluno){
         
         tcc.setUsuario(aluno);
-        this.tccRepository.save(tcc);
+        return aluno;
         
+    }
+
+    public void removendoAlunoDeUmTcc(Long idAluno){
+        this.tccRepository.removerDiscenteTcc(idAluno); 
     }
 
     public void removerRelacionamentoEntreUsuarioETcc(Long idUsuario, Long idTcc){
