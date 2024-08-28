@@ -12,18 +12,24 @@ import br.gtcc.gtcc.model.mysql.Tcc;
 @Repository
 public interface TccRepository extends JpaRepository <Tcc, Long> {
 
-    @Query("SELECT * FROM tb_tcc as tcc WHERE tcc.titulo = $titulo")
-    List<Tcc> listTccByTitulo(String titulo);
+    @Query("SELECT tcc FROM Tcc as tcc WHERE tcc.titulo = :titulo")
+    Tcc listTccByTitulo(String titulo);
 
     @Query("SELECT COUNT(*) as total FROM tb_apresentacao as tbca WHERE tbapr.id_tcc IS NULL")
     Long countTccComApresentcao();    
 
-    @Query("SELECT * FROM tb_apresentacao as tbca WHERE tbapr.id_tcc IS NULL")
+    @Query("SELECT apresentacao FROM Apresentacao as tbca WHERE tbapr.id_tcc IS NULL")
     List<Tcc> listTccComApresentcao();
 
-    @Query("SELECT * FROM tb_tcc as tcc WHERE tcc.id_discente IS NULL")
+    @Query("SELECT tcc FROM Tcc as tcc WHERE tcc.id_discente IS NULL")
     List<Tcc> listTccSemDiscente();
 
-    @Query("UPDATE TABLE tb_tcc SET id_discente = NULL WHERE id_discente = $idUsuario AND id = $idTcc")
+    @Query("UPDATE TABLE Tcc SET id_discente = NULL WHERE id_discente = :idUsuario AND id = :idTcc")
     void removeRelacaoEntreUsuarioTcc(Long idUsuario , Long idTcc);
+
+    @Query("SELECT COUNT(tcc) FROM Tcc as tcc WHERE tcc.id_discente = :idAluno")
+    Long buscaTccAluno(Long idAluno);
+
+    @Query("UPDATE TABLE Tcc SET id_discente = NULL WHERE id_discente = :idUsuario")
+    void removerDiscenteTcc(Long idDiscente);
 }
