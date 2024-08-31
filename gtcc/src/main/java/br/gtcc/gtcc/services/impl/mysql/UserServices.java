@@ -29,7 +29,7 @@ public class UserServices implements UserInterface<Usuario, Long> {
   public Usuario updateUsers(Usuario users, Long id) {
 
     this.utilUser.validaId(id);
-    this.utilUser.checkExistsUser(users.getId());
+    this.utilUser.checkExistsUser(users.getIdUsuario());
 
     Usuario userRepository = this.getUser(id);
 
@@ -89,7 +89,7 @@ public class UserServices implements UserInterface<Usuario, Long> {
   @Override
   public Usuario createdAluno(Usuario user) {
 
-    this.utilUser.validaIdForCreate(user.getId());
+    this.utilUser.validaIdForCreate(user.getIdUsuario());
     user = this.utilUser.moldeAluno(user);
     return this.utilUser.salvarUser(user);
 
@@ -145,8 +145,8 @@ public class UserServices implements UserInterface<Usuario, Long> {
   @Override
   public Usuario createdProfessor(Usuario user) {
 
-    this.utilUser.validaIdForCreate(user.getId());
-    this.utilUser.checkExistsProfessor(user.getId());
+    this.utilUser.validaIdForCreate(user.getIdUsuario());
+    this.utilUser.checkExistsProfessor(user.getIdUsuario());
 
     user = this.utilUser.moldeProfessor(user);
 

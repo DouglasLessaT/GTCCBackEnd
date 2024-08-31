@@ -52,7 +52,7 @@ public class UsuarioUtil {
     }
 
     public Usuario validaUser(Usuario user) {
-        validaIdForCreate(user.getId());
+        validaIdForCreate(user.getIdUsuario());
         validaLogin(user.getMatricula());
         validaPermissao(user.getPermissoes());
         return user;
