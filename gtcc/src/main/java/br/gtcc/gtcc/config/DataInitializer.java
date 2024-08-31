@@ -2,12 +2,16 @@ package br.gtcc.gtcc.config;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import br.gtcc.gtcc.model.mysql.Grupo;
 import br.gtcc.gtcc.model.mysql.TipoDocente;
 import br.gtcc.gtcc.model.mysql.repository.GrupoRepository;
 import br.gtcc.gtcc.services.impl.mysql.TipoDocenteService;
 
+@Configuration
+@EnableWebMvc
 public class DataInitializer {
   private final GrupoRepository grupoRepository;
 
