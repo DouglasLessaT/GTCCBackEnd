@@ -210,7 +210,7 @@ public class TccUtil {
 
     public Boolean checkSeAlunoTemTccSemExecao(Usuario aluno){
 
-        Long idAluno = aluno.getId();
+        Long idAluno = aluno.getIdUsuario();
         Boolean isEqualsAZeroTccAluno =  this.tccRepository.buscaTccAluno(idAluno) == 0;
         if(isEqualsAZeroTccAluno)
             return true;

@@ -22,7 +22,7 @@ public class TccServices implements TccInterface<Tcc, Long> {
     @Override
     public Tcc createTcc(Tcc tcc) {
        
-        Long idAluno = tcc.getUsuario().getId();
+        Long idAluno = tcc.getUsuario().getIdUsuario();
         Long idTcc = tcc.getId();
 
         this.tccUtil.validaIdAluno(idAluno);
@@ -46,7 +46,7 @@ public class TccServices implements TccInterface<Tcc, Long> {
     @Override
     public Tcc updateTCC(Tcc tcc, Long id) {
         
-        Long idAluno = tcc.getUsuario().getId();
+        Long idAluno = tcc.getUsuario().getIdUsuario();
 
         this.tccUtil.validaIdAluno(idAluno);
         this.tccUtil.validaIdTcc(id);
@@ -63,7 +63,7 @@ public class TccServices implements TccInterface<Tcc, Long> {
 
         Usuario alunoRepo = tccRepo.getUsuario();
 
-        Boolean isEqualsAlunos = aluno.getId().equals(alunoRepo.getId());
+        Boolean isEqualsAlunos = aluno.getIdUsuario().equals(alunoRepo.getIdUsuario());
     
         if( !isEqualsAlunos ){
             
