@@ -8,4 +8,6 @@ import br.gtcc.gtcc.model.mysql.DocenteBanca;
 @Repository
 public interface DocenteBancaRepository extends JpaRepository<DocenteBanca, Long> {
 
+    
+
 }
