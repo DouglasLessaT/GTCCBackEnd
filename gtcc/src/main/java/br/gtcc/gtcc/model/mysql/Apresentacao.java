@@ -1,5 +1,8 @@
 package br.gtcc.gtcc.model.mysql;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,18 +33,24 @@ public class Apresentacao {
     @NonNull
     @NotEmpty
     @Column(name = "data", nullable = false, length = 10)
-    private String data;
+    private LocalDateTime data;
     
     @NonNull
     @NotEmpty
     @Column(name = "hora_inicio", nullable = false, length = 5)
-    private String horaInicio;
+    private LocalTime horaInicio;
     
     @NonNull
     @NotEmpty
     @Column(name = "hora_fim", nullable = false, length = 5)
-    private String horaFim;
+    private LocalTime horaFim;
 
+    @NonNull
+    @NotEmpty
+    @Column(name = "data_criacao_apresentacao" , nullable = false , length = 5)
+    private LocalDateTime dataCriacaoApresentacao;
+
+    // 1 - ativo 0 -inativo
     @NonNull
     @NotEmpty
     @Column(name = "ativo")
