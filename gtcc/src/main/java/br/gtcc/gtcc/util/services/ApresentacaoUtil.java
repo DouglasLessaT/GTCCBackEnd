@@ -5,138 +5,89 @@ import java.time.LocalTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import br.gtcc.gtcc.model.neo4j.ApresentationBanca;
-import br.gtcc.gtcc.model.neo4j.Tcc;
-import br.gtcc.gtcc.model.neo4j.Users;
-import br.gtcc.gtcc.model.neo4j.repository.AgendaRepository;
-import br.gtcc.gtcc.model.neo4j.repository.ApresentationBancaRepository;
-import br.gtcc.gtcc.model.neo4j.repository.TccRepository;
-import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
+import br.gtcc.gtcc.model.mysql.Apresentacao;
+import br.gtcc.gtcc.model.mysql.DateTime;
+import br.gtcc.gtcc.model.mysql.Tcc;
+import br.gtcc.gtcc.model.mysql.Usuario;
+//import br.gtcc.gtcc.model.mysql.repository.AgendaRepository;
+import br.gtcc.gtcc.model.mysql.repository.ApresentacaoRepository;
+import br.gtcc.gtcc.model.mysql.repository.TccRepository;
+import br.gtcc.gtcc.model.mysql.repository.UsuarioRepository;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class ApresentacaoUtil {
     
-    @Autowired
-    public ApresentationBancaRepository repository;
+    private final ApresentacaoRepository repository;
 
-    @Autowired
-    public TccRepository tccRepository;
+    private final TccRepository tccRepository;
 
-    @Autowired
-    public AgendaRepository agendaRepository;
+    private final UsuarioRepository usersRepository;
 
-    @Autowired
-    public UsersRepository usersRepository;
+    // @Autowired
+    // public AgendaRepository agendaRepository;
 
-
-    public ApresentationBanca salvar(ApresentationBanca apr){
+    public Apresentacao salvar(Apresentacao apr){
         return this.repository.save(apr);
     }
 
-    public void delete(String id){
+    public void delete(Long id){
         this.repository.deleteById(id);
     }
 
-    public Boolean apresentationIsNull(ApresentationBanca ap){
+    public Boolean apresentationIsNull(Apresentacao ap){
         if(ap != null)
             return true;
         throw new RuntimeException("Apresentação é nula");
     }
 
-    public Boolean validaIdApresentacaoParaCriacao(String id){
-        if (id == null || id == "" || id == " ")
+    public Boolean validaIdApresentacaoParaCriacao(Long id){
+
+        if (id == null )
             return true;
         throw new RuntimeException("O id da Apresentação informado é inválido");
     }
 
-    public Boolean validaId(String id){
-        if (id == null || id == "" || id == " ")
+    public Boolean validaId(Long id ){
+
+        if (id == null )
             throw new RuntimeException("O id da Apresentação informada é inválido");
         return true;
     }
 
-    public Boolean apresentacaoDentroAgenda(ApresentationBanca ap){
+    public Boolean apresentacaoDentroAgenda(Apresentacao ap){
         if(ap == null)
             return true;
         throw new RuntimeException("Apresentação dentro da agenda infromada não é nula");
     }
 
-    public ApresentationBanca buscarApresentacao(String id){
+    public Apresentacao buscarApresentacao(Long id){
         return this.repository.findById(id).get();
     }
 
-    public ApresentationBanca buscarApresentacaoSemAgenda(String id){
-        return this.repository.buscarApresentacaoSemAgenda(id);
+    public List<Apresentacao> buscarApresentacaoSemApresentacao(){
+        return this.repository.buscarApresentacaoSemApresentacao();
     }
 
-    public Boolean checkExistsApresentacao(String id){
+    public Boolean checkExistsApresentacao(Long id){
         if(this.repository.existsById(id))
             return true;
         throw new RuntimeException("Apresentacao não existe");
     }
 
-    public Boolean checkExistsApresentacaoParaCriacao(String id){
+    public Boolean checkExistsApresentacaoParaCriacao(Long id){
         if(!this.repository.existsById(id))
-            return true;
-        throw new RuntimeException("Apresentacao não existe");
+            throw new RuntimeException("Apresentacao já existe");
+        return true;
     }
 
-    public Boolean countConflitosDentroDeTcc(String id){
+    public Boolean countConflitosDentroDeTcc(Long id){
         Boolean existsConlictTcc = this.repository.countConflictTccs(id) > 0;
-        
         if(existsConlictTcc == true){
-
             throw new IllegalArgumentException("O tcc já esta em outra apresentação");
-
         }
-
         return false;
-    }
-
-    public Boolean countConflitosDentroDeTccUpdate(String id){
-        Boolean existsConlictTcc = this.repository.countConflictTccs(id) > 1;
-        
-        if(existsConlictTcc == true){
-
-            throw new IllegalArgumentException("O tcc já esta em outra apresentação");
-
-        }
-
-        return false;
-    }
-
-    public Boolean isLockedMemberOneAndMemberTwo(LocalDateTime date ,LocalTime horasComeco,LocalTime horasFim ,String memberIId , String memberIIId){
-        Boolean isLockedMemberOneAndMemberTwo = this.repository.countConflictingApresentationsByData( date,horasComeco, horasFim ,memberIId ,memberIIId) > 0;
-
-        if(isLockedMemberOneAndMemberTwo)
-            throw new RuntimeException("Os membros da apresentação ja estão alocado nesta hora de começo e fim");
-        return false;
-
-    }
-
-    public Boolean isLockedMemberOneAndMemberTwoParaUpdate(LocalDateTime date ,LocalTime horasComeco,LocalTime horasFim ,String memberIId , String memberIIId){
-        Boolean isLockedMemberOneAndMemberTwo = this.repository.countConflictingApresentationsByData( date,horasComeco, horasFim ,memberIId ,memberIIId) > 1;
-
-        if(isLockedMemberOneAndMemberTwo)
-            throw new RuntimeException("Os membros da apresentação ja estão alocado nesta hora de começo e fim");
-        return false;
-
-    }
-
-    public ApresentationBanca adicionarTccDentroDeApresentacao(ApresentationBanca ap ,Tcc tcc){
-        ap.setTcc(tcc);
-        ap.setIdTcc(tcc.getId());
-        return this.repository.save(ap);
-    }
-
-    public ApresentationBanca adicionarMembroVazioDentroDaApresentacao(ApresentationBanca aB ,Boolean isOne){
-        if(aB.getMember1().getId() == null && isOne == true){
-            aB.setMember1(null);
-        }
-        if(aB.getMember2().getId() == null && isOne == false){
-            aB.setMember2(null);
-        }
-        return aB;
     }
 
     public Boolean countDeApresentacoes(){
@@ -147,26 +98,91 @@ public class ApresentacaoUtil {
         throw new RuntimeException("Não existe Apresentações cadastradas");
     }
 
-    public List<ApresentationBanca> listaTodasApresentacoes(){
+    public List<Apresentacao> listaTodasApresentacoes(){
         return this.repository.findAll();
     }
 
-    public String getTccTitlePeloIdDaApresentacao(String id){
-        String titulo = repository.findTccTitleByApresentationId(id);
-
-        if(titulo == null){
-            throw new IllegalArgumentException("O titulo do tcc não existe");
-        }
-        return titulo;
+    public void checkConflictsDates(LocalDateTime date , LocalTime horasComeco , LocalTime horasFim){
+        boolean countDatas = this.repository.countDates(date, horasComeco, horasFim) > 0;
+        if(countDatas == false)
+            return ;
+        throw new RuntimeException("Existe conflito de agendas");
     }
 
-    public String getNomeOrintadorPeloIdDaApresentacao(String id) {
-        String nomeOrientador = repository.findTccNomeOrientadorByApresentationId(id);
+    public void checkConflictsApresentacao(Long idLocalizacao ){
+        
+        if( idLocalizacao!= null){
 
-        if(nomeOrientador == null){
-            throw new IllegalArgumentException("O Nome do orientador não existe");
+            Long apresentacoes = this.repository.checkConflictLocalizacao(idLocalizacao);
+            if(apresentacoes > 0){
+                throw new RuntimeException("Esta localização esta indisponível");
+            }
         }
-        return nomeOrientador;
+        return;
     }
+
+
+    
+
+    //Talves não tenha necessidade desse método 
+    // public Boolean countConflitosDentroDeTccUpdate(Long id){
+    //     Boolean existsConlictTcc = this.repository.countConflictTccs(id) > 1;
+        
+    //     if(existsConlictTcc == true){
+
+    //         throw new IllegalArgumentException("O tcc já esta em outra apresentação");
+
+    //     }
+
+    //     return false;
+    // }
+
+    //Esse métodos de manipulção de menbros vão ser feitso em outro lugar na parte de banca ou docente banca
+    // public Boolean isLockedMemberOneAndMemberTwo(LocalDateTime date ,LocalTime horasComeco,LocalTime horasFim ,Long memberIId , Long memberIIId){
+    //     Boolean isLockedMemberOneAndMemberTwo = this.repository.countConflictingApresentationsByData( date,horasComeco, horasFim ,memberIId ,memberIIId) > 0;
+
+    //     if(isLockedMemberOneAndMemberTwo)
+    //         throw new RuntimeException("Os membros da apresentação ja estão alocado nesta hora de começo e fim");
+    //     return false;
+
+    // }
+
+    // public Boolean isLockedMemberOneAndMemberTwoParaUpdate(LocalDateTime date ,LocalTime horasComeco,LocalTime horasFim ,Long memberIId , Long memberIIId){
+    //     Boolean isLockedMemberOneAndMemberTwo = this.repository.countConflictingApresentationsByData( date,horasComeco, horasFim ,memberIId ,memberIIId) > 1;
+
+    //     if(isLockedMemberOneAndMemberTwo)
+    //         throw new RuntimeException("Os membros da apresentação ja estão alocado nesta hora de começo e fim");
+    //     return false;
+
+    // }
+
+    //Isso é feito no tabela de banca 
+    // public Apresentacao adicionarMembroVazioDentroDaApresentacao(Apresentacao aB ,Boolean isOne){
+    //     if(aB.getMember1().getId() == null && isOne == true){
+    //         aB.setMember1(null);
+    //     }
+    //     if(aB.getMember2().getId() == null && isOne == false){
+    //         aB.setMember2(null);
+    //     }
+    //     return aB;
+    // }
+
+    // public Long getTccTitlePeloIdDaApresentacao(Long id){
+    //     Long titulo = repository.findTccTitleByApresentationId(id);
+
+    //     if(titulo == null){
+    //         throw new IllegalArgumentException("O titulo do tcc não existe");
+    //     }
+    //     return titulo;
+    // }
+
+    // public Long getNomeOrintadorPeloIdDaApresentacao(Long id) {
+    //     Long nomeOrientador = repository.findTccNomeOrientadorByApresentationId(id);
+
+    //     if(nomeOrientador == null){
+    //         throw new IllegalArgumentException("O Nome do orientador não existe");
+    //     }
+    //     return nomeOrientador;
+    // }
     
 }
