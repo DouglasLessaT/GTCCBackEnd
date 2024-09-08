@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.gtcc.gtcc.annotations.ValidaAcesso;
 import br.gtcc.gtcc.model.neo4j.Users;
-import br.gtcc.gtcc.services.spec.UserInterface;
+import br.gtcc.gtcc.services.spec.UsuarioInterface;
 import br.gtcc.gtcc.util.UtilController;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class ProfessorController {
 
     @Autowired
-    public UserInterface<Users, String> usersInterface;
+    public UsuarioInterface<Users, String> usersInterface;
 
     @GetMapping("/usuario/{id}")
     public ResponseEntity<Object> getUser(@PathVariable String id) {

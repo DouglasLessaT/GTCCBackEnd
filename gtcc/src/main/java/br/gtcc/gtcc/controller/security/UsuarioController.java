@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import br.gtcc.gtcc.services.spec.UserInterface;
+import br.gtcc.gtcc.services.spec.UsuarioInterface;
 import br.gtcc.gtcc.util.Console;
 import br.gtcc.gtcc.util.UtilController;
 
@@ -28,11 +28,11 @@ import java.util.Optional;
 @RestController
 @ValidaAcesso("ROLE_ADMIN")
 @RequestMapping("coordenacao/tcc/v1")
-public class UsersController {
+public class UsuarioController {
     
     @SuppressWarnings("rawtypes")
     @Autowired
-    public UserInterface usersInterface;
+    public UsuarioInterface usersInterface;
 
     @Autowired
     PasswordEncoder passwordEncoder;

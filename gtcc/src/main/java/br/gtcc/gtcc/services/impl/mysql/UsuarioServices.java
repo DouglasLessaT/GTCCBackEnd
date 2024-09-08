@@ -4,12 +4,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import br.gtcc.gtcc.model.mysql.Usuario;
-import br.gtcc.gtcc.services.spec.UserInterface;
+import br.gtcc.gtcc.services.spec.UsuarioInterface;
 import br.gtcc.gtcc.util.services.UsuarioUtil;
 import br.gtcc.gtcc.util.Console;
 
 @Service
-public class UserServices implements UserInterface<Usuario, Long> {
+public class UsuarioServices implements UsuarioInterface<Usuario, Long> {
 
   @Autowired
   public UsuarioUtil utilUser;

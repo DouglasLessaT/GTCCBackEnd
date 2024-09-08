@@ -17,19 +17,19 @@ import org.springframework.web.servlet.ModelAndView;
 import br.gtcc.gtcc.annotations.ValidaAcesso;
 import br.gtcc.gtcc.model.mysql.Usuario;
 import br.gtcc.gtcc.model.mysql.repository.UsuarioRepository;
-import br.gtcc.gtcc.services.impl.mysql.UserServices;
+import br.gtcc.gtcc.services.impl.mysql.UsuarioServices;
 import br.gtcc.gtcc.util.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class LoginInterceptor implements HandlerInterceptor {
 
-  private UserServices userService;
+  private UsuarioServices userService;
   private UsuarioRepository usersRepository;
   private JWTUtil jwtUtil;
   private Optional<Usuario> user;
 
-  public LoginInterceptor(UserServices userService, UsuarioRepository usersRepository, JWTUtil jwtUtil) {
+  public LoginInterceptor(UsuarioServices userService, UsuarioRepository usersRepository, JWTUtil jwtUtil) {
     this.userService = userService;
     this.usersRepository = usersRepository;
     this.jwtUtil = jwtUtil;

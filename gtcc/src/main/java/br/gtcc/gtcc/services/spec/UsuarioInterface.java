@@ -2,7 +2,7 @@ package br.gtcc.gtcc.services.spec;
 
 import java.util.List;
 
-public interface UserInterface<T, E> {
+public interface UsuarioInterface<T, E> {
 
    public T createUsers(T users);
    

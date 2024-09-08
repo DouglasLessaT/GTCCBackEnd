@@ -30,7 +30,7 @@ import br.gtcc.gtcc.config.handlers.LoginInterceptor;
 import br.gtcc.gtcc.model.UserType;
 import br.gtcc.gtcc.model.mysql.Usuario;
 import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
-import br.gtcc.gtcc.services.impl.mysql.UserServices;
+import br.gtcc.gtcc.services.impl.mysql.UsuarioServices;
 import br.gtcc.gtcc.util.JWTUtil;
 import br.gtcc.gtcc.util.services.UsuarioUtil;
 
@@ -42,7 +42,7 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
     private UsuarioUtil userUtil;
 
     @Autowired
-    private UserServices userServices;
+    private UsuarioServices userServices;
 
     @Autowired
     JWTUtil jwtUtil;
