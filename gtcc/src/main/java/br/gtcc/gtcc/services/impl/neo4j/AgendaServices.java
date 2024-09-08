@@ -102,16 +102,16 @@ public class AgendaServices implements AgendaInterface<Agenda, String>{
         this.agendaUtil.validaId(idApresentacao);
 
         this.agendaUtil.checkExistAgenda(idAgenda);
-        this.aprUtil.checkExistsApresentacao(idApresentacao);
+     //    this.aprUtil.checkExistsApresentacao(idApresentacao);
 
         Agenda agenda = this.agendaUtil.buscarAgendaSemApresentacao(idAgenda);
-        ApresentationBanca apresentacao = this.aprUtil.buscarApresentacaoSemAgenda(idAgenda);
+     //    ApresentationBanca apresentacao = this.aprUtil.buscarApresentacaoSemAgenda(idAgenda);
 
-        apresentacao.setIdAgenda(idAgenda);
-        agenda.setApresentacao(apresentacao);
+     //    apresentacao.setIdAgenda(idAgenda);
+     //    agenda.setApresentacao(apresentacao);
         
         this.agendaUtil.salvarAgenda(agenda);
-        this.aprUtil.salvar(apresentacao);
+     //    this.aprUtil.salvar(apresentacao);
         return agenda;
   }
   
