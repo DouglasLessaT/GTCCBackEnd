@@ -165,10 +165,10 @@ public class UsuarioUtil {
     }
 
     public Usuario findByLogin(String login) {
-        return repository.findByLogin(login).get();
+        return repository.findByLogin(login);
     }
 
     public Usuario findByEmail(String email) {
-        return repository.findByEmail(email).get();
+        return repository.findByEmail(email);
     }
 }

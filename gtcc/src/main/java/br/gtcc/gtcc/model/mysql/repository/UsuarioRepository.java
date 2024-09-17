@@ -21,11 +21,11 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     // Encontrar todos os usuários e ordenar por login em ordem ascendente
     List<Usuario> findAllByOrderByLoginAsc();
     
-    Optional<Usuario> findByLogin(String login);
+    Usuario findByLogin(String login);
 
     // Encontrar um usuário por email utilizando uma query JPQL
     @Query("SELECT u FROM Usuario u WHERE u.email = ?1")
-    Optional<Usuario> findByEmail(String email);
+    Usuario findByEmail(String email);
 
     // Encontrar usuários com o tipo 'ALUNO' usando a estrutura de permissões
     @Query("SELECT u FROM Usuario u WHERE 'ROLE_ALUNO' MEMBER OF u.permissoes")

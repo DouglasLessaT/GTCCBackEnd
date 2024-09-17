@@ -54,7 +54,7 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
     private void addUsers() {
         try {
             // Verifica se o usuário Admin já existe no banco de dados
-            Optional<Usuario> existingAdmin = Optional.of(userUtil.findByLogin("admin"));
+            Optional<Usuario> existingAdmin = Optional.ofNullable(userUtil.findByLogin("admin"));
             if (existingAdmin.isEmpty()) {
                 Usuario admin = new Usuario();
                 admin.setNome("Admin");
@@ -74,7 +74,7 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
             }
 
             // Verifica se o usuário Professor já existe no banco de dados
-            Optional<Usuario> existingProfessor = Optional.of(userUtil.findByLogin("professor"));
+            Optional<Usuario> existingProfessor = Optional.ofNullable(userUtil.findByLogin("professor"));
             if (existingProfessor.isEmpty()) {
                 Usuario professor = new Usuario();
                 professor.setNome("Professor");
@@ -91,7 +91,7 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
             }
 
             // Verifica se o usuário Coordenador já existe no banco de dados
-            Optional<Usuario> existingCoordinator = Optional.of(userUtil.findByLogin("coordenador"));
+            Optional<Usuario> existingCoordinator = Optional.ofNullable(userUtil.findByLogin("coordenador"));
             if (existingCoordinator.isEmpty()) {
                 Usuario coordenador = new Usuario();
                 coordenador.setNome("Coordenador");
@@ -108,7 +108,7 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
             }
 
             // Verifica se o usuário Aluno já existe no banco de dados
-            Optional<Usuario> existingAluno = Optional.of(userUtil.findByEmail("aluno@gmail.com"));
+            Optional<Usuario> existingAluno = Optional.ofNullable(userUtil.findByEmail("aluno@gmail.com"));
             if (existingAluno.isEmpty()) {
                 Usuario aluno = new Usuario();
                 aluno.setNome("Aluno");
