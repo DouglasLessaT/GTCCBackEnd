@@ -76,7 +76,7 @@ public class Usuario {
     private String telefone;
     
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "usuario_permissoes", joinColumns = @JoinColumn(name = "usuario_id"))
+    @CollectionTable(name = "tb_usuario_permissoes", joinColumns = @JoinColumn(name = "usuario_id"))
     @Column(name = "permissao")
     private List<String> permissoes = new ArrayList<>();
 
