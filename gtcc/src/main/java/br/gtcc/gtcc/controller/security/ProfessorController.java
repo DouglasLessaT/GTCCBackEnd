@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.gtcc.gtcc.annotations.ValidaAcesso;
+import br.gtcc.gtcc.model.mysql.Usuario;
 import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.services.spec.UsuarioInterface;
 import br.gtcc.gtcc.util.UtilController;
@@ -29,12 +30,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class ProfessorController {
 
     @Autowired
-    public UsuarioInterface<Users, String> usersInterface;
+    public UsuarioInterface<Usuario, Long> usersInterface;
 
     @GetMapping("/usuario/{id}")
-    public ResponseEntity<Object> getUser(@PathVariable String id) {
+    public ResponseEntity<Object> getUser(@PathVariable Long id) {
 
-        Optional<Users> foundUsers = Optional.ofNullable(usersInterface.getUser(id));
+        Optional<Usuario> foundUsers = Optional.ofNullable(usersInterface.getUser(id));
         return UtilController.buildResponseFromOptional(foundUsers, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Usuário encontrado", "Usuário não econtrado");
    
     }
@@ -42,7 +43,7 @@ public class ProfessorController {
     @GetMapping("/alunos")
     public ResponseEntity<Object> getAllAlunos() {
    
-        Optional<List<Users>> list = Optional.ofNullable(usersInterface.getAlunos());
+        Optional<List<Usuario>> list = Optional.ofNullable(usersInterface.getAlunos());
         return UtilController.buildResponseFromOptional(list, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de alunos", "Lista vazia");
    
     }
@@ -50,31 +51,31 @@ public class ProfessorController {
     @GetMapping("/professores")
     public ResponseEntity<Object> getAllProfessores() {
     
-        Optional<List<Users>> list = Optional.ofNullable(usersInterface.getProfessores());
+        Optional<List<Usuario>> list = Optional.ofNullable(usersInterface.getProfessores());
         return UtilController.buildResponseFromOptional(list, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de professores", "Lista vazia");
     
     }
 
     @PostMapping("/aluno")
-    public ResponseEntity<Object> createAluno(@RequestBody Users users) {
+    public ResponseEntity<Object> createAluno(@RequestBody Usuario users) {
 
-        Optional<Users> createdUser = Optional.of(usersInterface.createdAluno(users));
+        Optional<Usuario> createdUser = Optional.of(usersInterface.createdAluno(users));
         return UtilController.buildResponseFromOptional( createdUser, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Aluno criado com sucesso", "Erro ao criar aluno");
     
     }
 
     @DeleteMapping("/aluno/{id}")
-    public ResponseEntity<Object> deleteAluno(@PathVariable String id){
+    public ResponseEntity<Object> deleteAluno(@PathVariable Long id){
     
-        Optional<Users> deletedUsers = Optional.ofNullable((Users) usersInterface.deleteAluno(id));  
+        Optional<Usuario> deletedUsers = Optional.ofNullable((Usuario) usersInterface.deleteAluno(id));  
         return UtilController.buildResponseFromOptional( deletedUsers, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Aluno deletado com sucesso", "Erro ao deletar aluno");
 
     }
     
     @PutMapping("/aluno/{id}")
-    public ResponseEntity<Object> updateAluno(@RequestBody(required = true) Users users ,@PathVariable("id") String id){
+    public ResponseEntity<Object> updateAluno(@RequestBody(required = true) Usuario users ,@PathVariable("id") Long id){
         
-        Optional<Users> updatedUser = Optional.ofNullable((Users)  usersInterface.updateAluno(users , id));
+        Optional<Usuario> updatedUser = Optional.ofNullable((Usuario)  usersInterface.updateAluno(users , id));
         return UtilController.buildResponseFromOptional( updatedUser, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Aluno alterado com sucesso", "Erro ao alterar aluno");                              
     
     }
@@ -82,7 +83,7 @@ public class ProfessorController {
     @GetMapping("/alunofree/")
     public ResponseEntity<Object> getAlunosSemTcc(){
         
-        Optional<List<Users>> listAlunosSemTcc = Optional.ofNullable(usersInterface.getAlunosSemTcc());
+        Optional<List<Usuario>> listAlunosSemTcc = Optional.ofNullable(usersInterface.getAlunosSemTcc());
         return UtilController.buildResponseFromOptional( listAlunosSemTcc, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de Alunos sem tcc", "Lista Vazia");
     
     }

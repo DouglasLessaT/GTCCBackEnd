@@ -27,13 +27,13 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin("*")
 @RestController
 @ValidaAcesso("ROLE_COORDENADOR")
-@RequestMapping("coordenacao/tcc/v1")
+@RequestMapping("coordenacao/tcc/v1/docente-banca")
 @RequiredArgsConstructor
 public class DocenteBancaController {
     
     private final DocenteBancaInterface docenteBancaInterface;
 
-    @PostMapping("/docente-banca")
+    @PostMapping("/")
     public ResponseEntity<Object> createDocenteBanca(@RequestBody DocenteBanca docenteBanca) {
         
         @SuppressWarnings("unchecked")
@@ -42,7 +42,7 @@ public class DocenteBancaController {
         
     }
 
-    @PutMapping("/docente-banca/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Object> updateDocenteBanca(@PathVariable Long idDocenteBanca, @RequestBody DocenteBanca docenteBanca) {
         
         @SuppressWarnings("unchecked")
@@ -51,7 +51,7 @@ public class DocenteBancaController {
         
     }
 
-    @GetMapping("/docente-banca/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getDocenteBanca(@PathVariable Long idDocenteBanca) {
         
         @SuppressWarnings("unchecked")
@@ -60,7 +60,7 @@ public class DocenteBancaController {
         
     }
 
-    @PutMapping("/docente-banca/{id}")
+    @GetMapping("/")
     public ResponseEntity<Object> getAllDocenteBanca() {
         
         @SuppressWarnings("unchecked")
