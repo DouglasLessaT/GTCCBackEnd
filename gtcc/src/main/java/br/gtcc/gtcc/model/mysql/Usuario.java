@@ -66,12 +66,12 @@ public class Usuario {
 
     @NonNull
     @NotEmpty
-    @Column(name = "senha", nullable = false, length = 10)
+    @Column(name = "senha", nullable = false, length = 255)
     private String senha;
     
     @NonNull
     @NotEmpty
-    @Column(name = "telefone", nullable = false, length = 14)
+    @Column(name = "telefone", nullable = false, length = 15)
     @Pattern(regexp = "^\\(\\d{2}\\) 00000-0000$", message = "O número de telefone deve seguir o padrão brasileiro.")
     private String telefone;
     
