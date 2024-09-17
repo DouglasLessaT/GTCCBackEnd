@@ -16,7 +16,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findById(Long id);
 
     // Encontrar todos os usuários por login e ordenar por login
-    List<Usuario> findAllByLoginOrderByLogin(String login);
+    List<Usuario> findAllByOrderByLogin();
 
     // Encontrar todos os usuários e ordenar por login em ordem ascendente
     List<Usuario> findAllByOrderByLoginAsc();

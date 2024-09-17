@@ -66,8 +66,8 @@ public class ApresentacaoUtil {
         return this.repository.findById(id).get();
     }
 
-    public List<Apresentacao> buscarApresentacaoSemApresentacao(){
-        return this.repository.buscarApresentacaoSemApresentacao();
+    public List<Apresentacao> buscarApresentacaoSemLocalizacao(){
+        return this.repository.buscarApresentacaoSemLocalizacao();
     }
 
     public Boolean checkExistsApresentacao(Long id){

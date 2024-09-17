@@ -50,12 +50,12 @@ public class Usuario {
     @NonNull
     @NotEmpty
     @Column(name = "login", nullable = false, length = 20)
-    private String Login;
+    private String login;
     
     @NonNull
     @NotEmpty
     @Column(name = "email", nullable = false, length = 150)
-    private String Email;
+    private String email;
     
     @NonNull
     @NotEmpty

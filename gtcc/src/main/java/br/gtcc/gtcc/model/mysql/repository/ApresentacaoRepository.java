@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import br.gtcc.gtcc.model.mysql.Apresentacao;
@@ -15,28 +16,32 @@ import br.gtcc.gtcc.model.mysql.Apresentacao;
 public interface ApresentacaoRepository extends JpaRepository<Apresentacao, Long> {
 
 
-    @Query("SELECT tcc FROM Tcc as tcc WHERE tcc.id_localizacao IS NULL")
-    public List<Apresentacao> buscarApresentacaoSemApresentacao();
+    @Query("SELECT apr FROM Apresentacao apr WHERE apr.localizacao IS NULL")
+    public List<Apresentacao> buscarApresentacaoSemLocalizacao();
 
-    @Query("SELECT tcc FROM Tcc as tcc WHERE tcc.id_tcc IS NULL")
+    @Query("SELECT apr FROM Apresentacao as apr WHERE apr.tcc IS NULL")
     public List<Apresentacao> buscarApresentacaoSemTcc();
     
-    @Query("SELECT tcc FROM Tcc as tcc WHERE tcc.ativo = false")
+    @Query("SELECT apr FROM Apresentacao as apr WHERE apr.ativo = 0")
     public List<Apresentacao> buscarApresentacoesInativas();
 
-    @Query("SELECT tcc FROM Tcc as tcc WHERE tcc.id_tcc = :idTcc")
-    public Long countConflictTccs(Long idTcc);
+    @Query(value = "SELECT COUNT(*) FROM tb_presentacao as apr WHERE apr.id_tcc = :idTcc", nativeQuery = true)
+    public Long countConflictTccs(@Param("idTcc") Long idTcc);
     
-    @Query("SELECT COUNT(a.id) FROM Apresentacao a WHERE a.data = :data"+
-        " AND ( " +
-            " (a.horasInicio = :horasInicio AND a.horasFim = :horasFim) OR " +
-            " (a.horasInicio > :horasInicio AND a.horasInicio < :horasFim) OR "+ 
-            " (a.horasFim > :horasInicio AND a.horasFim < :horasFim) OR "+
-            " (a.horasInicio <= :horasInicio AND a.horasFim >= :horasFim) OR "+
-            " (a.horasInicio > :horasInicio AND a.horasFim < :horasFim));")
-    public Long countDates(LocalDateTime data , LocalTime horasInicio , LocalTime horasFim);
+    @Query(value = "SELECT COUNT(id) FROM tb_apresentacao WHERE data = :data " +
+                   "AND ( " +
+                   " (horas_inicio = :horasInicio AND horas_fim = :horasFim) OR " +
+                   " (horas_inicio > :horasInicio AND horas_inicio < :horasFim) OR " +
+                   " (horas_fim > :horasInicio AND horas_fim < :horasFim) OR " +
+                   " (horas_inicio <= :horasInicio AND horas_fim >= :horasFim) OR " +
+                   " (horas_inicio > :horasInicio AND horas_fim < :horasFim) " +
+                   ")", nativeQuery = true)
+    Long countDates(@Param("data") LocalDateTime data,
+                    @Param("horasInicio") LocalTime horasInicio,
+                    @Param("horasFim") LocalTime horasFim);
 
-    @Query("SELECT COUNT(apresentacao) FROM Apresentacao as apresentacao WHERE apresentacao.id_localizacao = :idLocalizacao")
+
+    @Query("SELECT COUNT(apresentacao) FROM Apresentacao as apresentacao WHERE apresentacao.localizacao.id = :idLocalizacao")
     public Long checkConflictLocalizacao(Long idLocalizacao);
     
 
