@@ -57,4 +57,16 @@ public class CursoUtil {
     public void inativarCurso(Long id){
         this.cursoRepository.inativar(id);
     }
+
+    public Curso transferenciaDeObjeto(Curso curso){
+        curso.setTitulo(curso.getTitulo().toUpperCase());
+        return curso;
+    }
+
+    public Curso moldeCurso(Curso curso){
+        Curso newCurso = new Curso();
+        newCurso.setAtivo(curso.getAtivo());
+        newCurso.setTitulo(curso.getTitulo());
+        return newCurso;
+    }
 }

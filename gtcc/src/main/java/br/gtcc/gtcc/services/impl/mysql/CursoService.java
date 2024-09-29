@@ -31,8 +31,8 @@ public class CursoService implements CursoInterface<Curso ,Long>{
         
         this.utilCurso.validId(id);
         this.utilCurso.existeCurso(id);
-        this.utilCurso.buscarCurso(id);
-        return this.utilCurso.buscarCurso(id);
+        Curso curso = this.utilCurso.buscarCurso(id);
+        return this.utilCurso.transferenciaDeObjeto(curso);
     }
 
     @Override
@@ -44,8 +44,14 @@ public class CursoService implements CursoInterface<Curso ,Long>{
 
     @Override
     public Curso alterarCurso(Long idCurso, Curso curso) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'alterarCurso'");
+        
+        Long idOld = idCurso;
+        Long newId = curso.getId();
+        this.utilCurso.validIdForUpdate(newId);
+        Curso curso_ = this.utilCurso.moldeCurso(curso);
+        curso_.setId(idOld);
+        this.utilCurso.salvarCurso(curso_);
+        return curso_;
     }
 
     @Override
