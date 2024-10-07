@@ -42,17 +42,14 @@ public class ApresentacaoService implements ApresentacaoInterface<Apresentacao,L
     @Override
     public  Apresentacao updateApresentacao ( Long id ,Apresentacao apresentacao){
 
-        //Validar id da apresentacao nova
+        
         Long idNewApresntacao = apresentacao.getId();
         this.apresentacaoUtil.validaId(idNewApresntacao);
         this.apresentacaoUtil.checkExistsApresentacaoParaCriacao(idNewApresntacao);
 
-        //Validar id e verificar se  apresentcao antiga existe
         this.apresentacaoUtil.validaId(id);
         this.apresentacaoUtil.checkExistsApresentacaoParaCriacao(id);
 
-        //Verificar se o tcc esta em conflito 
-        //Verificar se a apresentacao esta em conflito 
         this.apresentacaoUtil.countConflitosDentroDeTcc(apresentacao.getTcc().getId());
 
         LocalDateTime data = apresentacao.getData();

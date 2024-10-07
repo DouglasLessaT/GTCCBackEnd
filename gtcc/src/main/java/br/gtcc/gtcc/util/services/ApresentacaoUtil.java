@@ -11,6 +11,7 @@ import br.gtcc.gtcc.model.mysql.Tcc;
 import br.gtcc.gtcc.model.mysql.Usuario;
 //import br.gtcc.gtcc.model.mysql.repository.AgendaRepository;
 import br.gtcc.gtcc.model.mysql.repository.ApresentacaoRepository;
+import br.gtcc.gtcc.model.mysql.repository.ConviteRepository;
 import br.gtcc.gtcc.model.mysql.repository.TccRepository;
 import br.gtcc.gtcc.model.mysql.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,7 @@ public class ApresentacaoUtil {
 
     private final UsuarioRepository usersRepository;
 
-    // @Autowired
-    // public AgendaRepository agendaRepository;
+    private final ConviteRepository  conviteRepository;
 
     public Apresentacao salvar(Apresentacao apr){
         return this.repository.save(apr);
