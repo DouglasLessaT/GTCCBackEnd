@@ -1,4 +1,4 @@
-package br.gtcc.gtcc.model;
+package br.gtcc.gtcc.model.mysql;
 public enum StatusConvite {
     ACCEPTED,
     INVITED,
