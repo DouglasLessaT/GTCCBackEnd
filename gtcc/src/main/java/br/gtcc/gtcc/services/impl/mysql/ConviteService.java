@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.gtcc.gtcc.model.mysql.Convite;
-import br.gtcc.gtcc.model.StatusConvite;
+import br.gtcc.gtcc.model.mysql.StatusConvite;
 import br.gtcc.gtcc.model.mysql.repository.ConviteRepository;
 import br.gtcc.gtcc.services.spec.ConviteInterface;
 

@@ -2,7 +2,6 @@ package br.gtcc.gtcc.model.mysql;
 
 import java.time.LocalDateTime;
 
-import br.gtcc.gtcc.model.StatusConvite;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
