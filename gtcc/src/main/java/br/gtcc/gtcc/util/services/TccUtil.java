@@ -13,8 +13,7 @@ import br.gtcc.gtcc.model.mysql.Tcc;
 import br.gtcc.gtcc.model.mysql.Usuario;
 import br.gtcc.gtcc.model.mysql.repository.TccRepository;
 import br.gtcc.gtcc.model.mysql.repository.UsuarioRepository;
-import br.gtcc.gtcc.model.neo4j.ApresentationBanca;
-import br.gtcc.gtcc.model.neo4j.Users;
+import br.gtcc.gtcc.model.mysql.Usuario;
 
 @Component
 public class TccUtil {

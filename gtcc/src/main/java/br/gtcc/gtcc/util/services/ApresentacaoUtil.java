@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import br.gtcc.gtcc.model.mysql.Apresentacao;
-import br.gtcc.gtcc.model.mysql.DateTime;
 import br.gtcc.gtcc.model.mysql.Tcc;
 import br.gtcc.gtcc.model.mysql.Usuario;
 //import br.gtcc.gtcc.model.mysql.repository.AgendaRepository;
