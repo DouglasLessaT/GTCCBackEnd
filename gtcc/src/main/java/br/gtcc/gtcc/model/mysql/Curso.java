@@ -30,7 +30,6 @@ public class Curso {
     private String titulo;
     
     @NonNull
-    @NotEmpty
     @Column(name = "ativo")
     private Integer ativo;
 }

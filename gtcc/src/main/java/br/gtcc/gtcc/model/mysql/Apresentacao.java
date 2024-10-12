@@ -52,7 +52,6 @@ public class Apresentacao {
 
     // 1 - ativo 0 -inativo
     @NonNull
-    @NotEmpty
     @Column(name = "ativo")
     private Integer ativo;
 

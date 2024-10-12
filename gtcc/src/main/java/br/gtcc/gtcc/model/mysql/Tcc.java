@@ -42,7 +42,6 @@ public class Tcc {
     private String resumo;
     
     @NonNull
-    @NotEmpty
     @Column(name = "ativo")
     private Integer ativo;
    

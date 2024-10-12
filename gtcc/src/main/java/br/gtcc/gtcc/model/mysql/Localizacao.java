@@ -40,7 +40,6 @@ public class Localizacao {
     private String andar;
 
     @NonNull
-    @NotEmpty
     @Column(name = "ativo")
     private Integer ativo;
 

@@ -28,7 +28,6 @@ public class Banca {
     private Long id;
     
     @NonNull
-    @NotEmpty
     @Column(name = "ativo")
     private Integer ativo;
     

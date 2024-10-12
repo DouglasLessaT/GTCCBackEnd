@@ -85,7 +85,6 @@ public class Usuario {
     private Grupo grupo;
     
     @NonNull
-    @NotEmpty
     @Column(name = "ativo")
     private Integer ativo;
 

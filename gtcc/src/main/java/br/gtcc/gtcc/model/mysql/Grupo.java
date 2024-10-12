@@ -30,7 +30,6 @@ public class Grupo {
     private String nome;
     
     @NonNull
-    @NotEmpty
     @Column(name = "ativo")
     private Integer ativo;
 }

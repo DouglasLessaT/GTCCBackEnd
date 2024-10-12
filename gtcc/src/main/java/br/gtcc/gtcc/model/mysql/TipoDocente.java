@@ -29,7 +29,6 @@ public class TipoDocente {
     private String titulo;
     
     @NonNull
-    @NotEmpty
     @Column(name = "ativo")
     private Integer ativo;
 
