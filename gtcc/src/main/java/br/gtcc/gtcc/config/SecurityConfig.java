@@ -9,8 +9,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -29,13 +32,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import br.gtcc.gtcc.config.handlers.LoginInterceptor;
 import br.gtcc.gtcc.model.UserType;
 import br.gtcc.gtcc.model.mysql.Usuario;
-import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
 import br.gtcc.gtcc.services.impl.mysql.UsuarioServices;
 import br.gtcc.gtcc.util.JWTUtil;
 import br.gtcc.gtcc.util.services.UsuarioUtil;
 
 @Configuration
 @EnableWebMvc
+@EnableWebSecurity
 public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
     
     @Autowired
