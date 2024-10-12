@@ -1,7 +1,7 @@
 package br.gtcc.gtcc.controller.security;
 
 import br.gtcc.gtcc.annotations.ValidaAcesso;
-import br.gtcc.gtcc.model.neo4j.Users;
+import br.gtcc.gtcc.model.mysql.Usuario;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,10 +38,10 @@ public class UsuarioController {
     PasswordEncoder passwordEncoder;
         
     @PostMapping("/usuario")
-    public ResponseEntity<Object> createUser(@RequestBody(required = true) Users users){
+    public ResponseEntity<Object> createUser(@RequestBody(required = true) Usuario users){
         
         @SuppressWarnings("unchecked")
-        Optional<Users> createdUsers = Optional.ofNullable((Users) usersInterface.createUsers(users));
+        Optional<Usuario> createdUsers = Optional.ofNullable((Usuario) usersInterface.createUsers(users));
         return UtilController.buildResponseFromOptional( createdUsers, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Usuário criado com sucesso", "Erro ao criar usuarios");
 
     }
@@ -50,16 +50,16 @@ public class UsuarioController {
     public ResponseEntity<Object> deleteUsers(@PathVariable String id){
     
         @SuppressWarnings("unchecked")
-        Optional<Users> deletedUsers = Optional.ofNullable((Users) usersInterface.deleteUsers(id));  
+        Optional<Usuario> deletedUsers = Optional.ofNullable((Usuario) usersInterface.deleteUsers(id));  
         return UtilController.buildResponseFromOptional( deletedUsers, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Usuário deletado com sucesso", "Erro ao deletar usuarios");
 
     }
     
     @PutMapping("/usuario/{id}")
-    public ResponseEntity<Object> updateUsers(@RequestBody(required = true) Users users ,@PathVariable("id") String id){
+    public ResponseEntity<Object> updateUsers(@RequestBody(required = true) Usuario users ,@PathVariable("id") String id){
         
         @SuppressWarnings("unchecked")
-        Optional<Users> updatedUser = Optional.ofNullable((Users)  usersInterface.updateUsers(users , id));
+        Optional<Usuario> updatedUser = Optional.ofNullable((Usuario)  usersInterface.updateUsers(users , id));
         return UtilController.buildResponseFromOptional( updatedUser, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Usuário alterado com sucesso", "Erro ao alterado usuarios");
 
     }
@@ -68,7 +68,7 @@ public class UsuarioController {
     public ResponseEntity<Object> getAllUsers(){
         
        @SuppressWarnings("unchecked")
-       Optional<List<Users>> list = Optional.ofNullable((List<Users>) usersInterface.getAllUsers());
+       Optional<List<Usuario>> list = Optional.ofNullable((List<Usuario>) usersInterface.getAllUsers());
        return UtilController.buildResponseFromOptional( list, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de usuários", "Lista Vazia");
        
     }
@@ -77,7 +77,7 @@ public class UsuarioController {
     public ResponseEntity<Object> getUser(@PathVariable String id){
         
         @SuppressWarnings("unchecked")
-        Optional<Users> foundUsers = Optional.ofNullable( (Users) usersInterface.getUser(id));
+        Optional<Usuario> foundUsers = Optional.ofNullable( (Usuario) usersInterface.getUser(id));
         return UtilController.buildResponseFromOptional( foundUsers, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Usuário encontrado", "Usuário não econtrado");        
 
     }

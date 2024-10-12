@@ -8,8 +8,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.gtcc.gtcc.controller.DefaultController;
-import br.gtcc.gtcc.model.neo4j.Users;
-import br.gtcc.gtcc.model.neo4j.repository.UsersRepository;
+import br.gtcc.gtcc.model.mysql.Usuario;
+import br.gtcc.gtcc.model.mysql.repository.UsuarioRepository;
 import br.gtcc.gtcc.util.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -35,14 +35,14 @@ public class AuthController extends DefaultController {
  JWTUtil jwtUtil;
 
  @Autowired
- UsersRepository userRepository;
+ UsuarioRepository userRepository;
 
  @Autowired
  PasswordEncoder passwordEncoder;
 
  @PostMapping("/login")
  public ResponseEntity<String> login(@RequestParam String login, @RequestParam String senha, HttpServletRequest request) throws JsonProcessingException {
-  Users user = userRepository.findByLogin(login).get();
+    Usuario user = userRepository.findByLogin(login);
 
   if (user == null) {
    request.setAttribute("jakarta.servlet.error.status_code", 400);
@@ -67,7 +67,7 @@ public class AuthController extends DefaultController {
    retorno.put("permissoes", listaPermissoes);
    retorno.put("token", jwttoken);
 
-   retorno.put("elementId", user.getId());
+   retorno.put("elementId", user.getIdUsuario());
  
 
    ObjectMapper objectMapper = new ObjectMapper();

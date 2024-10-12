@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 import br.gtcc.gtcc.annotations.ValidaAcesso;
 import br.gtcc.gtcc.model.mysql.Usuario;
-import br.gtcc.gtcc.model.neo4j.Users;
 import br.gtcc.gtcc.services.spec.UsuarioInterface;
 import br.gtcc.gtcc.util.UtilController;
 import lombok.RequiredArgsConstructor;

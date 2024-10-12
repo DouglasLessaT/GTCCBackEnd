@@ -10,7 +10,7 @@ import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
 import org.springframework.data.neo4j.repository.config.EnableReactiveNeo4jRepositories;
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class }) // desativa a tela de login no inicio
-@EnableAutoConfiguration
+// @EnableAutoConfiguration
 @EnableNeo4jRepositories(basePackages="br.gtcc.gtcc")
 public class GtccApplication {
 
@@ -18,12 +18,5 @@ public class GtccApplication {
 
         SpringApplication.run(GtccApplication.class, args);
     }
-
-    // @Bean("neo4j")
-    // org.neo4j.cypherdsl.core.renderer.Configuration cypherDslConfiguration() {
-    //     return org.neo4j.cypherdsl.core.renderer.Configuration
-    //             .newConfig()
-    //             .withDialect(Dialect.NEO4J_5).build();
-    // }
 
 }

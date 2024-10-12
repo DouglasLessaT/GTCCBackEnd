@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import br.gtcc.gtcc.annotations.ValidaAcesso;
 import br.gtcc.gtcc.model.mysql.DocenteBanca;
-import br.gtcc.gtcc.model.neo4j.Tcc;
+import br.gtcc.gtcc.model.mysql.Tcc;
 import br.gtcc.gtcc.services.spec.DocenteBancaInterface;
 import br.gtcc.gtcc.services.spec.TccInterface;
 import br.gtcc.gtcc.util.Console;
