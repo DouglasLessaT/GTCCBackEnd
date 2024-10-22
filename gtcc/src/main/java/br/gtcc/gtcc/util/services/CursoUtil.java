@@ -69,4 +69,10 @@ public class CursoUtil {
         newCurso.setTitulo(curso.getTitulo());
         return newCurso;
     }
+
+    public boolean isAtivo(Curso curso){
+        if(curso.getAtivo() == 1)
+            return true;
+        throw new RuntimeException("Não pode criar curso inativo");
+    }   
 }

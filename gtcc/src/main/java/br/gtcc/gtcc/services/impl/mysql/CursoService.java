@@ -18,6 +18,7 @@ public class CursoService implements CursoInterface<Curso ,Long>{
     @Override
     public Curso criarCurso(Curso curso) {
 
+        this.utilCurso.isAtivo(curso);
         this.utilCurso.validId(curso.getId());
         String tituloTrim = curso.getTitulo().toLowerCase().trim();
 
