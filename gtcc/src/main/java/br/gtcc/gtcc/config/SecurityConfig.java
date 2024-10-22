@@ -137,6 +137,18 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
         addUsers();
     }
 
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests((requests) -> requests
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .csrf().disable(); // Desativa a proteção CSRF, se necessário
+
+        return http.build();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor(userServices, null, jwtUtil))
