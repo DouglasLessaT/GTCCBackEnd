@@ -8,16 +8,18 @@ import br.gtcc.gtcc.model.mysql.Curso;
 import br.gtcc.gtcc.model.mysql.repository.CursoRepository;
 import br.gtcc.gtcc.services.spec.CursoInterface;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class CursoUtil {
     
 
     private final CursoRepository cursoRepository;
 
-    public Curso salvarCurso(Curso  cruso){
-        return this.cursoRepository.save(cruso);
+    public Curso salvarCurso(Curso curso) {
+        return this.cursoRepository.save(curso);
     }
 
     public boolean validId(Long id){
@@ -70,9 +72,10 @@ public class CursoUtil {
         return newCurso;
     }
 
-    public boolean isAtivo(Curso curso){
-        if(curso.getAtivo() == 1)
-            return true;
-        throw new RuntimeException("Não pode criar curso inativo");
+    public boolean isAtivo(Curso curso) {
+        if (curso.getAtivo() != 1) {
+            throw new RuntimeException("Não pode criar curso inativo");
+        }
+        return true;
     }   
 }
