@@ -3,6 +3,7 @@ package br.gtcc.gtcc.curso;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -13,6 +14,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Collections;
 
@@ -128,5 +130,24 @@ public class CursoUtilTest {
         assertThrows(RuntimeException.class , () -> cursoUtil.existeCurso(cursoCriado.getId()));
     }
 
+    @Test
+    @DisplayName("Testando a busca de curso")
+    public void buscarCursosPorId(){
+        var cursoCriado = criarCurso();
+
+        BDDMockito.given(cursoRepository.findById(cursoCriado.getId())).willReturn(Optional.of(cursoCriado));
+        Optional<Curso> cursoEncontrado = Optional.ofNullable(cursoUtil.buscarCurso(cursoCriado.getId()));
+        assertTrue(cursoEncontrado.isPresent());
+        
+    }
+    
+    @Test
+    @DisplayName("Testando a busca de curso")
+    public void buscarCursosPorIdDeveLancarExececaoCasoNaoExista(){
+        var cursoCriado = criarCurso();
+        assertThrows(NoSuchElementException.class, ()-> cursoUtil.buscarCurso(cursoCriado.getId()));
+        
+    }
+    
 
 }
