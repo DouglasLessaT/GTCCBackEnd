@@ -36,7 +36,7 @@ public class CursoUtil {
 
     public boolean existeCurso(Long id){
         if(this.cursoRepository.existsById(id) == false)
-           throw new RuntimeException("O id é invalido");
+           throw new RuntimeException("O Curso não existe");
         return true;
     }
 
