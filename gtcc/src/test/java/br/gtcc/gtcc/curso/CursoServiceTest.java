@@ -36,6 +36,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.gtcc.gtcc.model.mysql.Curso;
 import br.gtcc.gtcc.model.mysql.repository.CursoRepository;
+import br.gtcc.gtcc.services.exception.CursosNaoCadastradosException;
 import br.gtcc.gtcc.services.impl.mysql.CursoService;
 import br.gtcc.gtcc.util.services.CursoUtil;
 
@@ -87,6 +88,15 @@ public class CursoServiceTest {
         List<Curso> listaCursos = cursoService .listaCursos();
         assertEquals(1, listaCursos.size());
 
+    }
+
+    @Test
+    @DisplayName("Teste deve lancar excecao quando nao encontrar nehum curso cadastrado")
+    public void deveLancarExcecaoCasoNaoEcontreNenhumCurso(){
+       
+        given(cursoUtil.contagemDeCurso()).willReturn(0L);
+        assertThrows(CursosNaoCadastradosException.class, ()->cursoService.listaCursos());
+        then(cursoUtil).should(times(1)).contagemDeCurso();
     }
 
     @Test

@@ -46,6 +46,9 @@ import br.gtcc.gtcc.model.mysql.Curso;
 import br.gtcc.gtcc.model.mysql.Usuario;
 import br.gtcc.gtcc.model.mysql.repository.CursoRepository;
 import br.gtcc.gtcc.services.impl.mysql.CursoService;
+import br.gtcc.gtcc.util.exceptions.cursos.CursoInativoException;
+import br.gtcc.gtcc.util.exceptions.cursos.CursoNaoExisteExeception;
+import br.gtcc.gtcc.util.exceptions.cursos.IdInvalidoException;
 import br.gtcc.gtcc.util.services.CursoUtil;
 import lombok.var;
 import lombok.extern.slf4j.Slf4j;
@@ -100,7 +103,7 @@ public class CursoUtilTest {
     public void deveLancarExcecaoAoValidarId(){
         var cursoCriado = criarCursoInvĺido();
         
-        assertThrows(RuntimeException.class ,()-> this.cursoUtil.validId(cursoCriado.getId()));
+        assertThrows(IdInvalidoException.class ,()-> this.cursoUtil.validId(cursoCriado.getId()));
     }
 
     @Test
@@ -116,7 +119,7 @@ public class CursoUtilTest {
     public void deveLancarExcecaoAoValidarIdParaUpdate(){
         var cursoCriado = criarCurso();
         
-        assertThrows(RuntimeException.class ,()-> this.cursoUtil.validIdForUpdate(cursoCriado.getId()));
+        assertThrows(IdInvalidoException.class ,()-> this.cursoUtil.validIdForUpdate(cursoCriado.getId()));
     }
 
     @Test
@@ -124,11 +127,8 @@ public class CursoUtilTest {
     public void existeCurso(){
         
         var cursoCriado = criarCurso();
-
         given(cursoRepository.existsById(cursoCriado.getId())).willReturn(true);
-
         Boolean existsCurso = cursoUtil.existeCurso(cursoCriado.getId());
-
         assertTrue(existsCurso);
     }
 
@@ -139,7 +139,7 @@ public class CursoUtilTest {
         var cursoCriado = criarCurso();
 
         given(cursoRepository.existsById(cursoCriado.getId())).willReturn(false);
-        assertThrows(RuntimeException.class , () -> cursoUtil.existeCurso(cursoCriado.getId()));
+        assertThrows(CursoNaoExisteExeception.class , () -> cursoUtil.existeCurso(cursoCriado.getId()));
     }
 
     @Test
@@ -248,7 +248,7 @@ public class CursoUtilTest {
     public void deveRetornarExceaoCasoCursoInativo(){
         var cursoInativoCriado = criarCursoInativo();
         
-        assertThrows(RuntimeException.class,
+        assertThrows(CursoInativoException.class,
          ()-> cursoUtil.isAtivo(cursoInativoCriado));
     }
 }
