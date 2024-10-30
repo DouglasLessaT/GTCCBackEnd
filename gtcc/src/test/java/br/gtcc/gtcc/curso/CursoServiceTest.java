@@ -2,17 +2,28 @@ package br.gtcc.gtcc.curso;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willReturn;
+import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.BDDMockito.times;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,33 +41,15 @@ import br.gtcc.gtcc.util.services.CursoUtil;
 
 @ExtendWith(MockitoExtension.class)
 public class CursoServiceTest {
-
-    // @Mock
-    // private CursoRepository cursoRepositoryMockInjected;
-    // @Mock
-    // private CursoUtil utilMock;
-    // @InjectMocks
-    // private CursoService serviceMock;
-
-    @Mock
-    private CursoRepository cursoRepository;
-
+    
+    @InjectMocks
+    private CursoService cursoService;
+    
     @Mock
     private CursoUtil cursoUtil;
 
-    @InjectMocks
-    private CursoService cursoService;
-
-    // private CursoService cursoService;
-    // private CursoRepository cursoRepository;
-    // private CursoUtil cursoUtil;
-
-
     @BeforeEach
     public void setUp() {
-        cursoRepository = mock(CursoRepository.class);
-        cursoUtil = new CursoUtil(cursoRepository);
-        cursoService = new CursoService(cursoUtil);
     }
 
     @Test
@@ -70,7 +63,7 @@ public class CursoServiceTest {
     @DisplayName("Deve lançar exeção quando tentar salvar curso inativo")
     public void naoDeveSalvarCursoInativo(){        
         var cursoInativo = criarCursoInativo();
-
+        BDDMockito.given(cursoUtil.isAtivo(cursoInativo)).willThrow(new RuntimeException("Não pode criar curso inativo"));
         assertThrows(RuntimeException.class, 
             () -> cursoService.criarCurso(cursoInativo));
     }
@@ -79,9 +72,9 @@ public class CursoServiceTest {
     @DisplayName("Deve tesar salvar um curso ativo")
     public void deveSalvarCursoAtivo(){        
         var cursoAtivo = criarCurso();
+        BDDMockito.given(cursoUtil.isAtivo(cursoAtivo)).willReturn(true);
         assertDoesNotThrow(() -> cursoService.criarCurso(cursoAtivo));
     }
-
 
     @Test
     @DisplayName("Deve retornar uma lista com apenas um curso")
@@ -101,15 +94,82 @@ public class CursoServiceTest {
     public void buscarUmCursoPorId(){
         var curso = criarCurso();
 
-        BDDMockito.given(cursoRepository.existsById(curso.getId())).willReturn(true);
         BDDMockito.given(cursoUtil.existeCurso(curso.getId())).willReturn(true);
-        BDDMockito.given(cursoRepository.findById(curso.getId())).willReturn(Optional.of(curso));     
         BDDMockito.given(cursoUtil.buscarCurso(1L)).willReturn(curso);
         
         Optional<Curso> cursoEncontrado = Optional.ofNullable(cursoService.buscarCurso(curso.getId()));
         
         assertNotNull(cursoEncontrado);
 
+    }
+
+    @Test
+    @DisplayName("Teste de exclusao de curso com sucesso")
+    public void deletarCursoPorId(){
+        var cursoCriado = criarCurso();
+
+        given(cursoUtil.validId(cursoCriado.getId()))
+        .willReturn(true);
+        given(cursoUtil.existeCurso(cursoCriado.getId()))
+        .willReturn(true);
+        given(cursoUtil.buscarCurso(cursoCriado.getId()))
+        .willReturn(cursoCriado);
+
+        var cursoDeletado = cursoUtil.buscarCurso(cursoCriado.getId());
+        assertEquals(cursoCriado, cursoDeletado);
+        cursoService.deletarCurso(cursoDeletado.getId());
+        
+        then(cursoUtil).should(times(1)).validId(cursoCriado.getId());
+        then(cursoUtil).should(times(1)).existeCurso(cursoCriado.getId());
+        then(cursoUtil).should(times(2)).buscarCurso(cursoCriado.getId());
+        then(cursoUtil).should(times(1)).deleteCurso(cursoCriado.getId());
+       
+    }
+
+    @Test
+    @DisplayName("Teste deve lancar exececao caso nao encontre o curso")
+    public void deveFalharCasoNaoEncontreCurso(){
+        var cursoCriado = criarCurso();
+        
+        Long id = cursoCriado.getId();
+        given(cursoUtil.existeCurso(id)).willThrow(new RuntimeException("O Curso não existe"));
+
+        assertThrows(RuntimeException.class, ()->cursoService.deletarCurso(id));
+
+        then(cursoUtil).should(times(1)).existeCurso(id);
+
+    }
+
+    @Test
+    @DisplayName("Teste a alteracao com sucesso")
+    public void devePassarAlteracaoDeCurso(){
+        var cursoOld = criarCurso();
+        var crusoNew = criarCursoInativo();
+        var newId = crusoNew.getId();
+        var oldId = cursoOld.getId();
+
+        given(cursoUtil.validIdForUpdate(newId)).willReturn(true);
+        given(cursoUtil.moldeCurso(crusoNew)).willReturn(crusoNew);
+        given(cursoUtil.salvarCurso(crusoNew)).willReturn(crusoNew);
+
+        cursoService.alterarCurso(oldId, crusoNew);
+        assertEquals(newId, oldId);
+
+        then(cursoUtil).should(times(1)).validIdForUpdate(newId);
+        then(cursoUtil).should(times(1)).moldeCurso(crusoNew);
+        then(cursoUtil).should(times(1)).salvarCurso(crusoNew);
+    }
+
+    @Test
+    @DisplayName("Teste deve lancar uma exececao caso ele passe o id do curso invalido")
+    public void deveLancarExececaoCasoIdSejaInvalido(){
+        var cursoOld = criarCurso();
+        var crusoNew = criarCursoInativo();
+        var oldId = cursoOld.getId();
+
+        given(cursoUtil.validIdForUpdate(oldId)).willThrow(new RuntimeException("O id é invalido"));
+        assertThrows(RuntimeException.class, ()-> cursoService.alterarCurso(oldId, crusoNew));
+        then(cursoUtil).should(times(1)).validIdForUpdate(oldId);
     }
 
 

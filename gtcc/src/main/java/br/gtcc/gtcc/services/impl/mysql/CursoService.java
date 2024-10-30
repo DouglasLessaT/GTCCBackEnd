@@ -67,6 +67,4 @@ public class CursoService implements CursoInterface<Curso ,Long>{
 
     }
 
-    
-
 }
