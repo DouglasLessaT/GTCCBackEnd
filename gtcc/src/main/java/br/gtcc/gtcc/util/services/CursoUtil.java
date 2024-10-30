@@ -1,9 +1,11 @@
 package br.gtcc.gtcc.util.services;
 
 import java.util.List;
-
 import org.springframework.stereotype.Component;
 
+import br.gtcc.gtcc.util.exceptions.cursos.CursoInativoException;
+import br.gtcc.gtcc.util.exceptions.cursos.CursoNaoExisteExeception;
+import br.gtcc.gtcc.util.exceptions.cursos.IdInvalidoException;
 import br.gtcc.gtcc.model.mysql.Curso;
 import br.gtcc.gtcc.model.mysql.repository.CursoRepository;
 import br.gtcc.gtcc.services.spec.CursoInterface;
@@ -24,19 +26,19 @@ public class CursoUtil {
 
     public boolean validId(Long id){
         if (id == null)
-            throw new RuntimeException("O id do Curso informado é inválido");
+            throw new IdInvalidoException("O id do Curso informado é inválido");
         return true;
     }
 
     public boolean validIdForUpdate(Long id){
         if (id != null)
-            throw new RuntimeException("O id é invalido");
+            throw new IdInvalidoException("O id é invalido");
         return true;
     }
 
     public boolean existeCurso(Long id){
         if(this.cursoRepository.existsById(id) == false)
-           throw new RuntimeException("O Curso não existe");
+           throw new CursoNaoExisteExeception("O Curso não existe");
         return true;
     }
 
@@ -74,7 +76,7 @@ public class CursoUtil {
 
     public boolean isAtivo(Curso curso) {
         if (curso.getAtivo() != 1) {
-            throw new RuntimeException("Não pode criar curso inativo");
+            throw new CursoInativoException("Não pode criar curso inativo");
         }
         return true;
     }   

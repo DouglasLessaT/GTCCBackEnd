@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import br.gtcc.gtcc.model.mysql.Curso;
+import br.gtcc.gtcc.services.exception.CursosNaoCadastradosException;
 import br.gtcc.gtcc.services.spec.CursoInterface;
 import br.gtcc.gtcc.util.services.CursoUtil;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class CursoService implements CursoInterface<Curso ,Long>{
     @Override
     public List<Curso> listaCursos() {
         if(this.utilCurso.contagemDeCurso() == 0)
-            throw new RuntimeException("Não existe cursos cadastrados");
+            throw new CursosNaoCadastradosException("Não existe cursos cadastrados");
         return this.utilCurso.listaCursos();
     }
 
