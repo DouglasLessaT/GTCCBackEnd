@@ -1,4 +1,4 @@
-package br.gtcc.gtcc.util.exceptions.cursos;
+package br.gtcc.gtcc.util.exceptions;
 
 public class IdInvalidoException extends RuntimeException{
     
