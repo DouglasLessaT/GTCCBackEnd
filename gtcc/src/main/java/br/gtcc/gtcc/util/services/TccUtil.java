@@ -13,21 +13,24 @@ import br.gtcc.gtcc.model.mysql.Tcc;
 import br.gtcc.gtcc.model.mysql.Usuario;
 import br.gtcc.gtcc.model.mysql.repository.TccRepository;
 import br.gtcc.gtcc.model.mysql.repository.UsuarioRepository;
+import br.gtcc.gtcc.util.exceptions.IdInvalidoException;
+import br.gtcc.gtcc.util.exceptions.usuario.AlunoNaoEncontradoException;
+import br.gtcc.gtcc.util.exceptions.usuario.OrientadorNaoEncontradoException;
+import lombok.RequiredArgsConstructor;
 import br.gtcc.gtcc.model.mysql.Usuario;
 
 @Component
+@RequiredArgsConstructor
 public class TccUtil {
 
-    private final EnumSet<UserType> TYPE_COORDENADOR = EnumSet.of(UserType.COORDENADOR);
-    private final EnumSet<UserType> TYPE_PROFESSOR = EnumSet.of(UserType.PROFESSOR); 
-    private final EnumSet<UserType> TYPE_ADMIN = EnumSet.of(UserType.ADMIN);
-    private final EnumSet<UserType> TYPE_ALUNO = EnumSet.of(UserType.ALUNO);
+    // private final EnumSet<UserType> TYPE_COORDENADOR = EnumSet.of(UserType.COORDENADOR);
+    // private final EnumSet<UserType> TYPE_PROFESSOR = EnumSet.of(UserType.PROFESSOR); 
+    // private final EnumSet<UserType> TYPE_ADMIN = EnumSet.of(UserType.ADMIN);
+    private final String TYPE_ALUNO = "ALUNO";
  
-    @Autowired
-    public TccRepository tccRepository;
+    public final TccRepository tccRepository;
 
-    @Autowired
-    public UsuarioRepository usersRepository;
+    public final UsuarioRepository usersRepository;
 
     public Tcc salvarTcc(Tcc tcc){
         return this.tccRepository.save(tcc);
@@ -40,25 +43,25 @@ public class TccUtil {
     public Boolean validaIdTccParaCriacao(Long id){
         if (id == null )
             return true;
-        throw new RuntimeException("O id do Tcc informado é inválido");
+        throw new IdInvalidoException("O id do Tcc informado é inválido");
     }
 
     public Boolean validaIdTcc(Long id){
         if (id == null )
-            throw new RuntimeException("O id do Tcc informado é inválido");        
+            throw new IdInvalidoException("O id do Tcc informado é inválido");        
         return true;
     }
 
     public Boolean validaIdAluno(Long id){
         if (id == null )
-            throw new RuntimeException("O id do aluno informado é inválido");
+            throw new IdInvalidoException("O id do aluno informado é inválido");
 
         return true;
     }
 
     public Boolean validaIdOrientador(Long id){
         if (id == null )
-            throw new RuntimeException("O id do orientador informado é inválido");
+            throw new IdInvalidoException("O id do orientador informado é inválido");
 
         return true;
     }
@@ -68,7 +71,7 @@ public class TccUtil {
         if(this.usersRepository.existsById(id))
             return true;
 
-        throw new RuntimeException("O Aluno informado não existe");        
+        throw new AlunoNaoEncontradoException("O Aluno informado não existe");        
                 
     }
 
@@ -77,7 +80,7 @@ public class TccUtil {
         if(this.usersRepository.existsById(id))
             return true;
 
-        throw new RuntimeException("O Orientador informado não existe");
+        throw new OrientadorNaoEncontradoException("O Orientador informado não existe");
 
     }
 
@@ -103,7 +106,7 @@ public class TccUtil {
 
     public Boolean userTypeIsAluno(Usuario user){
         
-        Boolean isAluno = user.getGrupo().equals(TYPE_ALUNO);
+        Boolean isAluno = user.getGrupo().getNome().equals(TYPE_ALUNO);
         
         if( isAluno )
             return true;

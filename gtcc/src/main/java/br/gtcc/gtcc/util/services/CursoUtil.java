@@ -3,9 +3,9 @@ package br.gtcc.gtcc.util.services;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
+import br.gtcc.gtcc.util.exceptions.IdInvalidoException;
 import br.gtcc.gtcc.util.exceptions.cursos.CursoInativoException;
 import br.gtcc.gtcc.util.exceptions.cursos.CursoNaoExisteExeception;
-import br.gtcc.gtcc.util.exceptions.cursos.IdInvalidoException;
 import br.gtcc.gtcc.model.mysql.Curso;
 import br.gtcc.gtcc.model.mysql.repository.CursoRepository;
 import br.gtcc.gtcc.services.spec.CursoInterface;
