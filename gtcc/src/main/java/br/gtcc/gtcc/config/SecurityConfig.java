@@ -8,6 +8,7 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
@@ -37,46 +38,42 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Autowired
     private UsuarioServices userServices;
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                .anyRequest().authenticated()
-            ).csrf()
-            .disable(); // Desativa a proteção CSRF, se necessário
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/auth/**", "/auth/login").permitAll()
+                        .anyRequest().authenticated())
+                .csrf().disable()
+                .cors().and() // Habilita CORS
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
     }
 
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*");
+            }
+        };
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor(userServices, null, jwtUtil))
-                .excludePathPatterns("/error**", "/index**", "/doc**", "/auth**", "/swagger-ui**")
-                .addPathPatterns(
-                    "/coordenacao/tcc/v1/apresentacao",
-                        "/coordenacao/tcc/v1/apresentacao/**",
-                        "/coordenacao/tcc/v1/apresentacoes",
-                        "/coordenacao/tcc/v1/coordenador/alunos",
-                        "/coordenacao/tcc/v1/coordenador/professor",
-                        "/coordenacao/tcc/v1/coordenador/professores",
-                        "/coordenacao/tcc/v1/coordenador/usuario/**",
-                        "/coordenacao/tcc/v1/Professor/usuario/",
-                        "/coordenacao/tcc/v1/Professor/alunos",
-                        "/coordenacao/tcc/v1/Professor/aluno",
-                        "/coordenacao/tcc/v1/Professor/aluno/**",
-                        "/coordenacao/tcc/v1/Professor/",
-                        "/coordenacao/tcc/v1/agenda/**",
-                        "/coordenacao/tcc/v1/agenda",
-                        "/coordenacao/tcc/v1/agendas",
-                        "/coordenacao/tcc/v1/tcc",
-                        "/coordenacao/tcc/v1/tccs",
-                        "/coordenacao/tcc/v1/tcc/**",
-                        "/coordenacao/tcc/v1/usuario/**",
-                        "/coordenacao/tcc/v1/usuario",
-                        "/coordenacao/tcc/v1/usuarios"
-                        );
+                .excludePathPatterns("/error**",
+                        "/index**",
+                        "/doc**",
+                        "/auth/**",
+                        "/auth/login",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**")
+                .addPathPatterns("/coordenacao/tcc/v1/**");
     }
 
     @Override

@@ -42,7 +42,7 @@ public class LoginInterceptor implements HandlerInterceptor {
       String login = jwtUtil.getUsuarioNoToken(jwttoken);
 
       if (login != null && jwtUtil.validaToken(jwttoken, login)) {
-        user = Optional.of(usersRepository.findByLogin(login)) ;
+        user = Optional.of(usersRepository.findByLogin(login));
         if (user.isPresent()) {
           List<GrantedAuthority> listaPermissoes = new ArrayList<>();
           user.get().getPermissoes().forEach(p -> {
@@ -122,8 +122,7 @@ public class LoginInterceptor implements HandlerInterceptor {
   }
 
   @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-      throws Exception {
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
     boolean config = false;
     if (!config && (handler instanceof HandlerMethod)) {
       return this.validaLogin(request, response, handler);

@@ -45,10 +45,10 @@ public class AuthController extends DefaultController {
 
  private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
+ @CrossOrigin(origins = "*", allowedHeaders = "*")
  @PostMapping("/login")
  public ResponseEntity<String> login(@RequestParam String login, @RequestParam String senha, HttpServletRequest request) throws JsonProcessingException {
     Usuario user = userRepository.findByLogin(login);
-
   if (user == null) {
    request.setAttribute("jakarta.servlet.error.status_code", 400);
    throw new RuntimeException("Usuário não encontrado");
