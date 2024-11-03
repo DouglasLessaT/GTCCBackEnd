@@ -18,7 +18,14 @@ import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.BDDMockito.times;
 
+import br.gtcc.gtcc.util.exceptions.tcc.NaoExisteTccNoBancoException;
+import br.gtcc.gtcc.util.exceptions.tcc.NaoExisteTccParaRelacionarComApresentacoesException;
+import br.gtcc.gtcc.util.exceptions.tcc.TccExisteException;
+import br.gtcc.gtcc.util.exceptions.tcc.TccNaoExisteException;
+import br.gtcc.gtcc.util.exceptions.usuario.AlunoTemTccException;
+import br.gtcc.gtcc.util.exceptions.usuario.UsuarioNaoAlunoException;
 import org.aspectj.lang.annotation.Before;
+import org.aspectj.weaver.ast.Var;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -73,7 +73,7 @@ public class TccServices implements TccInterface<Tcc, Long> {
 
                 this.tccUtil.removendoAlunoDeUmTcc(idAluno);
             
-            tccRepo = this.tccUtil.trocandoORelacionamentoDeAlunoComTcc(tccRepo, aluno, alunoRepo, id);
+            tccRepo = this.tccUtil.trocandoORelacionamentoDeAlunoComTcc(tccRepo, aluno);
         
         }
 

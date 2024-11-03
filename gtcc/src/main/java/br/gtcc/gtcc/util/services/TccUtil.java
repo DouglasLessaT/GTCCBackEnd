@@ -4,6 +4,12 @@ import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 
+import br.gtcc.gtcc.util.exceptions.tcc.NaoExisteTccNoBancoException;
+import br.gtcc.gtcc.util.exceptions.tcc.NaoExisteTccParaRelacionarComApresentacoesException;
+import br.gtcc.gtcc.util.exceptions.tcc.TccExisteException;
+import br.gtcc.gtcc.util.exceptions.tcc.TccNaoExisteException;
+import br.gtcc.gtcc.util.exceptions.usuario.AlunoTemTccException;
+import br.gtcc.gtcc.util.exceptions.usuario.UsuarioNaoAlunoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,9 +29,9 @@ import br.gtcc.gtcc.model.mysql.Usuario;
 @RequiredArgsConstructor
 public class TccUtil {
 
-    // private final EnumSet<UserType> TYPE_COORDENADOR = EnumSet.of(UserType.COORDENADOR);
-    // private final EnumSet<UserType> TYPE_PROFESSOR = EnumSet.of(UserType.PROFESSOR); 
-    // private final EnumSet<UserType> TYPE_ADMIN = EnumSet.of(UserType.ADMIN);
+    private final String TYPE_COORDENADOR = "COORDENADOR";
+    private final String TYPE_PROFESSOR = "PROFESSOR";
+    private final String TYPE_ADMIN = "ADMIN";
     private final String TYPE_ALUNO = "ALUNO";
  
     public final TccRepository tccRepository;
@@ -111,16 +117,16 @@ public class TccUtil {
         if( isAluno )
             return true;
 
-        throw new RuntimeException("O Usuário não é do tipo aluno");
+        throw new UsuarioNaoAlunoException("O Usuário não é do tipo aluno");
         
     }
 
     public Boolean checkSeAlunoTemTcc(Usuario aluno){
-        Boolean isEqualsAZeroTccAluno =  usersRepository.countUsersSemTccRelacionado() == 0;
+        Boolean isEqualsAZeroTccAluno =  usersRepository.checkSeAlunoTemTcc(aluno.getIdUsuario()) == 0;
         if(isEqualsAZeroTccAluno)
             return true;
         
-        throw new RuntimeException("O aluno ja esta em outro tcc.");
+        throw new AlunoTemTccException("O aluno ja esta em outro tcc.");
         
     }
 
@@ -128,14 +134,14 @@ public class TccUtil {
 
         if(this.tccRepository.existsById(id))
             return true;
-        throw new RuntimeException("Tcc não existe no banco");
+        throw new TccNaoExisteException("Tcc não existe no banco");
         
     }
 
     public Boolean checkExistsTccpParaCriacao(Long id){
 
         if(this.tccRepository.existsById(id))
-            throw new RuntimeException("Tcc já existe no banco");
+            throw new TccExisteException("Tcc já existe no banco");
         return true;
         
     }
@@ -155,37 +161,19 @@ public class TccUtil {
         return oldTcc;
     }
 
-    //Isso aqui vai ser feito em outro tabela não nessa tabela banca 
-    // public Tcc trocandoORelacionamentoDeProfessorComTcc(Tcc tcc ,Users newOrientador ,Users oldOrientador ,String idTcc){
-        
-    //     this.removerRelacionamentoOrienta( oldOrientador.getId(), idTcc);
-    //     this.removeRelacionamentoDeTccsGerenciados( oldOrientador.getId(), idTcc);
-    //     oldOrientador.getTccsGerenciados().removeIf( tccItem -> tccItem.getId().equals(idTcc));
-    //     newOrientador.getTccsGerenciados().add(tcc);
-        
-    //     this.usersRepository.save(newOrientador);
+    public Tcc trocandoORelacionamentoDeAlunoComTcc(Tcc tcc ,Usuario newAluno ){
 
-    //     return tcc;
-        
-    // }
-
-    public Tcc trocandoORelacionamentoDeAlunoComTcc(Tcc tcc ,Usuario newAluno ,Usuario oldAluno ,Long idTcc){
-
-        //Alterar essa remocao de relacionamento
-        //this.removerRelacionamento(oldAluno.getId() , idTcc);
-        //Adicionar tcc ao usuario  
         tcc.setUsuario(newAluno);
-        //Atualizar tabela de tcc
-        //Atualizar tabela de aluno
         this.usersRepository.save(newAluno);
         return tcc;
     }
 
     public Long countDeTccs(){
 
-        if(this.tccRepository.count() > 0)
-            return this.tccRepository.count();
-        throw new RuntimeException("Não existe Tcc no banco");
+        Long countTccs = this.tccRepository.count();
+        if( countTccs > 0)
+            return countTccs;
+        throw new NaoExisteTccNoBancoException("Não existe Tcc no banco");
         
     }   
 
@@ -197,17 +185,16 @@ public class TccUtil {
         return this.tccRepository.listTccByTitulo(title);
     }
 
-    //Essa query pode ser feita com a tabela tb_banca ou pode usar a tcc.
     public Long countDeTccsSemApresentacao(){
 
         if(this.tccRepository.countTccComApresentcao() > 0)
             return this.tccRepository.countTccComApresentcao();
-        throw new RuntimeException("Não existe tcc a ser relacionado a apreentaçoes");
+        throw new NaoExisteTccParaRelacionarComApresentacoesException("Não existe tcc a ser relacionado a apreentaçoes");
 
     }   
 
     public List<Tcc> listaDeTccSemApresentacao(){
-        return this.tccRepository.listTccComApresentcao();
+        return this.tccRepository.listTccSemApresentcao();
     }
 
     public Boolean checkSeAlunoTemTccSemExecao(Usuario aluno){
