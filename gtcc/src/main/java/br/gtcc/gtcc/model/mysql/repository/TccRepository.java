@@ -17,20 +17,30 @@ public interface TccRepository extends JpaRepository <Tcc, Long> {
     Tcc listTccByTitulo(String titulo);
 
     @Query("SELECT COUNT(*) as total FROM Apresentacao as tbca WHERE tbca.tcc.id IS NULL")
-    Long countTccComApresentcao();    
+    Long countTccComApresentcao();
 
-    @Query("SELECT tbca FROM Apresentacao as tbca WHERE tbca.tcc.id IS NOT NULL")
+    @Query("SELECT tcc FROM Tcc as tcc " +
+            "WHERE EXISTS " +
+            "(SELECT a FROM Apresentacao as a WHERE a.tcc.id = tcc.id ) " +
+            "")
     List<Tcc> listTccComApresentcao();
 
-    @Query("SELECT tcc FROM Tcc as tcc WHERE tcc.usuario.id IS NULL")
+    @Query("SELECT tcc FROM Tcc as tcc " +
+            "WHERE NOT EXISTS " +
+            "(SELECT a FROM Apresentacao as a WHERE a.tcc.id = tcc.id ) " +
+            "")
+    List<Tcc> listTccSemApresentcao();
+
+    @Query("SELECT tcc FROM Tcc as tcc WHERE tcc.usuario.idUsuario IS NULL")
     List<Tcc> listTccSemDiscente();
 
-    @Query("UPDATE Tcc as tcc SET tcc.usuario = NULL WHERE tcc.usuario.id = :idUsuario AND tcc.id = :idTcc")
+    @Query("UPDATE Tcc as tcc SET tcc.usuario = NULL " +
+            "WHERE tcc.usuario.idUsuario = :idUsuario AND tcc.id = :idTcc")
     void removeRelacaoEntreUsuarioTcc(Long idUsuario , Long idTcc);
 
-    @Query("SELECT COUNT(tcc) FROM Tcc as tcc WHERE tcc.usuario.id = :idAluno")
+    @Query("SELECT COUNT(tcc) FROM Tcc as tcc WHERE tcc.usuario.idUsuario = :idAluno")
     Long buscaTccAluno(Long idAluno);
 
-    @Query("UPDATE Tcc as tcc SET tcc.usuario = NULL WHERE tcc.usuario.id = :idDiscente")
+    @Query("UPDATE Tcc as tcc SET tcc.usuario = NULL WHERE tcc.usuario.idUsuario = :idDiscente")
     void removerDiscenteTcc(@Param("idDiscente")Long idDiscente);
 }

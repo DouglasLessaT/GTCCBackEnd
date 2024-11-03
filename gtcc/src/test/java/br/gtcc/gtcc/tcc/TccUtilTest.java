@@ -1,16 +1,10 @@
 package br.gtcc.gtcc.tcc;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
-import java.util.EnumSet;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -48,13 +42,14 @@ import br.gtcc.gtcc.util.exceptions.usuario.OrientadorNaoEncontradoException;
 import br.gtcc.gtcc.util.services.TccUtil;
 
 @ExtendWith(MockitoExtension.class)
-public class TccUtilTest {
+public class  TccUtilTest {
 
     @InjectMocks
     private TccUtil tccUtil;
 
     @Mock
     private TccRepository tccRepository;
+
     @Mock
     private UsuarioRepository usuarioRepository;
 
@@ -80,6 +75,22 @@ public class TccUtilTest {
             criaUsuario(),
             criarCurso()
         );
+    }
+
+    private Tcc criarOutroTcc(){
+        return new Tcc(
+                2L,
+                "Análise de Sentimento em Redes Sociais Utilizando Processamento de Linguagem Natural",
+                "Processamento de Linguagem Natural",
+                "Este trabalho explora o uso de técnicas de NLP para análise de sentimentos em redes sociais...",
+                1,
+                criarUsuarioProfessor(),
+                criarOutroCurso()
+        );
+    }
+
+    private Curso criarOutroCurso(){
+        return new Curso(2L ,"ADM", 1);
     }
 
     private Tcc criarTccAlunoNulo(){
@@ -125,11 +136,10 @@ public class TccUtilTest {
              "senhaSegura123",
              "(12) 00000-0000",
              List.of("PROFESSOR"),
-             new Grupo(1L,"TYPE_PROFESSOR",1),
+             new Grupo(1L,"PROFESSOR",1),
              1
          );
     }
-    
 
     @Test
     @DisplayName("Teste deve lancar excecao caso seja dado uma entidade nula")
@@ -233,7 +243,6 @@ public class TccUtilTest {
 
     }
 
-
     @Test
     @DisplayName("Teste deve lancar exececao caso id do tcc seja igual a nulo na hora de sua alteracao")
     public void deveLancarExececaoCasoIdOrientadorSejaIgualNuloQuandoCriarUmTcc(){
@@ -290,7 +299,6 @@ public class TccUtilTest {
         .existsById(alunoCriado.getIdUsuario());
     }    
 
-    
     @Test
     @DisplayName("Teste deve lancar uma execao caso nao encontre Aluno")
     public void deveLancarExececaoCasoOrientadorNaoExista(){
@@ -347,5 +355,257 @@ public class TccUtilTest {
 
     }
 
-}
+    @Test
+    @DisplayName("Teste deve lancar uma excecao caso o usuario não é um aluno")
+    public void deveLancarExcecaoCasoUsuarioNaoSejaAluno(){
+        var professorCriado = criarUsuarioProfessor();
+        assertThrows(UsuarioNaoAlunoException.class,
+                ()->tccUtil.userTypeIsAluno(professorCriado)
+        );
 
+    }
+
+    @Test
+    @DisplayName("Teste deve lancar excecao caso o aluno ja tenha TCC")
+    public void deveLacarExcecaoCasoAlunoJaTenhaTcc(){
+        var criarAluno = criaUsuario();
+
+        given(usuarioRepository.checkSeAlunoTemTcc(criarAluno.getIdUsuario()))
+                .willReturn(1L);
+
+        assertThrows(AlunoTemTccException.class,
+                ()-> tccUtil.checkSeAlunoTemTcc(criarAluno)
+        );
+
+        then(usuarioRepository).should(times(1))
+                .checkSeAlunoTemTcc(criarAluno.getIdUsuario());
+
+    }
+
+    @Test
+    @DisplayName("Teste deve passar caso o aluno não tenha TCC")
+    public void deveLacaPassarCasoAlunoNaoTenhaTcc(){
+        var criarAluno = criaUsuario();
+
+        given(usuarioRepository.checkSeAlunoTemTcc(criarAluno.getIdUsuario()))
+                .willReturn(0L);
+
+        assertDoesNotThrow(
+                ()-> tccUtil.checkSeAlunoTemTcc(criarAluno)
+        );
+
+        then(usuarioRepository).should(times(1))
+                .checkSeAlunoTemTcc(criarAluno.getIdUsuario());
+
+    }
+
+    @Test
+    @DisplayName("Teste deve lancar caso o tcc exista")
+    public void deveLancarExcecaoCasoTccExista(){
+        var tccCriado = criarTcc();
+        given(tccRepository.existsById(tccCriado.getId()))
+                .willReturn(false);
+
+        assertThrows(TccNaoExisteException.class,
+                ()->tccUtil.checkExistsTcc(tccCriado.getId()
+        ));
+
+        then(tccRepository).should(times(1))
+                .existsById(tccCriado.getId());
+    }
+
+    @Test
+    @DisplayName("Teste deve passar caso o tcc não exista")
+    public void deveLancarExcecaoCasoTccNaoExista(){
+        var tccCriado = criarTcc();
+        given(tccRepository.existsById(tccCriado.getId()))
+                .willReturn(true);
+
+        assertDoesNotThrow(()->tccUtil.checkExistsTcc(tccCriado.getId()));
+        assertTrue(()->tccUtil.checkExistsTcc(tccCriado.getId()));
+
+
+        then(tccRepository).should(times(2))
+                .existsById(tccCriado.getId());
+    }
+
+    @Test
+    @DisplayName("Teste deve passar caso o tcc não exista na hora de sua criação")
+    public void devePassarCasoTccNaoExistaNaHoraDeSuaCriacao(){
+        var tccCriado = criarTcc();
+
+        given(tccRepository.existsById(tccCriado.getId())).willReturn(false);
+
+        assertTrue(()->tccUtil.checkExistsTccpParaCriacao(tccCriado.getId()));
+        assertDoesNotThrow(()->tccUtil.checkExistsTccpParaCriacao(tccCriado.getId()));
+
+        then(tccRepository).should(times(2)).existsById(tccCriado.getId());
+    }
+
+    @Test
+    @DisplayName("Teste deve lancar excecao caso o tcc exista na hora de sua criação")
+    public void deveLancarExececaoCasoTccExistaNaHoraDeSuaCriacao(){
+        var tccCriado = criarTcc();
+
+        given(tccRepository.existsById(tccCriado.getId())).willReturn(true);
+
+        assertThrows(TccExisteException.class,()->tccUtil.checkExistsTccpParaCriacao(tccCriado.getId()));
+
+        then(tccRepository).should(times(1)).existsById(tccCriado.getId());
+    }
+
+    @Test
+    @DisplayName("Teste deve passar caso encontre o tcc")
+    public void devePassarAoBuscarUmTccPorId(){
+        var tccCriado = criarTcc();
+
+        given(tccRepository.findById(tccCriado.getId())).willReturn(Optional.of(tccCriado));
+
+        var tccEncontrado = tccUtil.buscarTcc(tccCriado.getId());
+        assertEquals(tccCriado, tccEncontrado);
+
+        then(tccRepository).should(times(1)).findById(tccCriado.getId());
+    }
+
+    @Test
+    @DisplayName("Testa se as instancias dos objetos sao diferentes mas o conteudo é igual na " +
+            "hora da construção de um molde para o tcc")
+    public void verificaSeAsInstanciasSaoDiferentesPoremConteudoIgual(){
+
+        var tccNovoCriado = criarTcc();
+        var tccAntigoCriado = criarOutroTcc();
+
+        var res = tccUtil.moldeBasicoTcc(tccAntigoCriado , tccNovoCriado);
+        assertNotSame(tccNovoCriado, res ,"As instancias devem ser diferentes");
+
+        assertEquals(tccNovoCriado.getId(), res.getId());
+        assertEquals(tccNovoCriado.getUsuario(), res.getUsuario());
+        assertEquals(tccNovoCriado.getTitulo(), res.getTitulo());
+        assertEquals(tccNovoCriado.getTema(), res.getTema());
+        assertEquals(tccNovoCriado.getCurso(), res.getCurso());
+
+    }
+
+    @Test
+    @DisplayName("Deve passar caso exista tcc no banco")
+    public void devePassarCasoExistaNaBanco(){
+
+        given(tccRepository.count()).willReturn(1L);
+        assertEquals(1L ,tccUtil.countDeTccs());
+
+        then(tccRepository).should(times(1)).count();
+    }
+
+    @Test
+    @DisplayName("Deve lancar excecao caso não exista tcc no banco")
+    public void deveLancarExcecaoCasoNaoExistaNaBanco(){
+
+        given(tccRepository.count()).willReturn(0L);
+        assertThrows(NaoExisteTccNoBancoException.class, ()->tccUtil.countDeTccs());
+
+        then(tccRepository).should(times(1)).count();
+    }
+
+    @Test
+    @DisplayName("Deve listar uma lista com um elemento ")
+    public void deveListarUmaListaComUmElemento(){
+        var tccCriado = criarTcc();
+        given(tccRepository.findAll()).willReturn(Collections.singletonList(tccCriado));
+        List<Tcc> listTcc = tccUtil.buscarTodosOsTcc();
+        assertTrue(listTcc.size()>0);
+        then(tccRepository).should(times(1)).findAll();
+    }
+
+    @Test
+    @DisplayName("Deve lancar excecao caso nao econtre tcc para ser relacioado a uma apresentacao")
+    public void deveLancarExcecaoCasoNaoEncontreTccParaSerRelacioado(){
+        given(tccRepository.countTccComApresentcao())
+                .willReturn(0L);
+        assertThrows(NaoExisteTccParaRelacionarComApresentacoesException.class,
+                ()->tccUtil.countDeTccsSemApresentacao());
+        then(tccRepository).should(times(1)).countTccComApresentcao();
+    }
+
+    @Test
+    @DisplayName("Deve passar caso econtre tcc para ser relacioado a uma apresentacao")
+    public void devePassarCasoEncontreTccParaSerRelacioado(){
+        given(tccRepository.countTccComApresentcao())
+                .willReturn(8L);
+        assertEquals(8,tccUtil.countDeTccsSemApresentacao());
+        then(tccRepository).should(times(2)).countTccComApresentcao();
+    }
+
+    @Test
+    @DisplayName("Deve retornar uma lista vazia com um tcc sem apresentacao")
+    public void deveLancarUmaListaVaziaTccSemApresentacao(){
+        var tccCriado = criarTcc();
+        given(tccRepository.listTccSemApresentcao()).willReturn(Collections.singletonList(tccCriado));
+        List<Tcc> listaTccSemApresentacao = tccUtil.listaDeTccSemApresentacao();
+        assertTrue(listaTccSemApresentacao.size()>0);
+        then(tccRepository).should(times(1)).listTccSemApresentcao();
+    }
+
+    @Test
+    @DisplayName("Deve funcionar caso o aluno tenha tcc relacionado a ele")
+    public void devePassarCasoAlunoTenhaTcc(){
+        var usuarioCriado = criarUsuarioProfessor();
+        given(tccRepository.buscaTccAluno(usuarioCriado.getIdUsuario()))
+                .willReturn(1L);
+        assertFalse(
+                ()->tccUtil.checkSeAlunoTemTccSemExecao(usuarioCriado)
+        );
+        then(tccRepository).should(times(1))
+                .buscaTccAluno(usuarioCriado.getIdUsuario());
+    }
+
+    @Test
+    @DisplayName("Deve funcionar caso o aluno não tenha tcc relacionado a ele")
+    public void devePassarCasoAlunoNaoTenhaTcc(){
+        var usuarioCriado = criarUsuarioProfessor();
+        given(tccRepository.buscaTccAluno(usuarioCriado.getIdUsuario()))
+                .willReturn(0L);
+        assertTrue(
+                ()->tccUtil.checkSeAlunoTemTccSemExecao(usuarioCriado)
+        );
+        then(tccRepository).should(times(1))
+                .buscaTccAluno(usuarioCriado.getIdUsuario());
+    }
+
+    @Test
+    @DisplayName("Deve passar ao remover um aluno de um tcc")
+    public void devePassarAoRemoverAlunoDeUmTcc(){
+        var alunoCriado = criaUsuario();
+
+        tccUtil.removendoAlunoDeUmTcc(alunoCriado.getIdUsuario());
+        then(tccRepository).should(times(1))
+                .removerDiscenteTcc(alunoCriado.getIdUsuario());
+    }
+
+    @Test
+    @DisplayName("Deve atualizar o relacionamento de um aluno antigo para um aluno novo ")
+    public void deveAtualizarRelacionamentoDeAlunosComUmTcc(){
+        var tccCriado = criarTcc();
+        var alunoNovoCriado = criaUsuario();
+
+        var resultado = tccUtil.trocandoORelacionamentoDeAlunoComTcc(tccCriado,alunoNovoCriado);
+
+        assertEquals(alunoNovoCriado, resultado.getUsuario());
+        assertEquals(tccCriado, resultado);
+        assertSame(tccCriado, resultado);
+
+        then(usuarioRepository).should(times(1)).save(alunoNovoCriado);
+
+     }
+
+    @Test
+    @DisplayName("Deve lancar excecao caso o aluno seja nulo ")
+    public void deveLancarExcecaoCasoAlunoSejaNulo(){
+        var tccCriado = criarTcc();
+        given(usuarioRepository.save(null)).willThrow(IllegalArgumentException.class);
+        assertThrows(IllegalArgumentException.class ,
+                ()->tccUtil.trocandoORelacionamentoDeAlunoComTcc(tccCriado,null));
+        then(usuarioRepository).should(times(1)).save(null);
+
+    }
+
+}

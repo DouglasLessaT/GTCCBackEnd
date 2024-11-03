@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import br.gtcc.gtcc.model.mysql.Usuario;
@@ -36,11 +37,14 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     List<Usuario> findProfessores();
 
     // Encontrar usuários sem TCC relacionado (assumindo a existência da tabela de relacionamento)
-    @Query("SELECT u FROM Usuario u WHERE NOT EXISTS (SELECT t FROM Tcc t WHERE t.usuario.id = u.id) AND 'ROLE_ALUNO' MEMBER OF u.permissoes")
+    @Query("SELECT u FROM Usuario u WHERE NOT EXISTS (SELECT t FROM Tcc t WHERE t.usuario.idUsuario = u.idUsuario) AND 'ROLE_ALUNO' MEMBER OF u.permissoes")
     List<Usuario> getUsersSemTccRelacionado();
 
     // Contar usuários sem TCC relacionado
-    @Query("SELECT COUNT(u) FROM Usuario u WHERE NOT EXISTS (SELECT t FROM Tcc t WHERE t.usuario.id = u.id) AND 'ROLE_ALUNO' MEMBER OF u.permissoes")
+    @Query("SELECT COUNT(u) FROM Usuario u WHERE NOT EXISTS (SELECT t FROM Tcc t WHERE u.idUsuario=:idAluno AND t.usuario.idUsuario = u.idUsuario) AND 'ROLE_ALUNO' MEMBER OF u.permissoes")
+    Long checkSeAlunoTemTcc(@Param("idAluno") Long idAluno);
+
+    @Query("SELECT COUNT(u) FROM Usuario u WHERE NOT EXISTS (SELECT t FROM Tcc t WHERE t.usuario.idUsuario = u.idUsuario) AND 'ROLE_ALUNO' MEMBER OF u.permissoes")
     Long countUsersSemTccRelacionado();
 
     // Contar todos os usuários com o tipo 'ALUNO'
