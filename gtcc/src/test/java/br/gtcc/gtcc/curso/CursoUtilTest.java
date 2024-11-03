@@ -50,7 +50,6 @@ import br.gtcc.gtcc.util.exceptions.IdInvalidoException;
 import br.gtcc.gtcc.util.exceptions.cursos.CursoInativoException;
 import br.gtcc.gtcc.util.exceptions.cursos.CursoNaoExisteExeception;
 import br.gtcc.gtcc.util.services.CursoUtil;
-import lombok.var;
 import lombok.extern.slf4j.Slf4j;
 
 @ExtendWith(MockitoExtension.class)
