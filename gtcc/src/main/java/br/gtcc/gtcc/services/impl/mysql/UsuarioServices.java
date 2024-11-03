@@ -195,4 +195,9 @@ public class UsuarioServices implements UsuarioInterface<Usuario, Long> {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'getEmail'");
   }
+
+public Usuario findByLogin(String login) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'findByLogin'");
+}
 }

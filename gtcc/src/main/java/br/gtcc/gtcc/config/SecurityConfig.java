@@ -1,18 +1,13 @@
 package br.gtcc.gtcc.config;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
@@ -24,17 +19,13 @@ import org.springframework.web.servlet.config.annotation.DefaultServletHandlerCo
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import br.gtcc.gtcc.config.handlers.LoginInterceptor;
-import br.gtcc.gtcc.model.UserType;
-import br.gtcc.gtcc.model.mysql.Usuario;
 import br.gtcc.gtcc.services.impl.mysql.UsuarioServices;
 import br.gtcc.gtcc.util.JWTUtil;
-import br.gtcc.gtcc.util.services.UsuarioUtil;
 
 @Configuration
 @EnableWebMvc
@@ -53,38 +44,38 @@ public class SecurityConfig implements WebMvcConfigurer {
             .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
-            )
-            .csrf().disable(); // Desativa a proteção CSRF, se necessário
-
+            ).csrf()
+            .disable(); // Desativa a proteção CSRF, se necessário
         return http.build();
     }
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor(userServices, null, jwtUtil))
                 .excludePathPatterns("/error**", "/index**", "/doc**", "/auth**", "/swagger-ui**")
                 .addPathPatterns(
-                    // "/coordenacao/tcc/v1/apresentacao",
-                    //     "/coordenacao/tcc/v1/apresentacao/**",
-                    //     "/coordenacao/tcc/v1/apresentacoes",
-                    //     "/coordenacao/tcc/v1/coordenador/alunos",
-                    //     "/coordenacao/tcc/v1/coordenador/professor",
-                    //     "/coordenacao/tcc/v1/coordenador/professores",
-                    //     "/coordenacao/tcc/v1/coordenador/usuario/**",
-                    //     "/coordenacao/tcc/v1/Professor/usuario/",
-                    //     "/coordenacao/tcc/v1/Professor/alunos",
-                    //     "/coordenacao/tcc/v1/Professor/aluno",
-                    //     "/coordenacao/tcc/v1/Professor/aluno/**",
-                    //     "/coordenacao/tcc/v1/Professor/",
-                    //     "/coordenacao/tcc/v1/agenda/**",
-                    //     "/coordenacao/tcc/v1/agenda",
-                    //     "/coordenacao/tcc/v1/agendas",
-                    //     "/coordenacao/tcc/v1/tcc",
-                    //     "/coordenacao/tcc/v1/tccs",
-                    //     "/coordenacao/tcc/v1/tcc/**",
-                    //     "/coordenacao/tcc/v1/usuario/**",
-                    //     "/coordenacao/tcc/v1/usuario",
-                    //     "/coordenacao/tcc/v1/usuarios"
+                    "/coordenacao/tcc/v1/apresentacao",
+                        "/coordenacao/tcc/v1/apresentacao/**",
+                        "/coordenacao/tcc/v1/apresentacoes",
+                        "/coordenacao/tcc/v1/coordenador/alunos",
+                        "/coordenacao/tcc/v1/coordenador/professor",
+                        "/coordenacao/tcc/v1/coordenador/professores",
+                        "/coordenacao/tcc/v1/coordenador/usuario/**",
+                        "/coordenacao/tcc/v1/Professor/usuario/",
+                        "/coordenacao/tcc/v1/Professor/alunos",
+                        "/coordenacao/tcc/v1/Professor/aluno",
+                        "/coordenacao/tcc/v1/Professor/aluno/**",
+                        "/coordenacao/tcc/v1/Professor/",
+                        "/coordenacao/tcc/v1/agenda/**",
+                        "/coordenacao/tcc/v1/agenda",
+                        "/coordenacao/tcc/v1/agendas",
+                        "/coordenacao/tcc/v1/tcc",
+                        "/coordenacao/tcc/v1/tccs",
+                        "/coordenacao/tcc/v1/tcc/**",
+                        "/coordenacao/tcc/v1/usuario/**",
+                        "/coordenacao/tcc/v1/usuario",
+                        "/coordenacao/tcc/v1/usuarios"
                         );
     }
 
