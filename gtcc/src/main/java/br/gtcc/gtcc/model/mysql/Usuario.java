@@ -71,7 +71,7 @@ public class Usuario {
     @NonNull
     @NotEmpty
     @Column(name = "telefone", nullable = false, length = 15)
-    //@Pattern(regexp = " \"\\\\(\\\\d{2}\\\\) \\\\d{4,5}-\\\\d{4}\"", message = "O número de telefone deve seguir o padrão brasileiro.")
+    @Pattern(regexp = "\\(\\d{2}\\) \\d{5}-\\d{4}", message = "O número de telefone deve seguir o padrão brasileiro.")
     private String telefone;
     
     @ElementCollection(fetch = FetchType.EAGER)

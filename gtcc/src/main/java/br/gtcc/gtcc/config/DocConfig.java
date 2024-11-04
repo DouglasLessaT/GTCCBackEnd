@@ -27,7 +27,7 @@ public class DocConfig {
                                                                                 .scheme("Bearer")
                                                                                 .bearerFormat("JWT")))
                                 .info(new Info()
-                                                .title("API em NoSQL Neo4j GTCC")
+                                                .title("API em MySql GTCC")
                                                 .version("0.0.1")
                                                 .contact(new Contact().email("vix.bay.group@gmail.com")
                                                                 .name("Arthur, Alessandro Santos, Hugo da Cruz, Douglas Lessa, Pedro Pompermayer, Samuel Paviotti"))

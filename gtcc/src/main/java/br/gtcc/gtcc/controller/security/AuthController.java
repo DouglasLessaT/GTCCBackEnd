@@ -26,6 +26,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/auth")
@@ -40,10 +43,12 @@ public class AuthController extends DefaultController {
  @Autowired
  PasswordEncoder passwordEncoder;
 
+ private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+
+ @CrossOrigin(origins = "*", allowedHeaders = "*")
  @PostMapping("/login")
  public ResponseEntity<String> login(@RequestParam String login, @RequestParam String senha, HttpServletRequest request) throws JsonProcessingException {
     Usuario user = userRepository.findByLogin(login);
-
   if (user == null) {
    request.setAttribute("jakarta.servlet.error.status_code", 400);
    throw new RuntimeException("Usuário não encontrado");
@@ -61,6 +66,8 @@ public class AuthController extends DefaultController {
    
    claims.put("PERMISSOES", listaPermissoes);
    String jwttoken = jwtUtil.geraTokenUsuario(login, claims);
+
+   logger.info("JWT gerado: {}", jwttoken);
 
    Map<String, Object> retorno = new HashMap<>();
    retorno.put("login", login);
