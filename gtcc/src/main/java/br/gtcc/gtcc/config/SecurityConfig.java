@@ -3,6 +3,7 @@ package br.gtcc.gtcc.config;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -39,6 +40,7 @@ import br.gtcc.gtcc.util.services.UsuarioUtil;
 @Configuration
 @EnableWebMvc
 @EnableWebSecurity
+@Slf4j
 public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
     
     @Autowired
@@ -65,7 +67,7 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
                 admin.setLogin("admin");
                 admin.setEmail("admin@gmail.com");
                 admin.setSenha(passwordEncoder().encode("1234"));
-                admin.setTelefone("(11) 00000-0000");
+                admin.setTelefone("(82) 98578-4853");
                 admin.setDataNascimento("1980-01-01");
                 admin.setAtivo(1);
                 admin.getPermissoes().add("ROLE_USER");
@@ -85,7 +87,7 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
                 professor.setLogin("professor");
                 professor.setEmail("professor@gmail.com");
                 professor.setSenha(passwordEncoder().encode("1234"));
-                professor.setTelefone("(11) 11111-1111");
+                professor.setTelefone("(31) 2852-0527");
                 professor.setDataNascimento("1985-01-01");
                 professor.setAtivo(1);
                 professor.getPermissoes().add("ROLE_USER");
@@ -102,7 +104,7 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
                 coordenador.setLogin("coordenador");
                 coordenador.setEmail("coordenador@gmail.com");
                 coordenador.setSenha(passwordEncoder().encode("1234"));
-                coordenador.setTelefone("(11) 22222-2222");
+                coordenador.setTelefone("(31) 98252-0527");
                 coordenador.setDataNascimento("1990-01-01");
                 coordenador.setAtivo(1);
                 coordenador.getPermissoes().add("ROLE_USER");
@@ -119,7 +121,7 @@ public class SecurityConfig implements CommandLineRunner, WebMvcConfigurer {
                 aluno.setLogin("aluno");
                 aluno.setEmail("aluno@gmail.com");
                 aluno.setSenha(passwordEncoder().encode("1234"));
-                aluno.setTelefone("(11) 33333-3333");
+                aluno.setTelefone("(82) 3994-1082");
                 aluno.setDataNascimento("1995-01-01");
                 aluno.setAtivo(1);
                 aluno.getPermissoes().add("ROLE_USER");
