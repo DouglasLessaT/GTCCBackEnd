@@ -18,18 +18,14 @@ import br.gtcc.gtcc.util.exceptions.tcc.TccExisteException;
 import br.gtcc.gtcc.util.exceptions.tcc.TccNaoExisteException;
 import br.gtcc.gtcc.util.exceptions.usuario.AlunoTemTccException;
 import br.gtcc.gtcc.util.exceptions.usuario.UsuarioNaoAlunoException;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.weaver.ast.Var;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import br.gtcc.gtcc.model.UserType;
 import br.gtcc.gtcc.model.mysql.Curso;
 import br.gtcc.gtcc.model.mysql.Grupo;
 import br.gtcc.gtcc.model.mysql.Tcc;
@@ -52,14 +48,6 @@ public class  TccUtilTest {
 
     @Mock
     private UsuarioRepository usuarioRepository;
-
-    @BeforeEach
-    public void setUp(){
-        // MockitoAnnotations.openMocks(this);
-        // tccRepository = mock(TccRepository.class);
-        // usuarioRepository = mock(UsuarioRepository.class);
-        // tccUtil = new TccUtil(tccRepository, usuarioRepository);
-    }
 
     private Tcc criarTccNulo(){
         return null;
@@ -177,7 +165,10 @@ public class  TccUtilTest {
     @Test
     @DisplayName("Teste de exclusao de entidade com sucesso")
     public void exclusaoCorretaDeUmaEntidade(){
-        assertDoesNotThrow( ()->tccUtil.deleteTcc(null));
+
+        willThrow(new IllegalArgumentException()).given(tccRepository).deleteById(null);
+        
+        assertThrows(IllegalArgumentException.class, ()->tccUtil.deleteTcc(null));
     }
 
     @Test
