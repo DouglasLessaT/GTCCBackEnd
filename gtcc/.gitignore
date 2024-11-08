@@ -37,3 +37,6 @@ build/
 
 ## Zip files ##
 gtcc.zip
+
+## ENV file ##
+.env
