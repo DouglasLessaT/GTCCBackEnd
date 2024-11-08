@@ -82,8 +82,6 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
     
-
-
     private void addUsers() {
         try {
             // Verifica se o usuário Admin já existe no banco de dados
