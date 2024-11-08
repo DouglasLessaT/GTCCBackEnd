@@ -3,7 +3,7 @@ package br.gtcc.gtcc.util.services;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.LinkedList;
+//import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import br.gtcc.gtcc.model.UserType;
 import br.gtcc.gtcc.model.mysql.Usuario;
 import br.gtcc.gtcc.model.mysql.repository.UsuarioRepository;
+import br.gtcc.gtcc.util.exceptions.usuario.UsuarioNaoEcontradoException;
 
 @Component
 public class UsuarioUtil {
@@ -89,7 +90,7 @@ public class UsuarioUtil {
     }
 
     public Usuario buscaUsersById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        return repository.findById(id).orElseThrow(() -> new UsuarioNaoEcontradoException("Usuário não encontrado"));
     }
 
     public List<Usuario> buscarTodosUsuários() {
