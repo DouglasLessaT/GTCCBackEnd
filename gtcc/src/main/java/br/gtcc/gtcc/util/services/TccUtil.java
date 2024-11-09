@@ -95,21 +95,6 @@ public class TccUtil {
         return tcc;
     }
 
-    //Método vai buscar da tela GRUPO ainda inexistente
-    //Retorna false
-    // public Boolean isEqualsType(Usuario user){
-        
-    //     Boolean isEqualsAdmin = user.getUserType().equals(TYPE_ADMIN);
-    //     Boolean isEqualsProfessor = user.getUserType().equals(TYPE_PROFESSOR);
-    //     Boolean isEqualsCoordenador = user.getUserType().equals(TYPE_COORDENADOR);
-        
-    //     if(isEqualsAdmin || isEqualsProfessor || isEqualsCoordenador)
-    //         return true;
-
-    //     throw new RuntimeException("O Usuário é do tipo aluno, ele não pode criar um Tcc");
-        
-    // }
-
     public Boolean userTypeIsAluno(Usuario user){
         
         Boolean isAluno = user.getGrupo().getNome().equals(TYPE_ALUNO);

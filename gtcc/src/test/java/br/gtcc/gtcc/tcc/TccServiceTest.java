@@ -1,25 +1,19 @@
 package br.gtcc.gtcc.tcc;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import br.gtcc.gtcc.util.exceptions.usuario.UsuarioNaoAlunoException;
+import io.swagger.v3.oas.models.media.UUIDSchema;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -74,18 +68,6 @@ public class TccServiceTest {
         );
     }
 
-    private Tcc criarOutroTcc(){
-        return new Tcc(
-                2L,
-                "Análise de Sentimento em Redes Sociais Utilizando Processamento de Linguagem Natural",
-                "Processamento de Linguagem Natural",
-                "Este trabalho explora o uso de técnicas de NLP para análise de sentimentos em redes sociais...",
-                1,
-                criarUsuarioProfessor(),
-                criarOutroCurso()
-        );
-    }
-
     private Curso criarOutroCurso(){
         return new Curso(2L ,"ADM", 1);
     }
@@ -120,6 +102,22 @@ public class TccServiceTest {
              new Grupo(1L,"ALUNO",1),
              1
          );
+    }
+
+    private Usuario criaOutroUsuarioAluno() {
+        return new Usuario(
+                2L,
+                "Maria Souza",
+                "2021002",
+                "mariasouza",
+                "maria.souza@exemplo.com",
+                "2001-03-15",
+                "senhaSegura456",
+                "(13) 11111-1111",
+                List.of("ALUNO"),
+                new Grupo(1L, "ALUNO", 1),
+                1
+        );
     }
 
     private Usuario criarUsuarioProfessor(){
@@ -476,10 +474,210 @@ public class TccServiceTest {
         then(tccUtil).should(times(1)).buscarTccPorTitulo(tccCriado.getTitulo());
     }
 
-    //Teste de que adiciona aluno em tcc
     @Test
     @DisplayName("Deve testar se um aluno esta adicionado no tcc ")
     public void deveTestarSeUmaAlunoFoiAdicionadoNoTcc(){
-        
+
+        tccCriado = criarTccAlunoNulo();
+        var aluno = criaUsuario();
+        var idTcc = tccCriado.getId();
+        var idAluno =  aluno.getIdUsuario();
+
+        given(tccUtil.validaIdTcc(idTcc))
+                .willThrow(new IdInvalidoException("O id do Tcc informado é inválido"));
+        assertThrows( IdInvalidoException.class, () -> tccServices.adicionarAlunoEmTcc(idTcc, idAluno));
+        then(tccUtil).should(times(1)).validaIdTcc(idTcc);
+
+        reset(tccUtil);
+
+        given(tccUtil.validaIdTcc(idTcc)).willReturn(true);
+        given(tccUtil.checkExistsTcc(idTcc))
+                .willThrow(new TccNaoExisteException("Tcc não existe no banco"));
+        assertThrows(TccNaoExisteException.class,
+                ()->tccServices.adicionarAlunoEmTcc(idTcc, idAluno)
+        );
+        then(tccUtil).should(times(1)).validaIdTcc(idTcc);
+        then(tccUtil).should(times(1)).checkExistsTcc(idTcc);
+
+        reset(tccUtil);
+
+        given(tccUtil.validaIdTcc(idTcc)).willReturn(true);
+        given(tccUtil.checkExistsTcc(idTcc)).willReturn(true);
+        given(usuarioUtil.checkExistsUser(idAluno)).willThrow(new UsuarioNaoEcontradoException("Usuário não encontrado"));
+
+        assertThrows(UsuarioNaoEcontradoException.class ,
+                ()->tccServices.adicionarAlunoEmTcc(idTcc, idAluno)
+        );
+
+        then(tccUtil).should(times(1)).validaIdTcc(idTcc);
+        then(tccUtil).should(times(1)).checkExistsTcc(idTcc);
+        then(usuarioUtil).should(times(1)).checkExistsUser(idTcc);
+
+        reset(tccUtil,usuarioUtil);
+
+        given(tccUtil.validaIdTcc(idTcc)).willReturn(true);
+        given(tccUtil.checkExistsTcc(idTcc)).willReturn(true);
+        given(usuarioUtil.checkExistsUser(idAluno)).willReturn(true);
+        given(tccUtil.buscarTcc(idTcc)).willThrow(new NoSuchElementException());
+
+        assertThrows(NoSuchElementException.class ,
+                ()->tccServices.adicionarAlunoEmTcc(idTcc, idAluno)
+        );
+
+        then(tccUtil).should(times(1)).validaIdTcc(idTcc);
+        then(tccUtil).should(times(1)).checkExistsTcc(idTcc);
+        then(usuarioUtil).should(times(1)).checkExistsUser(idTcc);
+        then(tccUtil).should(times(1)).buscarTcc(idTcc);
+
+        reset(tccUtil,usuarioUtil);
+
+        given(usuarioUtil.buscaUsersById(idTcc)).willThrow(new UsuarioNaoEcontradoException("Usuário não encontrado"));
+        assertThrows(UsuarioNaoEcontradoException.class,()->tccServices.adicionarAlunoEmTcc(idTcc, idAluno));
+        then(usuarioUtil).should(times(1)).buscaUsersById(idTcc);
+
+        reset(tccUtil,usuarioUtil);
+
+        given(usuarioUtil.buscaUsersById(idTcc)).willReturn(aluno);
+        given(tccUtil.userTypeIsAluno(aluno)).willThrow(new UsuarioNaoAlunoException("O Usuário não é do tipo aluno"));
+
+        assertThrows(UsuarioNaoAlunoException.class,()->tccServices.adicionarAlunoEmTcc(idTcc, idAluno));
+
+        then(usuarioUtil).should(times(1)).buscaUsersById(idTcc);
+        then(tccUtil).should(times(1)).userTypeIsAluno(aluno);
+
+        reset(tccUtil, usuarioUtil);
+
+        given(usuarioUtil.buscaUsersById(idTcc)).willReturn(aluno);
+        given(tccUtil.buscarTcc(idTcc)).willReturn(tccCriado);
+        given(tccUtil.adicionarAlunoEmTcc(tccCriado, aluno)).willReturn(aluno);
+        tccServices.adicionarAlunoEmTcc(idTcc ,idAluno);
+        Usuario alunoAdded = tccUtil.adicionarAlunoEmTcc(tccCriado, aluno);
+        assertEquals(aluno, alunoAdded);
+        assertSame(aluno, alunoAdded);
+
+        then(usuarioUtil).should(times(1)).buscaUsersById(idTcc);
+        then(tccUtil).should(times(1)).buscarTcc(idTcc);
+
+        reset(tccUtil, usuarioUtil);
+        assertDoesNotThrow(()->tccServices.adicionarAlunoEmTcc(idTcc ,idAluno));
+    }
+
+    @Test
+    @DisplayName("Testa não troca de alunos se forem iguais durante a atualização do Tcc ")
+    public void testeAtualizaçãoTcc(){
+        tccCriado = criarTcc();
+        var aluno = criaUsuario();
+        var idTcc = tccCriado.getId();
+        var idAluno =  aluno.getIdUsuario();
+
+        var tccRepo = criarTcc();
+        tccRepo.setUsuario(criaOutroUsuarioAluno());
+
+        given(usuarioUtil.buscaUsersById(idAluno)).willReturn(aluno);
+        given(tccUtil.buscarTcc(idTcc)).willReturn(tccCriado);
+        given(tccUtil.moldeBasicoTcc(tccCriado, tccCriado)).willReturn(tccCriado);
+
+        tccServices.updateTCC(tccCriado, idTcc);
+
+        then(usuarioUtil).should(times(1)).buscaUsersById(idTcc);
+        then(tccUtil).should(times(1)).buscarTcc(idTcc);
+        then(tccUtil).should(times(1)).moldeBasicoTcc(tccCriado, tccCriado);
+        then(tccUtil).should(never()).checkSeAlunoTemTccSemExecao(aluno);
+        then(tccUtil).should(never()).removendoAlunoDeUmTcc(idAluno);
+        then(tccUtil).should(never()).trocandoORelacionamentoDeAlunoComTcc(tccRepo, aluno);
+
+    }
+
+    @Test
+    @DisplayName("Testa troca de alunos se forem diferentes durante a atualização do Tcc ")
+    public void testeAtualizaçãoTccCasoAlunosSejamDiferentes(){
+        tccCriado = criarTcc();
+        var aluno = criaUsuario();
+        var idTcc = tccCriado.getId();
+        var idAluno =  aluno.getIdUsuario();
+
+        var tccRepo = criarTcc();
+        tccRepo.setUsuario(criaOutroUsuarioAluno());
+
+        given(usuarioUtil.buscaUsersById(idAluno)).willReturn(aluno);
+        given(tccUtil.buscarTcc(idTcc)).willReturn(tccRepo);
+        given(tccUtil.moldeBasicoTcc(tccRepo, tccCriado)).willReturn(tccRepo);
+
+        tccServices.updateTCC(tccCriado, idTcc);
+
+        then(usuarioUtil).should(times(1)).buscaUsersById(idTcc);
+        then(tccUtil).should(times(1)).buscarTcc(idTcc);
+        then(tccUtil).should(times(1)).moldeBasicoTcc(tccRepo, tccCriado);
+        then(tccUtil).should(times(1)).checkSeAlunoTemTccSemExecao(aluno);
+        then(tccUtil).should(times(1)).removendoAlunoDeUmTcc(idAluno);
+        then(tccUtil).should(times(1)).trocandoORelacionamentoDeAlunoComTcc(tccRepo, aluno);
+
+        reset(tccUtil, usuarioUtil);
+
+        given(usuarioUtil.buscaUsersById(idAluno)).willReturn(aluno);
+        given(tccUtil.buscarTcc(idTcc)).willReturn(tccRepo);
+        given(tccUtil.moldeBasicoTcc(tccRepo, tccCriado)).willReturn(tccRepo);
+        given(tccUtil.checkSeAlunoTemTccSemExecao(aluno)).willReturn(true);
+
+        tccServices.updateTCC(tccCriado, idTcc);
+
+        then(usuarioUtil).should(times(1)).buscaUsersById(idTcc);
+        then(tccUtil).should(times(1)).buscarTcc(idTcc);
+        then(tccUtil).should(times(1)).moldeBasicoTcc(tccRepo, tccCriado);
+        then(tccUtil).should(times(1)).checkSeAlunoTemTccSemExecao(aluno);
+        then(tccUtil).should(never()).removendoAlunoDeUmTcc(idAluno);
+        then(tccUtil).should(times(1)).trocandoORelacionamentoDeAlunoComTcc(tccRepo, aluno);
+
+        reset(tccUtil, usuarioUtil);
+
+        given(usuarioUtil.buscaUsersById(idAluno)).willReturn(aluno);
+        given(tccUtil.buscarTcc(idTcc)).willReturn(tccRepo);
+        given(tccUtil.moldeBasicoTcc(tccRepo, tccCriado)).willReturn(tccRepo);
+        given(tccUtil.checkSeAlunoTemTccSemExecao(aluno)).willReturn(false);
+        willDoNothing().given(tccUtil).removendoAlunoDeUmTcc(idAluno);
+        given(tccUtil.trocandoORelacionamentoDeAlunoComTcc(tccRepo, aluno)).willReturn(tccRepo);
+        given(tccUtil.salvarTcc(tccRepo)).willReturn(tccRepo);
+
+        tccServices.updateTCC(tccCriado, idTcc);
+
+        then(usuarioUtil).should(times(1)).buscaUsersById(idTcc);
+        then(tccUtil).should(times(1)).buscarTcc(idTcc);
+        then(tccUtil).should(times(1)).moldeBasicoTcc(tccRepo, tccCriado);
+        then(tccUtil).should(times(1)).checkSeAlunoTemTccSemExecao(aluno);
+        then(tccUtil).should(times(1)).removendoAlunoDeUmTcc(idAluno);
+        then(tccUtil).should(times(1)).trocandoORelacionamentoDeAlunoComTcc(tccRepo, aluno);
+        then(tccUtil).should(times(1)).salvarTcc(tccRepo);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -69,7 +69,7 @@ public class TccServices implements TccInterface<Tcc, Long> {
             
             Boolean checkSeAlunoTemTcc = this.tccUtil.checkSeAlunoTemTccSemExecao(aluno);
             
-            if( !checkSeAlunoTemTcc)
+            if( !checkSeAlunoTemTcc )
 
                 this.tccUtil.removendoAlunoDeUmTcc(idAluno);
             
@@ -147,11 +147,9 @@ public class TccServices implements TccInterface<Tcc, Long> {
    public Tcc adicionarAlunoEmTcc(Long idTcc ,Long idAluno){
 
         this.tccUtil.validaIdTcc(idAluno);
-
         this.tccUtil.checkExistsTcc(idTcc);
         this.userUtil.checkExistsUser(idAluno);
 
-        
         Tcc tcc = this.tccUtil.buscarTcc(idTcc);
         Usuario aluno = this.userUtil.buscaUsersById(idAluno);
         this.tccUtil.userTypeIsAluno(aluno);

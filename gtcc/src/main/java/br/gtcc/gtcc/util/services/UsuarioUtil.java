@@ -84,7 +84,7 @@ public class UsuarioUtil {
 
     public Boolean checkExistsUser(Long id) {
         if (!repository.existsById(id)) {
-            throw new RuntimeException("Usuário não existe no banco");
+            throw new UsuarioNaoEcontradoException("Usuário não encontrado");
         }
         return true;
     }
