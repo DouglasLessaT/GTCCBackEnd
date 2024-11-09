@@ -120,9 +120,6 @@ public class ApresentacaoUtil {
         return;
     }
 
-
-    
-
     //Talves não tenha necessidade desse método 
     // public Boolean countConflitosDentroDeTccUpdate(Long id){
     //     Boolean existsConlictTcc = this.repository.countConflictTccs(id) > 1;
