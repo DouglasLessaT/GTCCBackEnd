@@ -14,7 +14,7 @@ import org.springframework.core.annotation.Order;
 
 @Configuration
 @Order(2)
-public class DocConfig {
+public class  DocConfig {
         @Bean
         public OpenAPI customOpenAPI() {
                 return new OpenAPI()

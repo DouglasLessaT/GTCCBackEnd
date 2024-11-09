@@ -1,6 +1,9 @@
 package br.gtcc.gtcc.config;
 
 import java.util.List;
+
+import br.gtcc.gtcc.model.mysql.repository.UsuarioRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,44 +31,29 @@ import br.gtcc.gtcc.config.handlers.LoginInterceptor;
 import br.gtcc.gtcc.services.impl.mysql.UsuarioServices;
 import br.gtcc.gtcc.util.JWTUtil;
 
-@Configuration
-@EnableWebMvc
 @EnableWebSecurity
+@RequiredArgsConstructor
+@Configuration
 public class SecurityConfig implements WebMvcConfigurer {
 
-    @Autowired
-    JWTUtil jwtUtil;
-    @Autowired
-    private UsuarioServices userServices;
+    private final JWTUtil jwtUtil;
+
+    private final UsuarioServices userServices;
+    private final UsuarioRepository usuarioRepository;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/auth/**", "/auth/login").permitAll()
-                        .anyRequest().authenticated())
-                .csrf().disable()
-                .cors().and() // Habilita CORS
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .authorizeRequests()
+                .anyRequest().permitAll()
+                .and()
+                .csrf().disable();
         return http.build();
-    }
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*");
-            }
-        };
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor(userServices, null, jwtUtil))
+        registry.addInterceptor(new LoginInterceptor(userServices, usuarioRepository, jwtUtil))
                 .excludePathPatterns("/error**",
                         "/index**",
                         "/doc**",
@@ -73,7 +61,10 @@ public class SecurityConfig implements WebMvcConfigurer {
                         "/auth/login",
                         "/swagger-ui/**",
                         "/v3/api-docs/**")
-                .addPathPatterns("/coordenacao/tcc/v1/**");
+                .addPathPatterns(
+                        "/coordenacao/tcc/v1/**",
+                        ""
+                );
     }
 
     @Override
