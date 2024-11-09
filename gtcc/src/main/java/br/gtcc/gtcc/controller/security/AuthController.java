@@ -1,5 +1,7 @@
 package br.gtcc.gtcc.controller.security;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,18 +34,17 @@ import org.slf4j.LoggerFactory;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
+@Slf4j
 public class AuthController extends DefaultController {
 
- @Autowired
- JWTUtil jwtUtil;
+ private final JWTUtil jwtUtil;
 
- @Autowired
- UsuarioRepository userRepository;
+ private final UsuarioRepository userRepository;
 
- @Autowired
- PasswordEncoder passwordEncoder;
+ private final PasswordEncoder passwordEncoder;
 
- private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+// private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
  @CrossOrigin(origins = "*", allowedHeaders = "*")
  @PostMapping("/login")
@@ -67,7 +68,7 @@ public class AuthController extends DefaultController {
    claims.put("PERMISSOES", listaPermissoes);
    String jwttoken = jwtUtil.geraTokenUsuario(login, claims);
 
-   logger.info("JWT gerado: {}", jwttoken);
+   log.info("JWT gerado: {}", jwttoken);
 
    Map<String, Object> retorno = new HashMap<>();
    retorno.put("login", login);

@@ -1,5 +1,6 @@
 package br.gtcc.gtcc.controller;
 
+import br.gtcc.gtcc.annotations.ValidaAcesso;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,14 +25,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
-@RequestMapping("/api/curso")
+@RequestMapping("coordenacao/tcc/v1")
+@ValidaAcesso("ROLE_COORDENADOR")
 @RequiredArgsConstructor
 public class CursoController {
 
     private final CursoInterface cursoInterface;
 
     @SuppressWarnings("unchecked")
-    @PostMapping("/")
+    @PostMapping("/curso/")
     public ResponseEntity<Object> criacaoDeCurso(@RequestBody Curso curso) {
         Console.log("Teste rota de criação de curso");
         Optional<Curso> cursoCriado = Optional.of( (Curso) cursoInterface.criarCurso(curso) );   
@@ -39,7 +41,7 @@ public class CursoController {
     }
 
     @SuppressWarnings("unchecked")
-    @PutMapping("/{id}")
+    @PutMapping("/curso/{id}")
     public ResponseEntity<Object> atualizacaDeCurso(@PathVariable Long id, @RequestBody Curso curso) {
         Console.log("Teste rota de update o de curso");
         Optional<Curso> cursoAlterado = Optional.of( (Curso) cursoInterface.alterarCurso(id ,curso) );   
@@ -47,7 +49,7 @@ public class CursoController {
     }
 
     @SuppressWarnings("unchecked")
-    @GetMapping("/")
+    @GetMapping("/curso/")
     public ResponseEntity<Object> listarCursos() {
         Console.log("Teste rota de listagem de curso");
         Optional<List<Curso>> listaDeCurso = Optional.of( (List<Curso>) cursoInterface.listaCursos() );   
@@ -55,7 +57,7 @@ public class CursoController {
     }
 
     @SuppressWarnings("unchecked")
-    @GetMapping("/{id}")
+    @GetMapping("/curso/{id}")
     public ResponseEntity<Object> buscarCurso(@RequestParam Long id) {
         Console.log("Teste rota de busca de curso");
         Optional<Curso> cursoEcontrado = Optional.of( (Curso) cursoInterface.buscarCurso(id) );   
@@ -63,7 +65,7 @@ public class CursoController {
     }
 
     @SuppressWarnings("unchecked")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/curso/{id}")
     public ResponseEntity<Object> deletarCurso(@RequestParam Long idCurso) {
         Console.log("Teste rota de deletar de curso");
         Optional<Curso> cursoEcontrado = Optional.of( (Curso) cursoInterface.deletarCurso(idCurso) );   
