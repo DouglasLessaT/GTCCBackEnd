@@ -16,18 +16,21 @@ public class ConviteService implements ConviteInterface<Convite, Long> {
 
     @Autowired
     private ConviteRepository conviteRepository;
-
+    
     @Override
     public Convite enviarConvite(Convite convite) {
-        convite.setStatus(StatusConvite.INVITED);
+        conviteRepository.findByStatus(StatusConvite.INVITED);
         convite.setCriacaoConvite(LocalDateTime.now());
         return conviteRepository.save(convite);
     }
 
     @Override
     public Convite aceitarConvite(Long conviteId) {
-        Convite convite = conviteRepository.findById(conviteId)
-                .orElseThrow(() -> new RuntimeException("Convite não encontrado"));
+    Convite convite = conviteRepository.findById(conviteId)
+        .orElseThrow(() -> new RuntimeException("Convite não encontrado"));
+
+        validarDatas(convite.getCriacaoConvite(), LocalDateTime.now(), convite.getValidateDate());
+
         convite.setStatus(StatusConvite.ACCEPTED);
         convite.setAcceptedDate(LocalDateTime.now());
         return conviteRepository.save(convite);
@@ -37,6 +40,9 @@ public class ConviteService implements ConviteInterface<Convite, Long> {
     public Convite visualizarConvite(Long conviteId) {
         Convite convite = conviteRepository.findById(conviteId)
                 .orElseThrow(() -> new RuntimeException("Convite não encontrado"));
+
+        validarDatas(convite.getCriacaoConvite(), LocalDateTime.now(), null);
+
         convite.setStatus(StatusConvite.VIEWED);
         convite.setValidateDate(LocalDateTime.now());
         return conviteRepository.save(convite);
@@ -46,6 +52,9 @@ public class ConviteService implements ConviteInterface<Convite, Long> {
     public Convite recusarConvite(Long conviteId) {
         Convite convite = conviteRepository.findById(conviteId)
                 .orElseThrow(() -> new RuntimeException("Convite não encontrado"));
+
+        validarDatas(convite.getCriacaoConvite(), LocalDateTime.now(), convite.getValidateDate());
+
         convite.setStatus(StatusConvite.DENIED);
         convite.setValidateDate(LocalDateTime.now());
         return conviteRepository.save(convite);
@@ -55,16 +64,29 @@ public class ConviteService implements ConviteInterface<Convite, Long> {
     public Convite atualizarConvite(Convite convite, Long conviteId) {
         Convite conviteExistente = conviteRepository.findById(conviteId)
                 .orElseThrow(() -> new RuntimeException("Convite não encontrado"));
+
+        validarDatas(conviteExistente.getCriacaoConvite(), convite.getValidateDate(), convite.getAcceptedDate());
+
         conviteExistente.setStatus(convite.getStatus());
         conviteExistente.setValidateDate(LocalDateTime.now());
         return conviteRepository.save(conviteExistente);
+        
+    }
+
+    private void validarDatas(LocalDateTime criacaoConvite, LocalDateTime validateDate, LocalDateTime acceptedDate) {
+        if (validateDate != null && validateDate.isBefore(criacaoConvite)) {
+            throw new IllegalArgumentException("A data de visualização deve ser após a data de criação.");
+        }
+        if (acceptedDate != null && (acceptedDate.isBefore(criacaoConvite) || acceptedDate.isBefore(validateDate))) {
+            throw new IllegalArgumentException("A data de aceitação deve ser após a data de criação e a data de visualização.");
+        }
     }
 
     @Override
     public Convite deletarConvite(Long conviteId) {
         Convite convite = conviteRepository.findById(conviteId)
-                .orElseThrow(() -> new RuntimeException("Convite não encontrado"));
-        conviteRepository.delete(convite);
+        .orElseThrow(() -> new RuntimeException("Convite não encontrado"));
+        conviteRepository.deleteById(conviteId);
         return convite;
     }
 

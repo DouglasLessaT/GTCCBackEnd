@@ -2,6 +2,7 @@ package br.gtcc.gtcc.model.mysql;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -11,6 +12,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,19 +31,27 @@ public class Convite {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_grupo", nullable = false)
-    private Grupo grupo;
+    @JoinColumn(name = "id_usuario_destino", nullable = false)
+    private Usuario destino;
 
     @ManyToOne
-    @JoinColumn(name = "id_origem", nullable = false)
+    @JoinColumn(name = "id_usuario_origem", nullable = false)
     private Usuario origem;
+
+    @ManyToOne
+    @JoinColumn(name = "id_apresentacao", nullable = false)
+    private Apresentacao apresentacao;
 
     @Enumerated(EnumType.STRING)
     private StatusConvite status;
 
+    @NotNull
+    @PastOrPresent
     private LocalDateTime criacaoConvite;
 
+    @FutureOrPresent
     private LocalDateTime validateDate;
 
+    @FutureOrPresent
     private LocalDateTime acceptedDate;
 }
