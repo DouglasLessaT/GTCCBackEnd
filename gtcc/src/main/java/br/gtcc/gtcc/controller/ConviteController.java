@@ -98,4 +98,18 @@ public class ConviteController {
         List<Convite> convitesVisualizados = conviteService.getConvitesVisualizados();
         return new ResponseEntity<>(convitesVisualizados, HttpStatus.OK);
     }
+
+
+// POST /convites: Envia um novo convite.
+// PUT /convites/{id}/aceitar: Aceita um convite pelo id.
+// PUT /convites/{id}/visualizar: Marca um convite como visualizado.
+// PUT /convites/{id}/recusar: Recusa um convite.
+// PUT /convites/{id}: Atualiza um convite existente pelo id.
+// DELETE /convites/{id}: Deleta um convite pelo id.
+// GET /convites: Obtém todos os convites.
+// GET /convites/{id}: Obtém um convite específico pelo id.
+// GET /convites/pendentes: Lista convites pendentes.
+// GET /convites/aceitos: Lista convites aceitos.
+// GET /convites/recusados: Lista convites recusados.
+// GET /convites/visualizados: Lista convites visualizados.
 }
