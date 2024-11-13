@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("coordenacao/tcc/v1")
+@RequestMapping("coordenacao/tcc/v1/convites")
 @RequiredArgsConstructor
 public class GrupoController {
 

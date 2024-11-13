@@ -20,7 +20,7 @@ import br.gtcc.gtcc.services.impl.mysql.ConviteService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("coordenacao/tcc/v1")
+@RequestMapping("coordenacao/tcc/v1/grupos")
 @ValidaAcesso("ROLE_PROFESSOR")
 @RequiredArgsConstructor
 public class ConviteController {
