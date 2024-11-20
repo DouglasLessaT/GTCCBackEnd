@@ -40,7 +40,11 @@ List<Usuario> findProfessores();
 List<Usuario> getUsersSemTccRelacionado();
 
 // Contar usuários sem TCC relacionado
-@Query("SELECT COUNT(u) FROM Usuario u WHERE NOT EXISTS (SELECT t FROM Tcc t WHERE u.idUsuario=:idAluno AND t.usuario.idUsuario = u.idUsuario) AND 'ROLE_ALUNO' MEMBER OF u.permissoes")
+@Query("SELECT COUNT(u) FROM Usuario u " +
+        " WHERE EXISTS " +
+        "   (SELECT t FROM Tcc t " +
+        "       WHERE u.idUsuario=:idAluno AND t.usuario.idUsuario = u.idUsuario) " +
+        "       AND 'ROLE_ALUNO' MEMBER OF u.permissoes")
 Long checkSeAlunoTemTcc(@Param("idAluno") Long idAluno);
 
 @Query("SELECT COUNT(u) FROM Usuario u WHERE NOT EXISTS (SELECT t FROM Tcc t WHERE t.usuario.idUsuario = u.idUsuario) AND 'ROLE_ALUNO' MEMBER OF u.permissoes")

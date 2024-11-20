@@ -1,6 +1,9 @@
 package br.gtcc.gtcc.services.impl.mysql;
 
 import java.util.List;
+
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import br.gtcc.gtcc.model.mysql.Tcc;
@@ -11,6 +14,7 @@ import br.gtcc.gtcc.util.services.UsuarioUtil;
 import br.gtcc.gtcc.util.Console;
 
 @Service
+@Slf4j
 public class TccServices implements TccInterface<Tcc, Long> {
 
     @Autowired
@@ -33,12 +37,15 @@ public class TccServices implements TccInterface<Tcc, Long> {
 
         Usuario aluno = this.userUtil.buscaUsersById(idAluno);
 
+        this.tccUtil.checkSeAlunoTemTcc(aluno);
         tcc = this.tccUtil.adicionarAlunoNoTcc(tcc ,aluno);
 
-        this.tccUtil.checkSeAlunoTemTcc(aluno);
-
         this.userUtil.salvarUser(aluno);
-    
+
+        if(tcc.getCurso().getId() == null) {
+            tcc.setCurso(null);
+        }
+
         return this.tccUtil.salvarTcc(tcc);
 
     }

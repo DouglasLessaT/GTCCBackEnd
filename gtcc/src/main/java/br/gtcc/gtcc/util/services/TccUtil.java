@@ -10,6 +10,7 @@ import br.gtcc.gtcc.util.exceptions.tcc.TccExisteException;
 import br.gtcc.gtcc.util.exceptions.tcc.TccNaoExisteException;
 import br.gtcc.gtcc.util.exceptions.usuario.AlunoTemTccException;
 import br.gtcc.gtcc.util.exceptions.usuario.UsuarioNaoAlunoException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ import br.gtcc.gtcc.util.exceptions.usuario.OrientadorNaoEncontradoException;
 import lombok.RequiredArgsConstructor;
 import br.gtcc.gtcc.model.mysql.Usuario;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class TccUtil {
@@ -108,6 +110,7 @@ public class TccUtil {
 
     public Boolean checkSeAlunoTemTcc(Usuario aluno){
         Boolean isEqualsAZeroTccAluno =  usersRepository.checkSeAlunoTemTcc(aluno.getIdUsuario()) == 0;
+
         if(isEqualsAZeroTccAluno)
             return true;
         

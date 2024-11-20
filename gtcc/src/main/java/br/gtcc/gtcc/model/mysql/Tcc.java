@@ -49,7 +49,7 @@ public class Tcc {
 	@JoinColumn(name="id_discente")
     private Usuario usuario;
    
-    @ManyToOne(targetEntity=Curso.class, fetch=FetchType.EAGER)
-	@JoinColumn(name="id_curso")
+    @ManyToOne(targetEntity=Curso.class, fetch=FetchType.EAGER , optional = true)
+	@JoinColumn(name="id_curso", nullable = true)
     private Curso curso;
 }
