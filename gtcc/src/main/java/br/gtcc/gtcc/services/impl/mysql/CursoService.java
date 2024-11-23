@@ -2,6 +2,7 @@ package br.gtcc.gtcc.services.impl.mysql;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import br.gtcc.gtcc.model.mysql.Curso;
@@ -11,6 +12,7 @@ import br.gtcc.gtcc.util.services.CursoUtil;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class CursoService implements CursoInterface<Curso ,Long>{ 
 
@@ -19,6 +21,7 @@ public class CursoService implements CursoInterface<Curso ,Long>{
     @Override
     public Curso criarCurso(Curso curso) {
 
+        log.info("Teste do id do curso "+curso.toString());
         this.utilCurso.isAtivo(curso);
         this.utilCurso.validId(curso.getId());
         String tituloTrim = curso.getTitulo().toLowerCase().trim();
@@ -50,6 +53,7 @@ public class CursoService implements CursoInterface<Curso ,Long>{
         Long idOld = idCurso;
         Long newId = curso.getId();
         this.utilCurso.validIdForUpdate(newId);
+
         Curso curso_ = this.utilCurso.moldeCurso(curso);
         curso_.setId(idOld);
         this.utilCurso.salvarCurso(curso_);
