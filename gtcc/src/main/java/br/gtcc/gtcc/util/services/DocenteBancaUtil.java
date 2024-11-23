@@ -6,7 +6,7 @@ import javax.print.Doc;
 
 import org.springframework.stereotype.Component;
 
-import br.gtcc.gtcc.model.mysql.TipoDocente;
+
 import br.gtcc.gtcc.model.mysql.DocenteBanca;
 import br.gtcc.gtcc.model.mysql.Apresentacao;
 import br.gtcc.gtcc.model.mysql.Banca;

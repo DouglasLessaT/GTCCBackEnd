@@ -2,6 +2,7 @@ package br.gtcc.gtcc.model.mysql;
 
 import java.time.LocalDateTime;
 
+import br.gtcc.gtcc.model.mysql.StatusConvite;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -39,8 +40,8 @@ public class Convite {
     private Usuario origem;
 
     @ManyToOne
-    @JoinColumn(name = "id_apresentacao", nullable = false)
-    private Apresentacao apresentacao;
+    @JoinColumn(name = "id_docente_destino", nullable = false)
+    private DocenteBanca destinoDocente;
 
     @Enumerated(EnumType.STRING)
     private StatusConvite status;
