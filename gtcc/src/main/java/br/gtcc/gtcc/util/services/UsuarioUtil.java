@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import br.gtcc.gtcc.model.UserType;
 import br.gtcc.gtcc.model.mysql.Usuario;
+import br.gtcc.gtcc.model.UserType;
 import br.gtcc.gtcc.model.mysql.repository.UsuarioRepository;
 import br.gtcc.gtcc.util.exceptions.usuario.UsuarioNaoEcontradoException;
 
