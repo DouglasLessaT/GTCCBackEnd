@@ -56,7 +56,7 @@ public class DataInitializer implements CommandLineRunner {
     private void createGrupoIfNotExists(String groupNome) {
         Optional<Grupo> existingGroup = grupoRepository.findByNome(groupNome);
         if (existingGroup.isEmpty()) {
-            Grupo newGroup = new Grupo(null, groupNome, null);
+            Grupo newGroup = new Grupo(null, groupNome, 1);
             grupoRepository.save(newGroup);
             System.out.println("Grupo '" + groupNome + "' criado com sucesso.");
         } else {
@@ -87,6 +87,9 @@ public class DataInitializer implements CommandLineRunner {
             // Verifica se o usuário Admin já existe no banco de dados
             Optional<Usuario> existingAdmin = Optional.ofNullable(userUtil.findByLogin("admin"));
             if (existingAdmin.isEmpty()) {
+
+                Grupo grpAdmin = grupoRepository.findByNome("Admin Group").get();
+
                 Usuario admin = new Usuario();
                 admin.setNome("Admin");
                 admin.setMatricula("0001");
@@ -101,12 +104,15 @@ public class DataInitializer implements CommandLineRunner {
                 admin.getPermissoes().add("ROLE_PROFESSOR");
                 admin.getPermissoes().add("ROLE_COORDENADOR");
                 admin.getPermissoes().add("ROLE_ALUNO");
+                admin.setGrupo(grpAdmin);
                 userUtil.salvarUser(admin);
             }
 
             // Verifica se o usuário Professor já existe no banco de dados
             Optional<Usuario> existingProfessor = Optional.ofNullable(userUtil.findByLogin("professor"));
             if (existingProfessor.isEmpty()) {
+                Grupo grpProfessor = grupoRepository.findByNome("Professor Group").get();
+
                 Usuario professor = new Usuario();
                 professor.setNome("Professor");
                 professor.setMatricula("0002");
@@ -118,12 +124,16 @@ public class DataInitializer implements CommandLineRunner {
                 professor.setAtivo(1);
                 professor.getPermissoes().add("ROLE_USER");
                 professor.getPermissoes().add("ROLE_PROFESSOR");
+                professor.setGrupo(grpProfessor);
                 userUtil.salvarUser(professor);
             }
 
             // Verifica se o usuário Coordenador já existe no banco de dados
             Optional<Usuario> existingCoordinator = Optional.ofNullable(userUtil.findByLogin("coordenador"));
             if (existingCoordinator.isEmpty()) {
+
+                Grupo grpCoordenador = grupoRepository.findByNome("Coordenador Group").get();
+
                 Usuario coordenador = new Usuario();
                 coordenador.setNome("Coordenador");
                 coordenador.setMatricula("0003");
@@ -135,12 +145,16 @@ public class DataInitializer implements CommandLineRunner {
                 coordenador.setAtivo(1);
                 coordenador.getPermissoes().add("ROLE_USER");
                 coordenador.getPermissoes().add("ROLE_COORDENADOR");
+                coordenador.setGrupo(grpCoordenador);
                 userUtil.salvarUser(coordenador);
             }
 
             // Verifica se o usuário Aluno já existe no banco de dados
             Optional<Usuario> existingAluno = Optional.ofNullable(userUtil.findByEmail("aluno@gmail.com"));
             if (existingAluno.isEmpty()) {
+
+                Grupo grpAluno = grupoRepository.findByNome("Aluno Group").get();
+
                 Usuario aluno = new Usuario();
                 aluno.setNome("Aluno");
                 aluno.setMatricula("0004");
@@ -152,6 +166,7 @@ public class DataInitializer implements CommandLineRunner {
                 aluno.setAtivo(1);
                 aluno.getPermissoes().add("ROLE_USER");
                 aluno.getPermissoes().add("ROLE_ALUNO");
+                aluno.setGrupo(grpAluno);
                 userUtil.salvarUser(aluno);
             }
 
