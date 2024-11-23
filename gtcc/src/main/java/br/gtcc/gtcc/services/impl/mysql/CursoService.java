@@ -52,7 +52,7 @@ public class CursoService implements CursoInterface<Curso ,Long>{
         
         Long idOld = idCurso;
         Long newId = curso.getId();
-        this.utilCurso.validIdForUpdate(newId);
+        this.utilCurso.validId(newId);
 
         Curso curso_ = this.utilCurso.moldeCurso(curso);
         curso_.setId(idOld);

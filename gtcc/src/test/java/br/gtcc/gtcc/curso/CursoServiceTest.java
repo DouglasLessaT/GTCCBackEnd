@@ -182,7 +182,6 @@ public class CursoServiceTest {
         then(cursoUtil).should(times(1)).validIdForUpdate(oldId);
     }
 
-
     private Curso criarCursoInativo(){
         return new Curso(1L ,"S.I", 0);
     }

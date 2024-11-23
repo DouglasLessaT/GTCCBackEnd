@@ -25,9 +25,9 @@ public class CursoUtil {
     }
 
     public boolean validId(Long id){
-        if (id == null)
-            return true;
-        throw new IdInvalidoException("O id do Curso informado é inválido");
+        if (id != null)
+            throw new IdInvalidoException("O id do Curso informado é inválido");
+        return true;
     }
 
     public boolean validIdForUpdate(Long id){
