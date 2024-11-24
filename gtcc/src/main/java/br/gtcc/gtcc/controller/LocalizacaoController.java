@@ -5,12 +5,15 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import br.gtcc.gtcc.annotations.ValidaAcesso;
 import br.gtcc.gtcc.model.mysql.Localizacao;
 import br.gtcc.gtcc.services.spec.LocalizacaoInterface;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/localizacoes")
+@ValidaAcesso("ROLE_PROFESSOR")
+@RequestMapping("coordenacao/tcc/v1/localizacoes")
 @RequiredArgsConstructor
 public class LocalizacaoController {
     private final LocalizacaoInterface localizacaoService;
