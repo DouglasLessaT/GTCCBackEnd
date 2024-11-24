@@ -31,22 +31,18 @@ public class Apresentacao {
     private Long id;
     
     @NonNull
-    @NotEmpty
     @Column(name = "data", nullable = false, length = 10)
     private LocalDateTime data;
     
     @NonNull
-    @NotEmpty
     @Column(name = "hora_inicio", nullable = false, length = 5)
     private LocalTime horaInicio;
     
     @NonNull
-    @NotEmpty
     @Column(name = "hora_fim", nullable = false, length = 5)
     private LocalTime horaFim;
 
     @NonNull
-    @NotEmpty
     @Column(name = "data_criacao_apresentacao" , nullable = false , length = 5)
     private LocalDateTime dataCriacaoApresentacao;
 
