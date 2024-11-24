@@ -2,6 +2,7 @@ package br.gtcc.gtcc.services.impl.mysql;
 
 import java.util.List;
 
+import br.gtcc.gtcc.util.exceptions.IdInvalidoException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -33,8 +34,10 @@ public class CursoService implements CursoInterface<Curso ,Long>{
 
     @Override
     public Curso buscarCurso(Long id) {
-        
-        this.utilCurso.validId(id);
+
+        if(id == null)
+            throw new IdInvalidoException("O id do Curso informado é inválido");
+
         this.utilCurso.existeCurso(id);
         Curso curso = this.utilCurso.buscarCurso(id);
         return this.utilCurso.transferenciaDeObjeto(curso);
