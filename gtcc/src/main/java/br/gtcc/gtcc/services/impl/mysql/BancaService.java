@@ -35,27 +35,28 @@ public class BancaService {
         if(bancaRequest.getIdDocentesBanca() == null){
             throw new IdInvalidoException("A lista de id dos Docente Banca informado é inválida");
         }
-        if(bancaRequest.getIdDocentesBanca().isEmpty()){
-            throw new IdInvalidoException("A lista de id dos Docente Banca informado esta vazia");
+
+        var banca = new Banca();
+
+        if(!bancaRequest.getIdDocentesBanca().isEmpty()){
+            var docentesBanca = bancaRequest.getIdDocentesBanca()
+                    .stream()
+                    .map(
+                            (idDocente) -> docenteBancaRepository.findById(idDocente)
+                                    .orElseThrow(
+                                            ()->new DocenteBancaNaoExisteException("Docente Banca não encontrado")
+                                    )
+                    ).collect(Collectors.toList());
+            banca.setDocentes(docentesBanca);
+
         }
 
         var tcc = tccRepository.findById(bancaRequest.getIdTcc())
                 .orElseThrow(()->new TccNaoExisteException("Id do tcc informado não existe"));
 
-        var docentesBanca = bancaRequest.getIdDocentesBanca()
-                .stream()
-                    .map(
-                        (idDocente) -> docenteBancaRepository.findById(idDocente)
-                                .orElseThrow(
-                                        ()->new DocenteBancaNaoExisteException("Docente Banca não encontrado")
-                                )
-                ).collect(Collectors.toList());
-
-        var banca = new Banca();
 
         banca.setTcc(tcc);
         banca.setAtivo(bancaRequest.getAtivo());
-        banca.setDocentes(docentesBanca);
 
         return bancaRepository.save(banca);
 
@@ -69,29 +70,27 @@ public class BancaService {
         if(bancaRequest.getIdDocentesBanca() == null){
             throw new IdInvalidoException("A lista de id dos Docente Banca informado é inválida");
         }
-        if(bancaRequest.getIdDocentesBanca().isEmpty()){
-            throw new IdInvalidoException("A lista de id dos Docente Banca informado esta vazia");
-        }
 
         var banca = bancaRepository.findById(id)
                 .orElseThrow(
                         ()->new BancaNaoExisteException("A banca não existe")
                 );
-
-        var docentesBanca = bancaRequest.getIdDocentesBanca()
-                .stream()
-                .map(
-                        (idDocente) -> docenteBancaRepository.findById(idDocente)
-                                .orElseThrow(
-                                        ()->new DocenteBancaNaoExisteException("Docente Banca não encontrado")
-                                )
-                ).collect(Collectors.toList());
+        if(!bancaRequest.getIdDocentesBanca().isEmpty()){
+            var docentesBanca = bancaRequest.getIdDocentesBanca()
+                    .stream()
+                    .map(
+                            (idDocente) -> docenteBancaRepository.findById(idDocente)
+                                    .orElseThrow(
+                                            ()->new DocenteBancaNaoExisteException("Docente Banca não encontrado")
+                                    )
+                    ).collect(Collectors.toList());
+            banca.setDocentes(docentesBanca);
+        }
 
         var tcc = tccRepository.findById(bancaRequest.getIdTcc())
                         .orElseThrow(()->new TccNaoExisteException("Tcc informado não existe"));
 
         banca.setAtivo(bancaRequest.getAtivo());
-        banca.setDocentes(docentesBanca);
         banca.setTcc(tcc);
 
         return bancaRepository.save(banca);
