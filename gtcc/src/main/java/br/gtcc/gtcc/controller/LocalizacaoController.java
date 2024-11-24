@@ -2,6 +2,8 @@ package br.gtcc.gtcc.controller;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,12 +15,13 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @ValidaAcesso("ROLE_PROFESSOR")
+@Tag(name = "Localização Controller", description = "Endpoints para gerenciar localização, ao buscar uma localização ele tras todas as informações sobre andar, predio e sala")
 @RequestMapping("coordenacao/tcc/v1/localizacoes")
 @RequiredArgsConstructor
 public class LocalizacaoController {
     private final LocalizacaoInterface localizacaoService;
 
-    // Criar uma nova localização
+    @Operation(summary ="Dado um objeto localização e o id ele cria uma localização no banco")
     @PostMapping
     public ResponseEntity<Localizacao> criarLocalizacao(@RequestBody Localizacao localizacao) {
         try {
@@ -29,14 +32,14 @@ public class LocalizacaoController {
         }
     }
 
-    // Listar todas as localizações
+    @Operation(summary ="ELe lista todas as localizações do banco")
     @GetMapping
     public ResponseEntity<List<Localizacao>> listarLocalizacoes() {
         List<Localizacao> localizacoes = localizacaoService.listar();
         return ResponseEntity.ok(localizacoes);
     }
 
-    // Buscar localização por ID
+    @Operation(summary ="Dado um id ele busca a localização referente a esse id ")
     @GetMapping("/{id}")
     public ResponseEntity<Localizacao> buscarPorId(@PathVariable Long id) {
         try {
@@ -47,7 +50,7 @@ public class LocalizacaoController {
         }
     }
 
-    // Atualizar uma localização existente
+    @Operation(summary ="Dado um id e o objeto com as alterações ele buscar o objeto referente ao id e aplica as alterações do objeto que esta sendo passado")
     @PutMapping("/{id}")
     public ResponseEntity<Localizacao> atualizarLocalizacao(@PathVariable Long id, @RequestBody Localizacao localizacao) {
         try {
@@ -58,7 +61,7 @@ public class LocalizacaoController {
         }
     }
 
-    // Deletar uma localização
+    @Operation(summary ="Dado um id ele exclui a localiuzação do banco  ")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarLocalizacao(@PathVariable Long id) {
         try {
