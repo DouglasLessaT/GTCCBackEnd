@@ -1,5 +1,7 @@
 package br.gtcc.gtcc.controller.security;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 @CrossOrigin("*")
 @RestController
+@Tag(name="Auth Controller", description = "Essa rota trata da autenticação de acesso ao sistema.")
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Slf4j
@@ -44,8 +47,8 @@ public class AuthController extends DefaultController {
 
  private final PasswordEncoder passwordEncoder;
 
-// private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
-
+ @Operation(summary = "Essa rota trata da autenticação para possui acessa a manipulação as rotas dado um Login e senha ",
+ description = "Dado um login e senha é retornado o token para ser usado a cada requisição a API")
  @CrossOrigin(origins = "*", allowedHeaders = "*")
  @PostMapping("/login")
  public ResponseEntity<String> login(@RequestParam String login, @RequestParam String senha, HttpServletRequest request) throws JsonProcessingException {
