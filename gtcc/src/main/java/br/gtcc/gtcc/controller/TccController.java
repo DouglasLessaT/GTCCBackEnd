@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import br.gtcc.gtcc.util.UtilController;
 @CrossOrigin("*")
 @RestController
 @ValidaAcesso("ROLE_COORDENADOR")
+@Tag(name= "Tcc Controller" ,description = "Controller coltada para gerenciamento da criação de tcc tem relação com a entidade curso e usuario")
 @RequestMapping("coordenacao/tcc/v1")
 @RequiredArgsConstructor
 public class TccController {

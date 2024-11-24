@@ -7,6 +7,7 @@ import br.gtcc.gtcc.model.mysql.Tcc;
 import br.gtcc.gtcc.services.impl.mysql.BancaService;
 import br.gtcc.gtcc.util.UtilController;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @Slf4j
 @CrossOrigin("*")
 @RequiredArgsConstructor
+@Tag(name="Banca Controller",description = "Essa entidade abstrai a entidade tcc para complemnetar a entidade doencente banca")
 @RequestMapping("coordenacao/tcc/v1/banca")
 public class BancaController {
 
