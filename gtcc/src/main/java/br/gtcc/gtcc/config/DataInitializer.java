@@ -1,8 +1,14 @@
 package br.gtcc.gtcc.config;
 
+import br.gtcc.gtcc.controller.BancaController;
 import br.gtcc.gtcc.model.mysql.*;
-import br.gtcc.gtcc.model.mysql.repository.DocenteBancaRepository;
-import br.gtcc.gtcc.model.mysql.repository.TccRepository;
+import br.gtcc.gtcc.model.mysql.DTO.BancaRequest;
+import br.gtcc.gtcc.model.mysql.repository.*;
+import br.gtcc.gtcc.services.exception.DocenteBancaNaoExisteException;
+import br.gtcc.gtcc.services.exception.LocalizacaoNaoExisteException;
+import br.gtcc.gtcc.services.impl.mysql.BancaService;
+import br.gtcc.gtcc.services.impl.mysql.CursoService;
+import br.gtcc.gtcc.util.exceptions.tcc.TccNaoExisteException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +20,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import br.gtcc.gtcc.model.mysql.repository.GrupoRepository;
 import br.gtcc.gtcc.services.impl.mysql.TipoDocenteService;
 import br.gtcc.gtcc.services.impl.mysql.UsuarioServices;
 import br.gtcc.gtcc.util.services.UsuarioUtil;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Configuration
@@ -31,6 +39,10 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private UsuarioServices userServices;
+    @Autowired
+    private BancaController bancaController;
+    @Autowired
+    private ApresentacaoRepository apresentacaoRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -41,13 +53,22 @@ public class DataInitializer implements CommandLineRunner {
     private final GrupoRepository grupoRepository;
     private final TccRepository tccRepository;
     private final TipoDocenteService tipoDocenteService;
+    private final BancaService bancaService;
+    private final CursoService cursoService;
+    private final LocalizacaoRepository localizacaoRepository;
 
     public DataInitializer(
             GrupoRepository grupoRepository,
             TipoDocenteService tipoDocenteService,
             TccRepository tccRepository,
-            DocenteBancaRepository docenteBancaRepository
+            DocenteBancaRepository docenteBancaRepository,
+            BancaService bancaService,
+            CursoService cursoService,
+            LocalizacaoRepository localizacaoRepository
     ) {
+        this.localizacaoRepository = localizacaoRepository;
+        this.cursoService = cursoService;
+        this.bancaService = bancaService;
         this.docenteBancaRepository = docenteBancaRepository;
         this.tccRepository = tccRepository;
         this.grupoRepository = grupoRepository;
@@ -93,6 +114,19 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
 
+    public synchronized CommandLineRunner runCurso(){
+        return args -> {
+            criarCurso();
+        };
+    }
+
+    private void criarCurso() {
+        var curso = new Curso();
+        curso.setAtivo(1);
+        curso.setTitulo("SI (Sistema de Informação)");
+        cursoService.criarCurso(curso);
+    }
+
     public CommandLineRunner runTcc(){
         return args -> {
             criarTcc();
@@ -102,17 +136,35 @@ public class DataInitializer implements CommandLineRunner {
     private void criarTcc() {
 
         var usuario = userUtil.buscaUsersById(4L);
+        var curso = cursoService.buscarCurso(1L);
 
         var tcc = new Tcc();
-        tcc.setCurso(null);
+        tcc.setCurso(curso);
         tcc.setUsuario(usuario);
         tcc.setAtivo(1);
-        tcc.setTema("Como a baleia jubarte peida");
-        tcc.setResumo("Por que os JUDEUS são Ricos ?");
-        tcc.setTitulo("Como Baleias jubarte tem relação com JUDEUS ??");
+        tcc.setTema("Aplicação de Inteligência Artificial na Agricultura");
+        tcc.setResumo("Este trabalho analisa como técnicas de inteligência artificial podem ser aplicadas para otimizar práticas agrícolas, como monitoramento de plantações, previsão de colheitas e gestão de recursos hídricos. Além disso, aborda os desafios de implementação e os benefícios para a sustentabilidade.");
+        tcc.setTitulo("Inteligência Artificial na Agricultura: Otimização e Sustentabilidade");
 
         tccRepository.save(tcc);
 
+    }
+
+    public CommandLineRunner runBanca(){
+        return args -> {
+            criarBanca();
+        };
+    }
+
+    private void criarBanca() {
+
+        var tcc =  tccRepository.findById(1L).orElseThrow(()->new TccNaoExisteException());
+
+        var banca = new BancaRequest();
+        banca.setIdTcc(tcc.getId());
+        banca.setAtivo(1);
+
+        bancaService.create(banca);
     }
 
     public CommandLineRunner runDocenteBanca(){
@@ -123,6 +175,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private void criarDocenteBanca() {
 
+        var banca = bancaService.getById(1L);
         DocenteEnum docenteEnum = DocenteEnum.ORIENTADOR;
         var usuario = userUtil.buscaUsersById(2L);
         var docenteBanca = new DocenteBanca();
@@ -130,7 +183,7 @@ public class DataInitializer implements CommandLineRunner {
         docenteBanca.setAtivo(1);
         docenteBanca.setUsuario(usuario);
         docenteBanca.setTipoDocente(docenteEnum);
-        docenteBanca.setBanca(null);
+        docenteBanca.setBanca(banca);
 
         docenteBancaRepository.save(docenteBanca);
 
@@ -140,9 +193,51 @@ public class DataInitializer implements CommandLineRunner {
         _docenteBanca.setAtivo(1);
         _docenteBanca.setUsuario(usuario);
         _docenteBanca.setTipoDocente(_docenteEnum);
-        _docenteBanca.setBanca(null);
+        _docenteBanca.setBanca(banca);
 
         docenteBancaRepository.save(_docenteBanca);
+
+    }
+
+    public CommandLineRunner runLoacalizacao(){
+        return args -> {
+            criarLoacalizacao();
+        };
+    }
+
+    private void criarLoacalizacao() {
+
+        var localizacao = new Localizacao();
+
+        localizacao.setAtivo(1);
+        localizacao.setSala("319");
+        localizacao.setAndar("3 Andar");
+        localizacao.setPredio("Dom Bosco I");
+
+        localizacaoRepository.save(localizacao);
+    }
+
+    public CommandLineRunner runApresentacao(){
+        return args -> {
+            criarApresentacao();
+        };
+    }
+
+    private void criarApresentacao() {
+
+        var apresentacao = new Apresentacao();
+        var tcc = tccRepository.findById(1L).orElseThrow(()->new TccNaoExisteException());
+        var localizacao = localizacaoRepository.findById(1L).orElseThrow(()->new LocalizacaoNaoExisteException());
+
+        apresentacao.setAtivo(1);
+        apresentacao.setData(LocalDateTime.of(2024, 11, 15, 10, 0));
+        apresentacao.setHoraInicio(LocalTime.of(10, 30));
+        apresentacao.setHoraFim(LocalTime.of(12, 0));
+        apresentacao.setDataCriacaoApresentacao(LocalDateTime.now());
+        apresentacao.setLocalizacao(localizacao);
+        apresentacao.setTcc(tcc);
+
+        apresentacaoRepository.save(apresentacao);
 
     }
 
@@ -245,11 +340,19 @@ public class DataInitializer implements CommandLineRunner {
         if (userUtil == null || userServices == null) {
             System.err.println("Erro: userUtil ou userServices não foram injetados.");
         } else {
+
             runGrupo().run(args);
             addUsers();
 
+            runCurso().run(args);
             runTcc().run(args);
+
+            runLoacalizacao().run(args);
+            runApresentacao().run(args);
+
+            runBanca().run(args);
             runDocenteBanca().run(args);
+
         }
     }
 }
