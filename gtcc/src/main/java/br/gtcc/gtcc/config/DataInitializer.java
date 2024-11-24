@@ -1,16 +1,19 @@
 package br.gtcc.gtcc.config;
 
+import br.gtcc.gtcc.model.mysql.*;
+import br.gtcc.gtcc.model.mysql.repository.DocenteBancaRepository;
+import br.gtcc.gtcc.model.mysql.repository.TccRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import br.gtcc.gtcc.model.mysql.Grupo;
-import br.gtcc.gtcc.model.mysql.TipoDocente;
-import br.gtcc.gtcc.model.mysql.Usuario;
 import br.gtcc.gtcc.model.mysql.repository.GrupoRepository;
 import br.gtcc.gtcc.services.impl.mysql.TipoDocenteService;
 import br.gtcc.gtcc.services.impl.mysql.UsuarioServices;
@@ -20,8 +23,8 @@ import java.util.Optional;
 
 @Configuration
 @EnableWebMvc
+@Slf4j
 public class DataInitializer implements CommandLineRunner {
-
 
     @Autowired
     private UsuarioUtil userUtil;
@@ -29,22 +32,29 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private UsuarioServices userServices;
 
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    private final DocenteBancaRepository docenteBancaRepository;
     private final GrupoRepository grupoRepository;
+    private final TccRepository tccRepository;
     private final TipoDocenteService tipoDocenteService;
 
-    public DataInitializer(GrupoRepository grupoRepository, TipoDocenteService tipoDocenteService) {
+    public DataInitializer(
+            GrupoRepository grupoRepository,
+            TipoDocenteService tipoDocenteService,
+            TccRepository tccRepository,
+            DocenteBancaRepository docenteBancaRepository
+    ) {
+        this.docenteBancaRepository = docenteBancaRepository;
+        this.tccRepository = tccRepository;
         this.grupoRepository = grupoRepository;
         this.tipoDocenteService = tipoDocenteService;
     }
 
-    @Bean
-    public CommandLineRunner runGrupo() {
+    public synchronized CommandLineRunner runGrupo() {
         return args -> {
             createGrupoIfNotExists("Admin Group");
             createGrupoIfNotExists("Aluno Group");
@@ -65,6 +75,7 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     @Bean
+    @Order()
     public CommandLineRunner runTipoDocentes() {
         return args -> {
             createTipoDocenteIfNotExists("Membro", 1);
@@ -81,15 +92,69 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("TipoDocente '" + titulo + "' já existe.");
         }
     }
-    
-    private void addUsers() {
+
+    public CommandLineRunner runTcc(){
+        return args -> {
+            criarTcc();
+        };
+    }
+
+    private void criarTcc() {
+
+        var usuario = userUtil.buscaUsersById(4L);
+
+        var tcc = new Tcc();
+        tcc.setCurso(null);
+        tcc.setUsuario(usuario);
+        tcc.setAtivo(1);
+        tcc.setTema("Como a baleia jubarte peida");
+        tcc.setResumo("Por que os JUDEUS são Ricos ?");
+        tcc.setTitulo("Como Baleias jubarte tem relação com JUDEUS ??");
+
+        tccRepository.save(tcc);
+
+    }
+
+    public CommandLineRunner runDocenteBanca(){
+        return args -> {
+            criarDocenteBanca();
+        };
+    }
+
+    private void criarDocenteBanca() {
+
+        DocenteEnum docenteEnum = DocenteEnum.ORIENTADOR;
+        var usuario = userUtil.buscaUsersById(2L);
+        var docenteBanca = new DocenteBanca();
+
+        docenteBanca.setAtivo(1);
+        docenteBanca.setUsuario(usuario);
+        docenteBanca.setTipoDocente(docenteEnum);
+        docenteBanca.setBanca(null);
+
+        docenteBancaRepository.save(docenteBanca);
+
+        DocenteEnum _docenteEnum = DocenteEnum.ORIENTADOR;
+        var _docenteBanca = new DocenteBanca();
+
+        _docenteBanca.setAtivo(1);
+        _docenteBanca.setUsuario(usuario);
+        _docenteBanca.setTipoDocente(_docenteEnum);
+        _docenteBanca.setBanca(null);
+
+        docenteBancaRepository.save(_docenteBanca);
+
+    }
+
+    private synchronized void addUsers() {
         try {
             // Verifica se o usuário Admin já existe no banco de dados
             Optional<Usuario> existingAdmin = Optional.ofNullable(userUtil.findByLogin("admin"));
             if (existingAdmin.isEmpty()) {
 
+                log.info("Teste ");
                 Grupo grpAdmin = grupoRepository.findByNome("Admin Group").get();
-
+                log.info("Admin Group "+grpAdmin.toString() );
                 Usuario admin = new Usuario();
                 admin.setNome("Admin");
                 admin.setMatricula("0001");
@@ -180,7 +245,11 @@ public class DataInitializer implements CommandLineRunner {
         if (userUtil == null || userServices == null) {
             System.err.println("Erro: userUtil ou userServices não foram injetados.");
         } else {
+            runGrupo().run(args);
             addUsers();
+
+            runTcc().run(args);
+            runDocenteBanca().run(args);
         }
     }
 }
