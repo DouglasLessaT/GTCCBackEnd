@@ -1,6 +1,7 @@
 package br.gtcc.gtcc.model.mysql;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class Banca {
     @JoinColumn(name = "id_tcc")
     private Tcc tcc;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "banca", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DocenteBanca> docentes = new ArrayList<>(); // Lista de docentes que fazem parte da banca
 
