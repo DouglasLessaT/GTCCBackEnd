@@ -10,6 +10,7 @@ import br.gtcc.gtcc.util.exceptions.tcc.TccExisteException;
 import br.gtcc.gtcc.util.exceptions.tcc.TccNaoExisteException;
 import br.gtcc.gtcc.util.exceptions.usuario.AlunoTemTccException;
 import br.gtcc.gtcc.util.exceptions.usuario.UsuarioNaoAlunoException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,15 +26,18 @@ import br.gtcc.gtcc.util.exceptions.usuario.OrientadorNaoEncontradoException;
 import lombok.RequiredArgsConstructor;
 import br.gtcc.gtcc.model.mysql.Usuario;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class TccUtil {
 
-    private final String TYPE_COORDENADOR = "COORDENADOR";
-    private final String TYPE_PROFESSOR = "PROFESSOR";
-    private final String TYPE_ADMIN = "ADMIN";
-    private final String TYPE_ALUNO = "ALUNO";
- 
+    private final String TYPE_COORDENADOR = "Coordenador Group";
+    private final String TYPE_PROFESSOR = "Professor Group";
+    private final String TYPE_ADMIN = "Admin Group";
+    private final String TYPE_ALUNO = "Aluno Group";
+
+    private final String PERMISSION_ALUNO = "ROLE_ALUNO";
+
     public final TccRepository tccRepository;
 
     public final UsuarioRepository usersRepository;
@@ -98,8 +102,12 @@ public class TccUtil {
     public Boolean userTypeIsAluno(Usuario user){
         
         Boolean isAluno = user.getGrupo().getNome().equals(TYPE_ALUNO);
+
+        String permissionAluno = user.getPermissoes()
+                .stream()
+                .filter(permission -> permission.equals(PERMISSION_ALUNO)).toString();
         
-        if( isAluno )
+        if( isAluno  || !permissionAluno.isEmpty())
             return true;
 
         throw new UsuarioNaoAlunoException("O Usuário não é do tipo aluno");
@@ -108,6 +116,7 @@ public class TccUtil {
 
     public Boolean checkSeAlunoTemTcc(Usuario aluno){
         Boolean isEqualsAZeroTccAluno =  usersRepository.checkSeAlunoTemTcc(aluno.getIdUsuario()) == 0;
+
         if(isEqualsAZeroTccAluno)
             return true;
         
@@ -137,7 +146,6 @@ public class TccUtil {
 
     public Tcc moldeBasicoTcc(Tcc oldTcc ,Tcc newTcc){
 
-        oldTcc.setId(newTcc.getId());
         oldTcc.setUsuario(newTcc.getUsuario());
         oldTcc.setTitulo(newTcc.getTitulo());
         oldTcc.setTema(newTcc.getTema());

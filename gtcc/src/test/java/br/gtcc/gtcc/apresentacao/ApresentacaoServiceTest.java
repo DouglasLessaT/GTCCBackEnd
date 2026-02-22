@@ -40,7 +40,7 @@ import br.gtcc.gtcc.model.mysql.Tcc;
 import br.gtcc.gtcc.model.mysql.Usuario;
 import br.gtcc.gtcc.services.impl.mysql.ApresentacaoService;
 
-public class ApresentacaoTest {
+public class ApresentacaoServiceTest {
 
     private ApresentacaoService aprtService;
 

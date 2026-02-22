@@ -45,13 +45,10 @@ import br.gtcc.gtcc.util.exceptions.localizacao.LocalizacaoIndisponivelException
 import br.gtcc.gtcc.util.exceptions.tcc.TccJaTemApresentacaoException;
 import br.gtcc.gtcc.model.mysql.repository.ApresentacaoRepository;
 
-//@ExtendWith(MockitoExtension.class)
 public class ApresentcaoUtilTest {
 
-    //@InjectMocks
     private ApresentacaoUtil aprtUtil;
 
-    //@Mock
     private ApresentacaoRepository aprtRepository;
 
     private Apresentacao aprtCriada;

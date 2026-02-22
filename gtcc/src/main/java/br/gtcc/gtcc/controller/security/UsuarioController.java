@@ -3,6 +3,8 @@ package br.gtcc.gtcc.controller.security;
 import br.gtcc.gtcc.annotations.ValidaAcesso;
 import br.gtcc.gtcc.model.mysql.Usuario;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,8 @@ import java.util.Optional;
 @CrossOrigin("*")
 @RestController
 @ValidaAcesso("ROLE_ADMIN")
+@Tag(name="Usuario Controller",description = "Essa entidade so pode ser acessada pelo admin e realiza a crição de varios outros componentes como aluno, " +
+        "professor , e coordenador")
 @RequestMapping("coordenacao/tcc/v1")
 public class UsuarioController {
     
@@ -36,7 +40,8 @@ public class UsuarioController {
 
     @Autowired
     PasswordEncoder passwordEncoder;
-        
+
+    @Operation(summary ="Dado um objeto usuario ele criar um resgitro de um usuario sem realizar nenhum filtro")
     @PostMapping("/usuario")
     public ResponseEntity<Object> createUser(@RequestBody(required = true) Usuario users){
         
@@ -46,6 +51,7 @@ public class UsuarioController {
 
     }
 
+    @Operation(summary ="Dado um id do o usuario ele recupera ele do banco")
     @DeleteMapping("/usuario/{id}")
     public ResponseEntity<Object> deleteUsers(@PathVariable String id){
     
@@ -54,7 +60,8 @@ public class UsuarioController {
         return UtilController.buildResponseFromOptional( deletedUsers, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Usuário deletado com sucesso", "Erro ao deletar usuarios");
 
     }
-    
+
+    @Operation(summary ="Dado um objeto e o id ele busca o usuario referente ao id passado e ataliza com as informações com o objeto passado")
     @PutMapping("/usuario/{id}")
     public ResponseEntity<Object> updateUsers(@RequestBody(required = true) Usuario users ,@PathVariable("id") String id){
         
@@ -63,7 +70,8 @@ public class UsuarioController {
         return UtilController.buildResponseFromOptional( updatedUser, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Usuário alterado com sucesso", "Erro ao alterado usuarios");
 
     }
-    
+
+    @Operation(summary ="Essa rota busca todos os registro do banco dessa entidade")
     @GetMapping("/usuarios")
     public ResponseEntity<Object> getAllUsers(){
         
@@ -72,7 +80,8 @@ public class UsuarioController {
        return UtilController.buildResponseFromOptional( list, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de usuários", "Lista Vazia");
        
     }
-    
+
+    @Operation(summary ="Essa rota busca um usário pelo id")
     @GetMapping("/usuario/{id}")
     public ResponseEntity<Object> getUser(@PathVariable String id){
         

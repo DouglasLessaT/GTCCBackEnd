@@ -1,6 +1,9 @@
 package br.gtcc.gtcc.services.impl.mysql;
 
 import java.util.List;
+
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import br.gtcc.gtcc.model.mysql.Tcc;
@@ -11,6 +14,7 @@ import br.gtcc.gtcc.util.services.UsuarioUtil;
 import br.gtcc.gtcc.util.Console;
 
 @Service
+@Slf4j
 public class TccServices implements TccInterface<Tcc, Long> {
 
     @Autowired
@@ -26,26 +30,30 @@ public class TccServices implements TccInterface<Tcc, Long> {
         Long idTcc = tcc.getId();
 
         this.tccUtil.validaIdAluno(idAluno);
-        this.tccUtil.validaIdTccParaCriacao(idTcc);
+        //this.tccUtil.validaIdTccParaCriacao(idTcc);
 
         this.tccUtil.checkExistsTccpParaCriacao(idTcc);
         this.tccUtil.existsAluno(idAluno);
 
         Usuario aluno = this.userUtil.buscaUsersById(idAluno);
 
+        this.tccUtil.checkSeAlunoTemTcc(aluno);
         tcc = this.tccUtil.adicionarAlunoNoTcc(tcc ,aluno);
 
-        this.tccUtil.checkSeAlunoTemTcc(aluno);
-
         this.userUtil.salvarUser(aluno);
-    
+
+        if(tcc.getCurso() == null ){
+            tcc.setCurso(null);
+        }
+
+        log.info("TEste " + tcc.toString());
         return this.tccUtil.salvarTcc(tcc);
 
     }
 
     @Override
     public Tcc updateTCC(Tcc tcc, Long id) {
-        
+
         Long idAluno = tcc.getUsuario().getIdUsuario();
 
         this.tccUtil.validaIdAluno(idAluno);
@@ -59,6 +67,7 @@ public class TccServices implements TccInterface<Tcc, Long> {
         this.tccUtil.userTypeIsAluno(aluno);
 
         Tcc tccRepo = this.tccUtil.buscarTcc(id);
+
         tccRepo = this.tccUtil.moldeBasicoTcc(tccRepo ,tcc);
 
         Usuario alunoRepo = tccRepo.getUsuario();
@@ -66,7 +75,7 @@ public class TccServices implements TccInterface<Tcc, Long> {
         Boolean isEqualsAlunos = aluno.getIdUsuario().equals(alunoRepo.getIdUsuario());
     
         if( !isEqualsAlunos ){
-            
+
             Boolean checkSeAlunoTemTcc = this.tccUtil.checkSeAlunoTemTccSemExecao(aluno);
             
             if( !checkSeAlunoTemTcc )
@@ -74,7 +83,7 @@ public class TccServices implements TccInterface<Tcc, Long> {
                 this.tccUtil.removendoAlunoDeUmTcc(idAluno);
             
             tccRepo = this.tccUtil.trocandoORelacionamentoDeAlunoComTcc(tccRepo, aluno);
-        
+
         }
 
         return this.tccUtil.salvarTcc(tccRepo);

@@ -3,6 +3,8 @@ package br.gtcc.gtcc.controller.security;
 import java.util.List;
 import java.util.Optional;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,12 +25,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 @CrossOrigin
 @ValidaAcesso("ROLE_COORDENADOR")
 @RestController
+@Tag(name="Coordenador Controller", description = "Essa entidade trata dos usuarios do tipo coordenador e suas funções ")
 @RequestMapping("coordenacao/tcc/v1/coordenador")
 @RequiredArgsConstructor
 public class CoordenadorController {
     
     private final UsuarioInterface<Usuario, Long> usersInterface;
 
+    @Operation(summary = "Essa rota recuperar coordenadores dado um id")
     @GetMapping("/usuario/{id}")
     public ResponseEntity<Object> getUserByCoordenador(@PathVariable Long id) {
 
@@ -37,6 +41,7 @@ public class CoordenadorController {
         
     }
 
+    @Operation(summary = "Essa rota recuperar todos alunos cadastrados")
     @GetMapping("/alunos")
     public ResponseEntity<Object> getAllAlunosByCoordenador() {
         
@@ -45,6 +50,7 @@ public class CoordenadorController {
         
     }
 
+    @Operation(summary = "Essa rota recuperar todos professores cadastrados")
     @GetMapping("/professores")
     public ResponseEntity<Object> getAllProfessoresByCoordenador() {
         
@@ -53,6 +59,7 @@ public class CoordenadorController {
         
     }
 
+    @Operation(summary = "Essa rota dado um objeto do tipo usuario ela criar um registro de um professor")
     @PostMapping("/professor")
     public ResponseEntity<Object> createProfessorByCoordenador(@RequestBody Usuario users) {
     
@@ -61,6 +68,7 @@ public class CoordenadorController {
     
     }
 
+    @Operation(summary = "Essa rota dado um id ele recuperar o professor da base")
     @DeleteMapping("/professor/{id}")
     public ResponseEntity<Object> deleteProfessorByCoordenador(@PathVariable Long id){
     
@@ -68,7 +76,8 @@ public class CoordenadorController {
         return UtilController.buildResponseFromOptional( deletedUsers, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Professor deletado com sucesso", "Erro ao deletar professor");
     
     }
-    
+
+    @Operation(summary = "Essa rota dado um id e um objeto usuario ele atualiza o resgitro referente ao id passado com o objeto passado")
     @PutMapping("/professor/{id}")
     public ResponseEntity<Object> updateProfessorByCoordenador(@RequestBody(required = true) Usuario users , @PathVariable("id") Long id){
         

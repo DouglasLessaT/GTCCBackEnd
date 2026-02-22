@@ -1,6 +1,7 @@
 package br.gtcc.gtcc.controller;
 
 import br.gtcc.gtcc.annotations.ValidaAcesso;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("coordenacao/tcc/v1")
 @ValidaAcesso("ROLE_COORDENADOR")
 @RequiredArgsConstructor
+@Slf4j
 public class CursoController {
 
     private final CursoInterface cursoInterface;
@@ -35,41 +37,42 @@ public class CursoController {
     @SuppressWarnings("unchecked")
     @PostMapping("/curso/")
     public ResponseEntity<Object> criacaoDeCurso(@RequestBody Curso curso) {
-        Console.log("Teste rota de criação de curso");
+
         Optional<Curso> cursoCriado = Optional.of( (Curso) cursoInterface.criarCurso(curso) );   
-        return UtilController.buildResponseFromOptional(cursoCriado , HttpStatus.OK , HttpStatus.BAD_REQUEST, "Apresentação criada com sucesso" , "Erro ao criar apresentação");
+        return UtilController.buildResponseFromOptional(cursoCriado , HttpStatus.OK , HttpStatus.BAD_REQUEST, "Curso criada com sucesso" , "Erro ao criar curso");
+
     }
 
     @SuppressWarnings("unchecked")
     @PutMapping("/curso/{id}")
     public ResponseEntity<Object> atualizacaDeCurso(@PathVariable Long id, @RequestBody Curso curso) {
-        Console.log("Teste rota de update o de curso");
+
         Optional<Curso> cursoAlterado = Optional.of( (Curso) cursoInterface.alterarCurso(id ,curso) );   
-        return UtilController.buildResponseFromOptional( cursoAlterado, HttpStatus.OK , HttpStatus.BAD_REQUEST, "Apresentação Alterada com sucesso" , "Erro ao Alterado apresentação");
+        return UtilController.buildResponseFromOptional( cursoAlterado, HttpStatus.OK , HttpStatus.BAD_REQUEST, "Curso Alterada com sucesso" , "Erro ao Alterado curso");
     }
 
     @SuppressWarnings("unchecked")
     @GetMapping("/curso/")
     public ResponseEntity<Object> listarCursos() {
-        Console.log("Teste rota de listagem de curso");
+
         Optional<List<Curso>> listaDeCurso = Optional.of( (List<Curso>) cursoInterface.listaCursos() );   
-        return UtilController.buildResponseFromOptional( listaDeCurso, HttpStatus.OK , HttpStatus.BAD_REQUEST, "Lista de apresentção" , "Lista Vazia");
+        return UtilController.buildResponseFromOptional( listaDeCurso, HttpStatus.OK , HttpStatus.BAD_REQUEST, "Lista de curso" , "Lista Vazia");
     }
 
     @SuppressWarnings("unchecked")
     @GetMapping("/curso/{id}")
     public ResponseEntity<Object> buscarCurso(@RequestParam Long id) {
-        Console.log("Teste rota de busca de curso");
+
         Optional<Curso> cursoEcontrado = Optional.of( (Curso) cursoInterface.buscarCurso(id) );   
-        return UtilController.buildResponseFromOptional( cursoEcontrado, HttpStatus.OK , HttpStatus.BAD_REQUEST, "Apresentcação encontrada" , "Error ao buscar Apresentação");
+        return UtilController.buildResponseFromOptional( cursoEcontrado, HttpStatus.OK , HttpStatus.BAD_REQUEST, "Curso encontrada" , "Error ao buscar Curso");
     }
 
     @SuppressWarnings("unchecked")
     @DeleteMapping("/curso/{id}")
     public ResponseEntity<Object> deletarCurso(@RequestParam Long idCurso) {
-        Console.log("Teste rota de deletar de curso");
+
         Optional<Curso> cursoEcontrado = Optional.of( (Curso) cursoInterface.deletarCurso(idCurso) );   
-        return UtilController.buildResponseFromOptional( cursoEcontrado, HttpStatus.OK , HttpStatus.BAD_REQUEST, "Apresentcação deletada com sucesso!" , "Error ao deletar Apresentação");
+        return UtilController.buildResponseFromOptional( cursoEcontrado, HttpStatus.OK , HttpStatus.BAD_REQUEST, "Curso deletada com sucesso!" , "Error ao deletar Curso");
     }
     
 }

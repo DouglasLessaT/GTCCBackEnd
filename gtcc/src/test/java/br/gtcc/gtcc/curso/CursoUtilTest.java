@@ -94,15 +94,21 @@ public class CursoUtilTest {
     public void validaId(){
         var cursoCriado = criarCurso();
         
-        assertDoesNotThrow(()-> this.cursoUtil.validId(cursoCriado.getId()));
+        assertDoesNotThrow(
+                ()-> this.cursoUtil.validId(null)
+        );
+
     }
 
     @Test
     @DisplayName("Testa se o id é invalido para criação e lanca uma execeção")
     public void deveLancarExcecaoAoValidarId(){
-        var cursoCriado = criarCursoInvĺido();
+        var cursoCriado = criarCurso();
         
-        assertThrows(IdInvalidoException.class ,()-> this.cursoUtil.validId(cursoCriado.getId()));
+        assertThrows(IdInvalidoException.class ,
+                ()-> this.cursoUtil.validId(cursoCriado.getId())
+        );
+
     }
 
     @Test

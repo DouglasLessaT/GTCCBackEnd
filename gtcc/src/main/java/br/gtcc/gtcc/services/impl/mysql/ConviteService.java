@@ -1,39 +1,64 @@
 package br.gtcc.gtcc.services.impl.mysql;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.gtcc.gtcc.model.mysql.Banca;
 import br.gtcc.gtcc.model.mysql.Convite;
+import br.gtcc.gtcc.model.mysql.DocenteBanca;
+import br.gtcc.gtcc.model.mysql.DocenteEnum;
 import br.gtcc.gtcc.model.mysql.StatusConvite;
 import br.gtcc.gtcc.model.mysql.repository.ConviteRepository;
+import br.gtcc.gtcc.model.mysql.repository.DocenteBancaRepository; // Importando o repositório
 import br.gtcc.gtcc.services.spec.ConviteInterface;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ConviteService implements ConviteInterface<Convite, Long> {
 
     @Autowired
     private ConviteRepository conviteRepository;
-    
+
+    @Autowired
+    private DocenteBancaRepository docenteBancaRepository; // Injetando o repositório
+
     @Override
     public Convite enviarConvite(Convite convite) {
-        conviteRepository.findByStatus(StatusConvite.INVITED);
         convite.setCriacaoConvite(LocalDateTime.now());
         return conviteRepository.save(convite);
     }
 
     @Override
     public Convite aceitarConvite(Long conviteId) {
-    Convite convite = conviteRepository.findById(conviteId)
-        .orElseThrow(() -> new RuntimeException("Convite não encontrado"));
-
+        Convite convite = conviteRepository.findById(conviteId)
+            .orElseThrow(() -> new RuntimeException("Convite não encontrado"));
+    
         validarDatas(convite.getCriacaoConvite(), LocalDateTime.now(), convite.getValidateDate());
-
+    
         convite.setStatus(StatusConvite.ACCEPTED);
         convite.setAcceptedDate(LocalDateTime.now());
-        return conviteRepository.save(convite);
+    
+        // Adiciona o docente à banca
+        DocenteBanca docenteBanca = new DocenteBanca();
+        docenteBanca.setUsuario(convite.getDestino()); // Definindo o usuário do docente
+        docenteBanca.setTipoDocente(DocenteEnum.AVALIADOR_INTERNO); // Tipo do docente
+        docenteBanca.setAtivo(1); // Define o status do docente
+    
+        // Acessando a banca da apresentação
+        Banca banca = convite.getDestinoDocente().getBanca();
+        if (banca != null) {
+            banca.adicionarDocente(docenteBanca); // Adiciona o docente à banca
+        } else {
+            throw new RuntimeException("Banca não encontrada na apresentação.");
+        }
+    
+        // Salva o docente na banca e o convite
+        docenteBancaRepository.save(docenteBanca);
+        conviteRepository.save(convite);
+    
+        return convite;
     }
 
     @Override
@@ -120,4 +145,5 @@ public class ConviteService implements ConviteInterface<Convite, Long> {
     public List<Convite> getConvitesVisualizados() {
         return conviteRepository.findByStatus(StatusConvite.VIEWED);
     }
+    
 }

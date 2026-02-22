@@ -1,5 +1,7 @@
 package br.gtcc.gtcc.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,8 @@ import java.util.Optional;
 @CrossOrigin
 @RestController
 @ValidaAcesso("ROLE_PROFESSOR")
+@Tag(name = "Apresentacão Controller", description = "Rotas para gerenciamento de apresentação um objeto apresentação conten hora fim, hora começo, " +
+        " data, data de criação, tcc e localização")
 @RequestMapping("coordenacao/tcc/v1")
 @RequiredArgsConstructor
 public class ApresentacaoController {
@@ -32,6 +36,7 @@ public class ApresentacaoController {
     @SuppressWarnings("rawtypes")
     private final ApresentacaoInterface interfaceBanca;
 
+    @Operation(summary ="Dado um objeto apresentacao ele criar um regitros no banco da apresentação ")
     @PostMapping("/apresentacao")
     public ResponseEntity<Object> createApresentantion(@RequestBody Apresentacao apresentation) {
 
@@ -41,6 +46,7 @@ public class ApresentacaoController {
         
     }
 
+    @Operation(summary ="Dado um id da apresentacao ele deleta a apresentacao da base")
     @DeleteMapping("/apresentacao/{id}")
     public ResponseEntity<Object> deleteApresentationBanca(@PathVariable("id") String id) {
 
@@ -50,6 +56,7 @@ public class ApresentacaoController {
         
     }
 
+    @Operation(summary ="Dado um id da apresentacao que sera modificada e o objeto que com as informações novas essa rota pega o objeto da base a atuliza ela com as informações passadas")
     @PutMapping("/apresentacao/{id}")
     public ResponseEntity<Object> updateApresentationBanca(@PathVariable("id") String id,@RequestBody(required = true) Apresentacao apresentation) {
 
@@ -59,6 +66,7 @@ public class ApresentacaoController {
 
     }
 
+    @Operation(summary ="Dado um id da apresentacao ele recupear esse valor do banco")
     @GetMapping("/apresentacao/{id}")
     public ResponseEntity<Object> getApresentationBancaById(@PathVariable("id") String id) {
 
@@ -68,6 +76,7 @@ public class ApresentacaoController {
 
     }
 
+    @Operation(summary ="Dado um id da apresentacao ele recupear esse valor do banco")
     @GetMapping("/apresentacoes")
     public ResponseEntity<Object> getAllApresentationBanca() {
 
@@ -76,30 +85,5 @@ public class ApresentacaoController {
         return UtilController.buildResponseFromOptional( getApresentationBancaList, HttpStatus.OK, HttpStatus.BAD_REQUEST, "Lista de apresentação", "Lista Vazia");
 
     }
-
-    // @GetMapping("/apresentacao-titulo-nome/{id}")
-    // public ResponseEntity<Object> getTituloENomeOrientador(@PathVariable("id") String id) {
-
-    //     @SuppressWarnings("unchecked")
-    //     Optional<String> nome = Optional.ofNullable((String) interfaceBanca.getNomeOrintadorPeloIdDaApresentacao(id));
-    //     @SuppressWarnings("unchecked")
-    //     Optional<String> titulo = Optional.ofNullable((String) interfaceBanca.getTccTitlePeloIdDaApresentacao(id));
-
-    //     boolean nomeIsPresent = nome.isPresent() ;
-    //     boolean tituloIsPresent = titulo.isPresent();
-
-    //     if (nomeIsPresent!= false && tituloIsPresent != false) {
-
-    //         String resultado = ""+nome.get()+":"+titulo.get();
-    //         Console.log(resultado);
-    //         return new ResponseEntity<>(resultado, HttpStatus.OK);
-
-    //     } else {
-
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sem titlo ou nome encontrados");
-
-    //     }
-
-    // }
     
 }
