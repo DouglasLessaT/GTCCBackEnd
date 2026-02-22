@@ -18,16 +18,8 @@ public class DocenteBanca {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_banca")
-    private Banca banca; // Relacionamento com a banca
-
-    @ManyToOne
     @JoinColumn(name = "id_usuario") // Supondo que você tenha um usuário que representa o docente
     private Usuario usuario; // O docente que faz parte da banca
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_docente")
-    private DocenteEnum tipoDocente; // Tipo de docente (por exemplo, avaliador interno, externo, etc.)
 
     @Column(name = "ativo")
     private Integer ativo;
