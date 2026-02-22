@@ -42,4 +42,8 @@ public class DocenteBanca {
     @ManyToOne(targetEntity=TipoDocente.class, fetch=FetchType.EAGER)
 	@JoinColumn(name="id_tipo_docente")
     private TipoDocente tipoDocente;
+
+    @Column(name="status")
+    private String status;
+
 }
